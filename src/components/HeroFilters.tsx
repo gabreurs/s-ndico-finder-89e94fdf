@@ -1,6 +1,6 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ESPECIALIDADES, REGIOES, CIDADES } from "@/lib/constants";
+import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -28,6 +28,15 @@ export function HeroFilters({
     if (regiao !== "all") params.set("regiao", regiao);
     const query = params.toString();
     return query ? `/sindicos?${query}` : "/sindicos";
+  };
+
+  // Get regions for selected city
+  const availableRegioes = cidade !== "all" ? CIDADES_REGIOES[cidade] || [] : [];
+
+  // Handle city change - reset region when city changes
+  const handleCidadeChange = (value: string) => {
+    onCidadeChange(value);
+    onRegiaoChange("all"); // Reset region when city changes
   };
 
   return (
@@ -64,17 +73,17 @@ export function HeroFilters({
 
         <div>
           <label className="block text-sm font-semibold text-foreground mb-2">
-            Estado/Cidade
+            Cidade
           </label>
-          <Select value={cidade} onValueChange={onCidadeChange}>
+          <Select value={cidade} onValueChange={handleCidadeChange}>
             <SelectTrigger className="h-12 rounded-xl border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors">
-              <SelectValue placeholder="selecione a estado/cidade..." />
+              <SelectValue placeholder="selecione a cidade..." />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               <SelectItem value="all">Todas as cidades</SelectItem>
               {CIDADES.map((cid) => (
                 <SelectItem key={cid} value={cid}>
-                  {cid.toUpperCase()}
+                  {cid}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -85,13 +94,17 @@ export function HeroFilters({
           <label className="block text-sm font-semibold text-foreground mb-2">
             Região
           </label>
-          <Select value={regiao} onValueChange={onRegiaoChange}>
-            <SelectTrigger className="h-12 rounded-xl border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors">
-              <SelectValue placeholder="selecione a região..." />
+          <Select 
+            value={regiao} 
+            onValueChange={onRegiaoChange}
+            disabled={cidade === "all"}
+          >
+            <SelectTrigger className="h-12 rounded-xl border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors disabled:opacity-50">
+              <SelectValue placeholder={cidade === "all" ? "Selecione uma cidade primeiro" : "selecione a região..."} />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
               <SelectItem value="all">Todas as regiões</SelectItem>
-              {REGIOES.map((reg) => (
+              {availableRegioes.map((reg) => (
                 <SelectItem key={reg} value={reg}>
                   {reg}
                 </SelectItem>

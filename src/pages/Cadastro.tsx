@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { ESPECIALIDADES, REGIOES } from "@/lib/constants";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +37,17 @@ export default function Cadastro() {
     autoriza_divulgacao_clientes: false,
     foto_url: null as string | null,
   });
+
+  // Get available regions based on selected city
+  const availableRegioes = formData.cidade ? CIDADES_REGIOES[formData.cidade] || [] : [];
+
+  const handleCidadeChange = (value: string) => {
+    setFormData({ 
+      ...formData, 
+      cidade: value,
+      regioes: [] // Reset regions when city changes
+    });
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -235,16 +247,20 @@ export default function Cadastro() {
                 <div className="grid gap-4">
                   <div>
                     <Label className="text-sm font-medium mb-2 block">
-                      Cidade onde atua
+                      Cidade onde atua <span className="text-destructive">*</span>
                     </Label>
-                    <Input
-                      value={formData.cidade}
-                      onChange={(e) =>
-                        setFormData({ ...formData, cidade: e.target.value })
-                      }
-                      placeholder="Ex: São Paulo"
-                      className="h-12"
-                    />
+                    <Select value={formData.cidade} onValueChange={handleCidadeChange}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Selecione a cidade..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CIDADES.map((cid) => (
+                          <SelectItem key={cid} value={cid}>
+                            {cid}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div>
@@ -318,7 +334,11 @@ export default function Cadastro() {
                   >
                     Voltar
                   </Button>
-                  <Button onClick={() => setStep(3)} className="h-12 px-8">
+                  <Button 
+                    onClick={() => setStep(3)} 
+                    className="h-12 px-8"
+                    disabled={!formData.cidade}
+                  >
                     Próximo Passo
                   </Button>
                 </div>
@@ -332,10 +352,10 @@ export default function Cadastro() {
                     <span className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">
                       3
                     </span>
-                    Regiões de Atuação
+                    Regiões de Atuação em {formData.cidade}
                   </h2>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {REGIOES.map((r) => (
+                    {availableRegioes.map((r) => (
                       <label
                         key={r}
                         className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
