@@ -13,24 +13,77 @@ export const ESPECIALIDADES = [
   "Outro",
 ] as const;
 
-export const REGIOES = [
-  "Centro de SP",
-  "Zona Sul",
-  "Zona Norte",
-  "Zona Leste",
-  "Zona Oeste",
-  "Interior de SP",
-  "Outro",
-] as const;
+export const CIDADES_REGIOES: Record<string, string[]> = {
+  "São Paulo": [
+    "Centro",
+    "Zona Sul",
+    "Zona Norte",
+    "Zona Leste",
+    "Zona Oeste",
+  ],
+  "Guarulhos": [
+    "Centro",
+    "Região Norte",
+    "Região Sul",
+    "Região Leste",
+    "Região Oeste",
+  ],
+  "Campinas": [
+    "Centro",
+    "Barão Geraldo",
+    "Cambuí",
+    "Taquaral",
+    "Sousas",
+  ],
+  "Santo André": [
+    "Centro",
+    "Jardim",
+    "Paraíso",
+    "Vila Assunção",
+  ],
+  "São Bernardo do Campo": [
+    "Centro",
+    "Rudge Ramos",
+    "Assunção",
+    "Planalto",
+  ],
+  "Osasco": [
+    "Centro",
+    "Presidente Altino",
+    "Bela Vista",
+    "Industrial Autonomistas",
+  ],
+  "Ribeirão Preto": [
+    "Centro",
+    "Zona Sul",
+    "Zona Norte",
+    "Zona Leste",
+    "Zona Oeste",
+  ],
+  "Sorocaba": [
+    "Centro",
+    "Zona Norte",
+    "Zona Sul",
+    "Zona Leste",
+    "Zona Oeste",
+  ],
+  "Santos": [
+    "Centro",
+    "Gonzaga",
+    "Boqueirão",
+    "Ponta da Praia",
+    "Embaré",
+  ],
+  "São José dos Campos": [
+    "Centro",
+    "Zona Sul",
+    "Zona Norte",
+    "Zona Leste",
+    "Zona Oeste",
+  ],
+};
 
-export const CIDADES = [
-  "São Paulo",
-  "Brasília",
-  "Indaiatuba",
-  "São José",
-  "Outro",
-] as const;
+export const CIDADES = Object.keys(CIDADES_REGIOES);
 
 export type Especialidade = typeof ESPECIALIDADES[number];
-export type Regiao = typeof REGIOES[number];
-export type Cidade = typeof CIDADES[number];
+export type Cidade = keyof typeof CIDADES_REGIOES;

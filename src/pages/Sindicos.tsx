@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SindicoCard } from "@/components/SindicoCard";
 import { useSindicos } from "@/hooks/useSindicos";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ESPECIALIDADES, REGIOES, CIDADES } from "@/lib/constants";
+import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -22,6 +22,15 @@ export default function Sindicos() {
 
   const visibleSindicos = sindicos?.slice(0, visibleCount) || [];
   const hasMore = sindicos && sindicos.length > visibleCount;
+
+  // Get regions for selected city
+  const availableRegioes = cidade !== "all" ? CIDADES_REGIOES[cidade] || [] : [];
+
+  // Reset region when city changes
+  const handleCidadeChange = (value: string) => {
+    setCidade(value);
+    setRegiao("all");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -45,9 +54,9 @@ export default function Sindicos() {
               </SelectContent>
             </Select>
 
-            <Select value={cidade} onValueChange={setCidade}>
+            <Select value={cidade} onValueChange={handleCidadeChange}>
               <SelectTrigger className="w-full md:w-[200px]">
-                <SelectValue placeholder="selecione a estado/cidade..." />
+                <SelectValue placeholder="selecione a cidade..." />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todas as cidades</SelectItem>
@@ -59,13 +68,17 @@ export default function Sindicos() {
               </SelectContent>
             </Select>
 
-            <Select value={regiao} onValueChange={setRegiao}>
+            <Select 
+              value={regiao} 
+              onValueChange={setRegiao}
+              disabled={cidade === "all"}
+            >
               <SelectTrigger className="w-full md:w-[200px]">
-                <SelectValue placeholder="selecione a região..." />
+                <SelectValue placeholder={cidade === "all" ? "Selecione uma cidade" : "selecione a região..."} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todas as regiões</SelectItem>
-                {REGIOES.map((reg) => (
+                {availableRegioes.map((reg) => (
                   <SelectItem key={reg} value={reg}>
                     {reg}
                   </SelectItem>
