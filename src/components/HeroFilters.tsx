@@ -1,5 +1,8 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { ESPECIALIDADES, REGIOES, CIDADES } from "@/lib/constants";
+import { Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface HeroFiltersProps {
   especialidade: string;
@@ -18,22 +21,37 @@ export function HeroFilters({
   onCidadeChange,
   onRegiaoChange,
 }: HeroFiltersProps) {
+  const buildSearchUrl = () => {
+    const params = new URLSearchParams();
+    if (especialidade !== "all") params.set("especialidade", especialidade);
+    if (cidade !== "all") params.set("cidade", cidade);
+    if (regiao !== "all") params.set("regiao", regiao);
+    const query = params.toString();
+    return query ? `/sindicos?${query}` : "/sindicos";
+  };
+
   return (
-    <div className="bg-card/95 backdrop-blur-sm rounded-xl p-6 md:p-8 shadow-xl max-w-4xl mx-auto">
-      <h1 className="text-2xl md:text-3xl font-bold text-center text-foreground mb-6">
-        Encontre os Melhores Síndicos!
-      </h1>
+    <div className="bg-card rounded-3xl p-8 md:p-10 shadow-2xl max-w-4xl mx-auto border border-border/50">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground mb-3 tracking-tight">
+          Encontre os Melhores{" "}
+          <span className="text-primary">Síndicos!</span>
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          Conectamos você aos melhores profissionais do mercado condominial
+        </p>
+      </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-semibold text-foreground mb-2">
             Especialidade
           </label>
           <Select value={especialidade} onValueChange={onEspecialidadeChange}>
-            <SelectTrigger>
+            <SelectTrigger className="h-12 rounded-xl border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors">
               <SelectValue placeholder="selecione a especialidade..." />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               <SelectItem value="all">Todas as especialidades</SelectItem>
               {ESPECIALIDADES.map((esp) => (
                 <SelectItem key={esp} value={esp}>
@@ -45,14 +63,14 @@ export function HeroFilters({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-semibold text-foreground mb-2">
             Estado/Cidade
           </label>
           <Select value={cidade} onValueChange={onCidadeChange}>
-            <SelectTrigger>
+            <SelectTrigger className="h-12 rounded-xl border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors">
               <SelectValue placeholder="selecione a estado/cidade..." />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               <SelectItem value="all">Todas as cidades</SelectItem>
               {CIDADES.map((cid) => (
                 <SelectItem key={cid} value={cid}>
@@ -64,14 +82,14 @@ export function HeroFilters({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
+          <label className="block text-sm font-semibold text-foreground mb-2">
             Região
           </label>
           <Select value={regiao} onValueChange={onRegiaoChange}>
-            <SelectTrigger>
+            <SelectTrigger className="h-12 rounded-xl border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors">
               <SelectValue placeholder="selecione a região..." />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               <SelectItem value="all">Todas as regiões</SelectItem>
               {REGIOES.map((reg) => (
                 <SelectItem key={reg} value={reg}>
@@ -82,6 +100,16 @@ export function HeroFilters({
           </Select>
         </div>
       </div>
+
+      <Button 
+        asChild 
+        className="w-full h-14 text-lg font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all gap-2"
+      >
+        <Link to={buildSearchUrl()}>
+          <Search size={20} />
+          Buscar Síndicos
+        </Link>
+      </Button>
     </div>
   );
 }
