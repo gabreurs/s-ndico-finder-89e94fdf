@@ -3,7 +3,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { HeroFilters } from "@/components/HeroFilters";
 import { SindicoCard } from "@/components/SindicoCard";
-import { ScrollBlur } from "@/components/ScrollBlur";
 import { Marquee } from "@/components/Marquee";
 import { SpinBadge } from "@/components/SpinBadge";
 import { useSindicos } from "@/hooks/useSindicos";
@@ -61,7 +60,6 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
-      <ScrollBlur />
 
       {/* ===== HERO ===== */}
       <section ref={heroRef} className="relative min-h-[100vh] flex items-center overflow-hidden">

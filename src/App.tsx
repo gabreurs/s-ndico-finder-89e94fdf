@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { IntroAnimation } from "@/components/IntroAnimation";
+import { ScrollBlur } from "@/components/ScrollBlur";
 import Index from "./pages/Index";
 import Sindicos from "./pages/Sindicos";
 import SindicoPerfil from "./pages/SindicoPerfil";
@@ -17,17 +18,24 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [showIntro, setShowIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(() => {
+    if (typeof window === "undefined") return false;
 
-  useEffect(() => {
-    const seen = sessionStorage.getItem("intro_seen");
-    if (!seen) {
-      setShowIntro(true);
+    try {
+      const navEntry = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+      const isReload = navEntry?.type === "reload";
+      return isReload || !window.sessionStorage.getItem("intro_seen");
+    } catch {
+      return false;
     }
-  }, []);
+  });
 
   const handleIntroComplete = () => {
-    sessionStorage.setItem("intro_seen", "1");
+    try {
+      window.sessionStorage.setItem("intro_seen", "1");
+    } catch {
+      // no-op
+    }
     setShowIntro(false);
   };
 
@@ -37,6 +45,7 @@ const App = () => {
         <Toaster />
         <Sonner />
         {showIntro && <IntroAnimation onComplete={handleIntroComplete} />}
+        {!showIntro && <ScrollBlur />}
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />

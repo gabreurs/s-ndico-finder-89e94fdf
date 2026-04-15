@@ -4,11 +4,8 @@ import { SpinBadge } from "./SpinBadge";
 
 export function Footer() {
   return (
-    <footer className="relative">
-      {/* Top gradient transition */}
-      <div className="h-24 bg-gradient-to-b from-background to-[hsl(220,25%,5%)]" />
-
-      <div className="bg-[hsl(220,25%,5%)] text-white/80">
+    <footer className="relative bg-[hsl(220,25%,5%)] text-white/80">
+      <div>
         <div className="container py-14 relative">
           {/* Spinning badge */}
           <div className="absolute top-8 right-8 hidden lg:block">
