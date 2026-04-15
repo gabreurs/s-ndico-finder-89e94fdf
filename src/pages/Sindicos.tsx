@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { SindicoCard } from "@/components/SindicoCard";
 import { useSindicos } from "@/hooks/useSindicos";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,8 +10,7 @@ import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Search } from "lucide-react";
-import { useRef } from "react";
+import { Search, SlidersHorizontal } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -60,14 +60,14 @@ export default function Sindicos() {
 
       {/* Hero */}
       <section ref={heroRef} className="gradient-mesh py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute top-[20%] right-[10%] w-[300px] h-[300px] rounded-full bg-primary/[0.04] blur-[100px]" />
+        <div className="absolute top-[20%] right-[10%] w-[300px] h-[300px] rounded-full bg-primary/[0.05] blur-[100px]" />
         <motion.div style={{ opacity: heroOpacity }} className="container relative">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <p className="text-[11px] text-white/25 tracking-[0.2em] uppercase mb-4" style={{ fontWeight: 380 }}>Diretório curado</p>
+            <PageBreadcrumb items={[{ label: "Síndicos" }]} variant="dark" className="mb-6" />
             <h1 className="text-2xl md:text-3xl lg:text-4xl text-white/90 mb-3 tracking-[-0.02em]" style={{ fontWeight: 320 }}>
               Síndicos Profissionais
             </h1>
-            <p className="text-white/30 text-sm max-w-lg leading-relaxed" style={{ fontWeight: 350 }}>
+            <p className="text-white/35 text-sm max-w-lg leading-relaxed" style={{ fontWeight: 400 }}>
               Explore perfis verificados e encontre o profissional ideal para seu condomínio em São Paulo e região.
             </p>
           </motion.div>
@@ -75,7 +75,7 @@ export default function Sindicos() {
       </section>
 
       {/* Filters */}
-      <section className="py-3 border-b border-border/[0.06] sticky top-14 z-40 bg-background/80 backdrop-blur-2xl">
+      <section className="py-3 border-b border-border/30 sticky top-14 z-40 bg-background/85 backdrop-blur-2xl">
         <div className="container">
           <div className="flex flex-wrap gap-2.5 items-center">
             <div className="relative flex-1 min-w-[180px] max-w-xs">
@@ -84,13 +84,13 @@ export default function Sindicos() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar por nome, cidade..."
-                className="h-9 text-[13px] pl-9 rounded-xl border-border/20 bg-muted/20"
-                style={{ fontWeight: 380 }}
+                className="h-9 text-[13px] pl-9 rounded-lg border-border/30 bg-muted/30"
+                style={{ fontWeight: 420 }}
               />
             </div>
 
             <Select value={especialidade} onValueChange={setEspecialidade}>
-              <SelectTrigger className="w-full md:w-[190px] h-9 text-[13px] rounded-xl border-border/20 bg-muted/20" style={{ fontWeight: 380 }}>
+              <SelectTrigger className="w-full md:w-[190px] h-9 text-[13px] rounded-lg border-border/30 bg-muted/30" style={{ fontWeight: 420 }}>
                 <SelectValue placeholder="Especialidade..." />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -102,7 +102,7 @@ export default function Sindicos() {
             </Select>
 
             <Select value={cidade} onValueChange={handleCidadeChange}>
-              <SelectTrigger className="w-full md:w-[160px] h-9 text-[13px] rounded-xl border-border/20 bg-muted/20" style={{ fontWeight: 380 }}>
+              <SelectTrigger className="w-full md:w-[160px] h-9 text-[13px] rounded-lg border-border/30 bg-muted/30" style={{ fontWeight: 420 }}>
                 <SelectValue placeholder="Cidade..." />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -114,7 +114,7 @@ export default function Sindicos() {
             </Select>
 
             <Select value={regiao} onValueChange={setRegiao} disabled={cidade === "all"}>
-              <SelectTrigger className="w-full md:w-[160px] h-9 text-[13px] rounded-xl border-border/20 bg-muted/20" style={{ fontWeight: 380 }}>
+              <SelectTrigger className="w-full md:w-[160px] h-9 text-[13px] rounded-lg border-border/30 bg-muted/30" style={{ fontWeight: 420 }}>
                 <SelectValue placeholder={cidade === "all" ? "Cidade primeiro" : "Região..."} />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
@@ -132,7 +132,7 @@ export default function Sindicos() {
       <section className="py-10 flex-1">
         <div className="container">
           {!isLoading && (
-            <p className="text-[11px] text-muted-foreground/60 mb-6" style={{ fontWeight: 380 }}>
+            <p className="text-[11px] text-muted-foreground/60 mb-6" style={{ fontWeight: 420 }}>
               {filteredSindicos.length} {filteredSindicos.length === 1 ? "profissional encontrado" : "profissionais encontrados"}
             </p>
           )}
@@ -140,7 +140,7 @@ export default function Sindicos() {
           {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-muted/20 animate-pulse rounded-2xl h-[380px]" />
+                <div key={i} className="bg-muted/20 animate-pulse rounded-xl h-[320px]" />
               ))}
             </div>
           ) : visibleSindicos.length > 0 ? (
@@ -168,8 +168,8 @@ export default function Sindicos() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="rounded-full px-8 border-border/15 text-[12px]"
-                    style={{ fontWeight: 400 }}
+                    className="rounded-full px-8 border-border/30 text-[12px]"
+                    style={{ fontWeight: 430 }}
                     onClick={() => setVisibleCount((prev) => prev + 12)}
                   >
                     Carregar mais
@@ -179,8 +179,8 @@ export default function Sindicos() {
             </>
           ) : (
             <div className="text-center py-24">
-              <p className="text-muted-foreground text-sm mb-4" style={{ fontWeight: 380 }}>Nenhum síndico encontrado com os filtros selecionados.</p>
-              <Button asChild size="sm" className="rounded-full px-6" style={{ fontWeight: 420 }}>
+              <p className="text-muted-foreground text-sm mb-4" style={{ fontWeight: 400 }}>Nenhum síndico encontrado com os filtros selecionados.</p>
+              <Button asChild size="sm" className="rounded-full px-6" style={{ fontWeight: 450 }}>
                 <Link to="/cadastro">Cadastre-se como síndico</Link>
               </Button>
             </div>

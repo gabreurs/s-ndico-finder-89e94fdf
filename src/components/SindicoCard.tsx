@@ -51,12 +51,8 @@ export function SindicoCard({ id, nome, foto, resumo, regioes, especialidades, c
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
-                target.nextElementSibling?.classList.remove('hidden');
               }}
             />
-            <div className="hidden w-full h-full flex items-center justify-center absolute inset-0 bg-muted">
-              <User size={32} className="text-muted-foreground/20" />
-            </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <User size={32} className="text-muted-foreground/20" />
