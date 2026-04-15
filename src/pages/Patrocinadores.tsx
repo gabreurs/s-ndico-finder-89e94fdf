@@ -1,19 +1,26 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { motion } from "framer-motion";
 
 export default function Patrocinadores() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <section className="py-16 flex-1">
+      <section className="py-14 flex-1">
         <div className="container">
-          <h1 className="text-3xl font-bold text-foreground mb-8 text-center">
-            Patrocinadores
-          </h1>
-          <p className="text-center text-muted-foreground max-w-2xl mx-auto">
-            Esta página está em construção. Em breve você poderá conhecer nossos patrocinadores e parceiros que apoiam o Quero 1 Síndico.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center"
+          >
+            <h1 className="text-2xl text-foreground mb-3 tracking-tight" style={{ fontWeight: 500 }}>
+              Patrocinadores
+            </h1>
+            <p className="text-sm text-muted-foreground max-w-lg mx-auto">
+              Em breve você poderá conhecer nossos patrocinadores e parceiros que apoiam o Quero 1 Síndico.
+            </p>
+          </motion.div>
         </div>
       </section>
 

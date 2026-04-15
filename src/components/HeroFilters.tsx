@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
 import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface HeroFiltersProps {
   especialidade: string;
@@ -30,99 +31,88 @@ export function HeroFilters({
     return query ? `/sindicos?${query}` : "/sindicos";
   };
 
-  // Get regions for selected city
   const availableRegioes = cidade !== "all" ? CIDADES_REGIOES[cidade] || [] : [];
 
-  // Handle city change - reset region when city changes
   const handleCidadeChange = (value: string) => {
     onCidadeChange(value);
-    onRegiaoChange("all"); // Reset region when city changes
+    onRegiaoChange("all");
   };
 
   return (
-    <div className="bg-card rounded-3xl p-8 md:p-10 shadow-2xl max-w-4xl mx-auto border border-border/50">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-foreground mb-3 tracking-tight">
-          Encontre os Melhores{" "}
-          <span className="text-primary">Síndicos!</span>
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.3 }}
+      className="bg-card/95 backdrop-blur-xl rounded-2xl p-6 md:p-8 max-w-3xl mx-auto border border-border/30"
+    >
+      <div className="text-center mb-6">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl text-foreground mb-2 tracking-tight" style={{ fontWeight: 500 }}>
+          Encontre o síndico{" "}
+          <span className="text-primary">ideal</span>
         </h1>
-        <p className="text-muted-foreground text-lg">
-          Conectamos você aos melhores profissionais do mercado condominial
+        <p className="text-muted-foreground text-sm">
+          Profissionais qualificados para cada tipo de condomínio
         </p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
         <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            Especialidade
-          </label>
+          <label className="block text-xs text-muted-foreground mb-1.5">Especialidade</label>
           <Select value={especialidade} onValueChange={onEspecialidadeChange}>
-            <SelectTrigger className="h-12 rounded-xl border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors">
-              <SelectValue placeholder="selecione a especialidade..." />
+            <SelectTrigger className="h-10 rounded-lg border-border/50 bg-muted/30 text-sm">
+              <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="all">Todas as especialidades</SelectItem>
+            <SelectContent className="rounded-lg">
+              <SelectItem value="all">Todas</SelectItem>
               {ESPECIALIDADES.map((esp) => (
-                <SelectItem key={esp} value={esp}>
-                  {esp}
-                </SelectItem>
+                <SelectItem key={esp} value={esp}>{esp}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            Cidade
-          </label>
+          <label className="block text-xs text-muted-foreground mb-1.5">Cidade</label>
           <Select value={cidade} onValueChange={handleCidadeChange}>
-            <SelectTrigger className="h-12 rounded-xl border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors">
-              <SelectValue placeholder="selecione a cidade..." />
+            <SelectTrigger className="h-10 rounded-lg border-border/50 bg-muted/30 text-sm">
+              <SelectValue placeholder="Selecione..." />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="all">Todas as cidades</SelectItem>
+            <SelectContent className="rounded-lg">
+              <SelectItem value="all">Todas</SelectItem>
               {CIDADES.map((cid) => (
-                <SelectItem key={cid} value={cid}>
-                  {cid}
-                </SelectItem>
+                <SelectItem key={cid} value={cid}>{cid}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-foreground mb-2">
-            Região
-          </label>
-          <Select 
-            value={regiao} 
-            onValueChange={onRegiaoChange}
-            disabled={cidade === "all"}
-          >
-            <SelectTrigger className="h-12 rounded-xl border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors disabled:opacity-50">
-              <SelectValue placeholder={cidade === "all" ? "Selecione uma cidade primeiro" : "selecione a região..."} />
+          <label className="block text-xs text-muted-foreground mb-1.5">Região</label>
+          <Select value={regiao} onValueChange={onRegiaoChange} disabled={cidade === "all"}>
+            <SelectTrigger className="h-10 rounded-lg border-border/50 bg-muted/30 text-sm disabled:opacity-40">
+              <SelectValue placeholder={cidade === "all" ? "Cidade primeiro" : "Selecione..."} />
             </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="all">Todas as regiões</SelectItem>
+            <SelectContent className="rounded-lg">
+              <SelectItem value="all">Todas</SelectItem>
               {availableRegioes.map((reg) => (
-                <SelectItem key={reg} value={reg}>
-                  {reg}
-                </SelectItem>
+                <SelectItem key={reg} value={reg}>{reg}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <Button 
-        asChild 
-        className="w-full h-14 text-lg font-semibold rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all gap-2"
-      >
-        <Link to={buildSearchUrl()}>
-          <Search size={20} />
-          Buscar Síndicos
-        </Link>
-      </Button>
-    </div>
+      <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+        <Button 
+          asChild 
+          className="w-full h-11 text-sm rounded-lg gap-2 transition-all"
+        >
+          <Link to={buildSearchUrl()}>
+            <Search size={16} />
+            Buscar síndicos
+          </Link>
+        </Button>
+      </motion.div>
+    </motion.div>
   );
 }
