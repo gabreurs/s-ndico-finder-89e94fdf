@@ -7,13 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { Check } from "lucide-react";
-import { motion } from "framer-motion";
+import { Check, ArrowRight, ArrowLeft, Info } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Cadastro() {
   const [step, setStep] = useState(1);
@@ -39,9 +38,15 @@ export default function Cadastro() {
     foto_url: null as string | null,
   });
 
-  // Get available regions based on selected cities
   const availableRegioes = formData.cidades.flatMap(c => CIDADES_REGIOES[c] || []);
   const uniqueRegioes = [...new Set(availableRegioes)];
+
+  const formatWhatsApp = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 11);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -66,14 +71,14 @@ export default function Cadastro() {
       if (error) throw error;
 
       toast({
-        title: "Cadastro enviado!",
-        description: "Seu cadastro foi enviado para aprovação. Entraremos em contato em breve.",
+        title: "Cadastro enviado com sucesso",
+        description: "Seu perfil foi enviado para aprovação. Você será notificado quando for publicado.",
       });
       navigate("/");
     } catch (error) {
       toast({
         title: "Erro ao cadastrar",
-        description: "Ocorreu um erro. Tente novamente.",
+        description: "Ocorreu um erro inesperado. Tente novamente.",
         variant: "destructive",
       });
     } finally {
@@ -81,117 +86,129 @@ export default function Cadastro() {
     }
   };
 
-  const StepIndicator = () => (
-    <div className="flex items-center justify-center gap-2 md:gap-4 mb-8">
-      {[
-        { num: 1, label: "Dados Pessoais" },
-        { num: 2, label: "Dados Profissionais" },
-        { num: 3, label: "Regiões e Especialidades" },
-      ].map((s, index) => (
-        <div key={s.num} className="flex items-center gap-2 md:gap-4">
-          <div className="flex flex-col items-center gap-1.5">
-            <div
-              className={`w-9 h-9 rounded-full flex items-center justify-center text-xs transition-all ${
-                step > s.num
-                  ? "bg-primary text-primary-foreground"
-                  : step === s.num
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              {step > s.num ? <Check size={16} /> : s.num}
-            </div>
-            <span className={`text-[10px] md:text-xs text-center ${step === s.num ? "text-primary" : "text-muted-foreground"}`}>
-              {s.label}
-            </span>
-          </div>
-          {index < 2 && (
-            <div className={`w-8 md:w-12 h-px -mt-5 ${step > s.num ? "bg-primary" : "bg-border"}`} />
-          )}
-        </div>
-      ))}
-    </div>
-  );
+  const totalSteps = 3;
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <section className="py-8 md:py-14 flex-1">
+      <section className="py-10 md:py-16 flex-1">
         <div className="container max-w-2xl">
-          <div className="text-center mb-6">
-            <h1 className="text-xl md:text-2xl text-foreground mb-1 tracking-tight" style={{ fontWeight: 500 }}>
-              Cadastro de Síndico
-            </h1>
-            <p className="text-sm text-muted-foreground">Preencha seus dados para aparecer na plataforma</p>
-          </div>
-
-          <StepIndicator />
-
+          {/* Header */}
           <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-card rounded-xl border border-border/30 p-5 md:p-7"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
           >
-            {step === 1 && (
-              <div className="space-y-5">
-                <h2 className="text-sm text-foreground flex items-center gap-2" style={{ fontWeight: 500 }}>
-                  <span className="w-7 h-7 rounded-lg bg-primary/8 text-primary flex items-center justify-center text-xs">1</span>
-                  Dados Pessoais
-                </h2>
+            <p className="text-[11px] text-primary/60 tracking-[0.2em] uppercase mb-2" style={{ fontWeight: 420 }}>Cadastro profissional</p>
+            <h1 className="text-xl md:text-2xl text-foreground tracking-[-0.02em] mb-2" style={{ fontWeight: 380 }}>
+              Crie seu perfil de síndico
+            </h1>
+            <p className="text-[13px] text-muted-foreground" style={{ fontWeight: 370 }}>
+              Preencha as informações abaixo. Seu perfil será analisado antes da publicação.
+            </p>
+          </motion.div>
 
-                <div className="space-y-4">
+          {/* Progress */}
+          <div className="flex items-center gap-2 mb-8">
+            {[1, 2, 3].map((s) => (
+              <div key={s} className="flex items-center gap-2 flex-1">
+                <div className={`w-full h-1 rounded-full transition-colors duration-300 ${step >= s ? 'bg-primary/60' : 'bg-muted/40'}`} />
+              </div>
+            ))}
+          </div>
+          <p className="text-[11px] text-muted-foreground/50 mb-6" style={{ fontWeight: 380 }}>
+            Etapa {step} de {totalSteps} — {step === 1 ? "Dados pessoais" : step === 2 ? "Perfil profissional" : "Atuação e especialidades"}
+          </p>
+
+          {/* Steps */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, x: 12 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -12 }}
+              transition={{ duration: 0.25 }}
+              className="rounded-2xl border border-border/10 bg-card p-6 md:p-8"
+            >
+              {step === 1 && (
+                <div className="space-y-6">
                   <div>
-                    <Label className="text-xs text-muted-foreground mb-1.5 block">Foto de Perfil</Label>
+                    <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 400 }}>Foto de perfil</Label>
                     <PhotoUpload value={formData.foto_url || undefined} onChange={(url) => setFormData({ ...formData, foto_url: url })} />
                   </div>
 
-                  <div className="grid gap-3">
+                  <div className="grid gap-4">
                     <div>
-                      <Label className="text-xs text-muted-foreground mb-1.5 block">Nome Completo <span className="text-destructive">*</span></Label>
-                      <Input value={formData.nome_completo} onChange={(e) => setFormData({ ...formData, nome_completo: e.target.value })} placeholder="Digite seu nome completo" className="h-10 text-sm" />
+                      <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 400 }}>
+                        Nome completo <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        value={formData.nome_completo}
+                        onChange={(e) => setFormData({ ...formData, nome_completo: e.target.value })}
+                        placeholder="Seu nome completo"
+                        className="h-11 text-[13px] rounded-xl border-border/15"
+                        style={{ fontWeight: 380 }}
+                      />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground mb-1.5 block">WhatsApp <span className="text-destructive">*</span></Label>
-                      <Input value={formData.contato_whatsapp} onChange={(e) => setFormData({ ...formData, contato_whatsapp: e.target.value })} placeholder="(XX) XXXXX-XXXX" className="h-10 text-sm" />
+                      <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 400 }}>
+                        WhatsApp <span className="text-destructive">*</span>
+                      </Label>
+                      <Input
+                        value={formData.contato_whatsapp}
+                        onChange={(e) => setFormData({ ...formData, contato_whatsapp: formatWhatsApp(e.target.value) })}
+                        placeholder="(11) 99999-9999"
+                        className="h-11 text-[13px] rounded-xl border-border/15"
+                        style={{ fontWeight: 380 }}
+                      />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground mb-1.5 block">E-mail</Label>
-                      <Input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="seu@email.com" className="h-10 text-sm" />
+                      <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 400 }}>E-mail</Label>
+                      <Input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="seu@email.com"
+                        className="h-11 text-[13px] rounded-xl border-border/15"
+                        style={{ fontWeight: 380 }}
+                      />
                     </div>
                     <div>
-                      <Label className="text-xs text-muted-foreground mb-1.5 block">Empresa</Label>
-                      <Input value={formData.nome_empresa} onChange={(e) => setFormData({ ...formData, nome_empresa: e.target.value })} placeholder="Nome da empresa (opcional)" className="h-10 text-sm" />
+                      <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 400 }}>Empresa (opcional)</Label>
+                      <Input
+                        value={formData.nome_empresa}
+                        onChange={(e) => setFormData({ ...formData, nome_empresa: e.target.value })}
+                        placeholder="Nome da empresa"
+                        className="h-11 text-[13px] rounded-xl border-border/15"
+                        style={{ fontWeight: 380 }}
+                      />
                     </div>
                   </div>
-                </div>
 
-                <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-                  <Button onClick={() => setStep(2)} disabled={!formData.nome_completo || !formData.contato_whatsapp} className="w-full md:w-auto h-10 px-6 text-sm rounded-full">
-                    Próximo
+                  <Button
+                    onClick={() => setStep(2)}
+                    disabled={!formData.nome_completo || !formData.contato_whatsapp}
+                    className="h-11 px-6 text-[13px] rounded-full gap-2"
+                    style={{ fontWeight: 420 }}
+                  >
+                    Próximo <ArrowRight size={14} />
                   </Button>
-                </motion.div>
-              </div>
-            )}
+                </div>
+              )}
 
-            {step === 2 && (
-              <div className="space-y-5">
-                <h2 className="text-sm text-foreground flex items-center gap-2" style={{ fontWeight: 500 }}>
-                  <span className="w-7 h-7 rounded-lg bg-primary/8 text-primary flex items-center justify-center text-xs">2</span>
-                  Dados Profissionais
-                </h2>
-
-                <div className="grid gap-3">
+              {step === 2 && (
+                <div className="space-y-6">
                   <div>
-                    <Label className="text-xs text-muted-foreground mb-1.5 block">Cidades de atuação <span className="text-destructive">*</span></Label>
+                    <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 400 }}>
+                      Cidades de atuação <span className="text-destructive">*</span>
+                    </Label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                       {CIDADES.map((cid) => (
                         <label
                           key={cid}
-                          className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all text-sm ${
-                            formData.cidades.includes(cid) ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/30"
+                          className={`flex items-center gap-2.5 p-3 rounded-xl border cursor-pointer transition-all duration-200 ${
+                            formData.cidades.includes(cid) ? "border-primary/30 bg-primary/[0.04]" : "border-border/10 hover:border-border/25"
                           }`}
                         >
                           <Checkbox
@@ -204,97 +221,155 @@ export default function Cadastro() {
                               })
                             }
                           />
-                          <span className="text-xs">{cid}</span>
+                          <span className="text-[12px]" style={{ fontWeight: 390 }}>{cid}</span>
                         </label>
                       ))}
                     </div>
                   </div>
 
                   <div>
-                    <Label className="text-xs text-muted-foreground mb-1.5 block">Ano de início</Label>
-                    <Input type="number" value={formData.ano_inicio_profissao} onChange={(e) => setFormData({ ...formData, ano_inicio_profissao: parseInt(e.target.value) || new Date().getFullYear() })} className="h-10 text-sm" min={1990} max={new Date().getFullYear()} />
+                    <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 400 }}>Ano de início na profissão</Label>
+                    <Input
+                      type="number"
+                      value={formData.ano_inicio_profissao}
+                      onChange={(e) => setFormData({ ...formData, ano_inicio_profissao: parseInt(e.target.value) || new Date().getFullYear() })}
+                      className="h-11 text-[13px] rounded-xl border-border/15 max-w-[160px]"
+                      style={{ fontWeight: 380 }}
+                      min={1990}
+                      max={new Date().getFullYear()}
+                    />
                   </div>
 
                   <div>
-                    <Label className="text-xs text-muted-foreground mb-1.5 block">Site ou Redes Sociais</Label>
-                    <Input value={formData.site_redes_sociais} onChange={(e) => setFormData({ ...formData, site_redes_sociais: e.target.value })} placeholder="https://seusite.com" className="h-10 text-sm" />
+                    <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 400 }}>Resumo profissional</Label>
+                    <Textarea
+                      value={formData.breve_resumo}
+                      onChange={(e) => setFormData({ ...formData, breve_resumo: e.target.value })}
+                      placeholder="Descreva sua experiência, diferenciais e abordagem como síndico profissional..."
+                      className="min-h-[120px] resize-none text-[13px] rounded-xl border-border/15"
+                      style={{ fontWeight: 380 }}
+                    />
+                    <p className="text-[10px] text-muted-foreground/40 mt-1.5" style={{ fontWeight: 350 }}>
+                      Um bom resumo ajuda moradores a entenderem seu perfil rapidamente.
+                    </p>
                   </div>
 
-                  <div>
-                    <Label className="text-xs text-muted-foreground mb-1.5 block">Breve Resumo</Label>
-                    <Textarea value={formData.breve_resumo} onChange={(e) => setFormData({ ...formData, breve_resumo: e.target.value })} placeholder="Conte sobre sua experiência..." className="min-h-[100px] resize-none text-sm" />
+                  <div className="grid gap-4">
+                    <div>
+                      <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 400 }}>Site ou redes sociais</Label>
+                      <Input
+                        value={formData.site_redes_sociais}
+                        onChange={(e) => setFormData({ ...formData, site_redes_sociais: e.target.value })}
+                        placeholder="https://seusite.com"
+                        className="h-11 text-[13px] rounded-xl border-border/15"
+                        style={{ fontWeight: 380 }}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 400 }}>Vídeo de apresentação (YouTube)</Label>
+                      <Input
+                        value={formData.link_youtube}
+                        onChange={(e) => setFormData({ ...formData, link_youtube: e.target.value })}
+                        placeholder="https://youtube.com/watch?v=..."
+                        className="h-11 text-[13px] rounded-xl border-border/15"
+                        style={{ fontWeight: 380 }}
+                      />
+                    </div>
                   </div>
 
-                  <div>
-                    <Label className="text-xs text-muted-foreground mb-1.5 block">Link do YouTube</Label>
-                    <Input value={formData.link_youtube} onChange={(e) => setFormData({ ...formData, link_youtube: e.target.value })} placeholder="https://youtube.com/watch?v=..." className="h-10 text-sm" />
+                  <div className="flex gap-2">
+                    <Button variant="outline" onClick={() => setStep(1)} className="h-11 px-5 text-[13px] rounded-full gap-1.5 border-border/15" style={{ fontWeight: 400 }}>
+                      <ArrowLeft size={14} /> Voltar
+                    </Button>
+                    <Button onClick={() => setStep(3)} className="h-11 px-6 text-[13px] rounded-full gap-2" disabled={formData.cidades.length === 0} style={{ fontWeight: 420 }}>
+                      Próximo <ArrowRight size={14} />
+                    </Button>
                   </div>
                 </div>
+              )}
 
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => setStep(1)} className="h-10 px-5 text-sm rounded-full">Voltar</Button>
-                  <Button onClick={() => setStep(3)} className="h-10 px-6 text-sm rounded-full" disabled={formData.cidades.length === 0}>Próximo</Button>
-                </div>
-              </div>
-            )}
+              {step === 3 && (
+                <div className="space-y-6">
+                  {uniqueRegioes.length > 0 && (
+                    <div>
+                      <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 400 }}>Regiões de atuação</Label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {uniqueRegioes.map((r) => (
+                          <label
+                            key={r}
+                            className={`flex items-center gap-2.5 p-3 rounded-xl border cursor-pointer transition-all duration-200 ${
+                              formData.regioes.includes(r) ? "border-primary/30 bg-primary/[0.04]" : "border-border/10 hover:border-border/25"
+                            }`}
+                          >
+                            <Checkbox
+                              checked={formData.regioes.includes(r)}
+                              onCheckedChange={(c) => setFormData({ ...formData, regioes: c ? [...formData.regioes, r] : formData.regioes.filter((x) => x !== r) })}
+                            />
+                            <span className="text-[12px]" style={{ fontWeight: 390 }}>{r}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-            {step === 3 && (
-              <div className="space-y-6">
-                {uniqueRegioes.length > 0 && (
                   <div>
-                    <h2 className="text-sm text-foreground flex items-center gap-2 mb-3" style={{ fontWeight: 500 }}>
-                      <span className="w-7 h-7 rounded-lg bg-primary/8 text-primary flex items-center justify-center text-xs">3</span>
-                      Regiões de Atuação
-                    </h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                      {uniqueRegioes.map((r) => (
+                    <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 400 }}>
+                      Especialidades <span className="text-destructive">*</span>
+                    </Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {ESPECIALIDADES.map((e) => (
                         <label
-                          key={r}
-                          className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all ${
-                            formData.regioes.includes(r) ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/30"
+                          key={e}
+                          className={`flex items-center gap-2.5 p-3 rounded-xl border cursor-pointer transition-all duration-200 ${
+                            formData.especialidades.includes(e) ? "border-primary/30 bg-primary/[0.04]" : "border-border/10 hover:border-border/25"
                           }`}
                         >
-                          <Checkbox checked={formData.regioes.includes(r)} onCheckedChange={(c) => setFormData({ ...formData, regioes: c ? [...formData.regioes, r] : formData.regioes.filter((x) => x !== r) })} />
-                          <span className="text-xs">{r}</span>
+                          <Checkbox
+                            checked={formData.especialidades.includes(e)}
+                            onCheckedChange={(c) => setFormData({ ...formData, especialidades: c ? [...formData.especialidades, e] : formData.especialidades.filter((x) => x !== e) })}
+                          />
+                          <span className="text-[12px]" style={{ fontWeight: 390 }}>{e}</span>
                         </label>
                       ))}
                     </div>
                   </div>
-                )}
 
-                <div>
-                  <h2 className="text-sm text-foreground mb-3" style={{ fontWeight: 500 }}>Especialidades</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {ESPECIALIDADES.map((e) => (
-                      <label
-                        key={e}
-                        className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all ${
-                          formData.especialidades.includes(e) ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/30"
-                        }`}
-                      >
-                        <Checkbox checked={formData.especialidades.includes(e)} onCheckedChange={(c) => setFormData({ ...formData, especialidades: c ? [...formData.especialidades, e] : formData.especialidades.filter((x) => x !== e) })} />
-                        <span className="text-xs">{e}</span>
-                      </label>
-                    ))}
+                  <label className="flex items-start gap-3 p-4 rounded-xl bg-muted/15 border border-border/[0.06] cursor-pointer">
+                    <Checkbox
+                      checked={formData.autoriza_divulgacao_clientes}
+                      onCheckedChange={(c) => setFormData({ ...formData, autoriza_divulgacao_clientes: !!c })}
+                      className="mt-0.5"
+                    />
+                    <span className="text-[12px] text-muted-foreground leading-relaxed" style={{ fontWeight: 370 }}>
+                      Autorizo a divulgação do meu perfil para condomínios e possíveis clientes na plataforma.
+                    </span>
+                  </label>
+
+                  <div className="flex items-start gap-2 p-3 rounded-xl bg-primary/[0.03] border border-primary/[0.06]">
+                    <Info size={14} className="text-primary/50 mt-0.5 shrink-0" />
+                    <p className="text-[11px] text-muted-foreground leading-relaxed" style={{ fontWeight: 370 }}>
+                      Seu cadastro será enviado para análise. Após aprovação, seu perfil ficará visível na plataforma. Você será notificado por e-mail.
+                    </p>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button variant="outline" onClick={() => setStep(2)} className="h-11 px-5 text-[13px] rounded-full gap-1.5 border-border/15" style={{ fontWeight: 400 }}>
+                      <ArrowLeft size={14} /> Voltar
+                    </Button>
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={loading || formData.especialidades.length === 0}
+                      className="h-11 px-7 text-[13px] rounded-full gap-2"
+                      style={{ fontWeight: 420 }}
+                    >
+                      {loading ? "Enviando..." : "Enviar cadastro"}
+                      {!loading && <ArrowRight size={14} />}
+                    </Button>
                   </div>
                 </div>
-
-                <label className="flex items-start gap-2.5 p-3 rounded-lg bg-muted/30 cursor-pointer">
-                  <Checkbox checked={formData.autoriza_divulgacao_clientes} onCheckedChange={(c) => setFormData({ ...formData, autoriza_divulgacao_clientes: !!c })} className="mt-0.5" />
-                  <span className="text-xs text-muted-foreground">Autorizo a divulgação da minha empresa para possíveis clientes</span>
-                </label>
-
-                <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => setStep(2)} className="h-10 px-5 text-sm rounded-full">Voltar</Button>
-                  <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
-                    <Button onClick={handleSubmit} disabled={loading || formData.regioes.length === 0 || formData.especialidades.length === 0} className="h-10 px-6 text-sm rounded-full">
-                      {loading ? "Enviando..." : "Cadastrar"}
-                    </Button>
-                  </motion.div>
-                </div>
-              </div>
-            )}
-          </motion.div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </section>
 
