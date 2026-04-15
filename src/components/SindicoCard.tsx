@@ -32,22 +32,21 @@ export function SindicoCard({ id, nome, foto, resumo, regioes, especialidades, c
 
   const cidadeDisplay = Array.isArray(cidade) && cidade.length > 0 ? cidade.join(", ") : null;
   const experiencia = anoInicio ? new Date().getFullYear() - anoInicio : null;
-  const truncatedResumo = resumo && resumo.length > 100 ? resumo.slice(0, 100) + "…" : resumo;
 
   return (
     <Link to={buildProfileUrl()} className="group block">
       <motion.div
-        whileHover={{ y: -4 }}
+        whileHover={{ y: -3 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className="relative rounded-2xl overflow-hidden bg-card border border-border/10 hover:border-primary/10 transition-colors duration-500"
+        className="relative h-[320px] rounded-xl overflow-hidden bg-card border border-border/40 hover:border-primary/20 transition-colors duration-400 flex flex-col"
       >
-        {/* Image */}
-        <div className="aspect-[3/4] relative overflow-hidden bg-muted">
+        {/* Image — fixed 160px */}
+        <div className="h-[160px] shrink-0 relative overflow-hidden bg-muted">
           {foto ? (
             <img
               src={foto}
               alt={`${nome} — Síndico profissional`}
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               loading="lazy"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -56,58 +55,54 @@ export function SindicoCard({ id, nome, foto, resumo, regioes, especialidades, c
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <User size={40} className="text-muted-foreground/20" />
+              <User size={32} className="text-muted-foreground/20" />
             </div>
           )}
 
-          {/* Overlay on hover */}
-          <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
           {/* Experience badge */}
           {experiencia !== null && experiencia > 0 && (
-            <div className="absolute top-3 left-3 flex items-center gap-1 bg-background/70 backdrop-blur-md text-foreground text-[10px] px-2.5 py-1 rounded-full" style={{ fontWeight: 420 }}>
-              <Clock size={10} className="text-primary/70" />
-              {experiencia} {experiencia === 1 ? 'ano' : 'anos'}
+            <div className="absolute top-2.5 left-2.5 flex items-center gap-1 bg-background/80 backdrop-blur-md text-foreground text-[10px] px-2 py-0.5 rounded-full" style={{ fontWeight: 440 }}>
+              <Clock size={9} className="text-primary/70" />
+              {experiencia}a
             </div>
           )}
 
           {/* Arrow on hover */}
-          <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-primary flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-400">
-            <ArrowRight size={14} className="text-primary-foreground" />
-          </div>
-
-          {/* Name overlay on hover */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-            {truncatedResumo && (
-              <p className="text-white/80 text-[11px] leading-relaxed line-clamp-2" style={{ fontWeight: 350 }}>
-                {truncatedResumo}
-              </p>
-            )}
+          <div className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-full bg-primary flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+            <ArrowRight size={12} className="text-primary-foreground" />
           </div>
         </div>
 
-        {/* Info */}
-        <div className="p-4 space-y-2">
-          <h3 className="text-foreground text-sm tracking-tight line-clamp-1" style={{ fontWeight: 420 }}>
-            {nome}
-          </h3>
+        {/* Info — fills remaining space */}
+        <div className="flex-1 p-3.5 flex flex-col justify-between min-h-0">
+          <div className="space-y-1.5">
+            <h3 className="text-foreground text-[13px] tracking-tight line-clamp-1" style={{ fontWeight: 480 }}>
+              {nome}
+            </h3>
 
-          {cidadeDisplay && (
-            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <MapPin size={10} className="shrink-0 text-primary/50" />
-              <span className="line-clamp-1" style={{ fontWeight: 350 }}>{cidadeDisplay}</span>
-            </div>
-          )}
+            {cidadeDisplay && (
+              <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                <MapPin size={9} className="shrink-0 text-primary/50" />
+                <span className="line-clamp-1" style={{ fontWeight: 400 }}>{cidadeDisplay}</span>
+              </div>
+            )}
+
+            {resumo && (
+              <p className="text-[11px] text-muted-foreground/70 leading-relaxed line-clamp-2" style={{ fontWeight: 390 }}>
+                {resumo}
+              </p>
+            )}
+          </div>
 
           {especialidades.length > 0 && (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1 mt-auto pt-2">
               {especialidades.slice(0, 2).map((esp) => (
                 <span
                   key={esp}
-                  className="text-[10px] px-2 py-0.5 rounded-full bg-primary/[0.06] text-primary/70"
-                  style={{ fontWeight: 380 }}
+                  className="text-[9px] px-2 py-0.5 rounded-full bg-primary/[0.07] text-primary/80"
+                  style={{ fontWeight: 420 }}
                 >
-                  {esp.length > 20 ? esp.slice(0, 20) + "…" : esp}
+                  {esp.length > 18 ? esp.slice(0, 18) + "…" : esp}
                 </span>
               ))}
             </div>

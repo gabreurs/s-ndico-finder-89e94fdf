@@ -40,14 +40,14 @@ export function HeroFilters({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.4 }}
-      className="flex flex-col md:flex-row items-stretch md:items-center gap-3 max-w-3xl"
+      transition={{ duration: 0.5, delay: 0.5 }}
+      className="glass rounded-xl p-3 max-w-3xl"
     >
-      <div className="flex flex-col sm:flex-row flex-1 gap-2">
+      <div className="flex flex-col sm:flex-row items-stretch gap-2">
         <Select value={especialidade} onValueChange={onEspecialidadeChange}>
-          <SelectTrigger className="h-11 rounded-xl bg-white/[0.06] border-white/[0.08] text-white/80 text-[13px] backdrop-blur-md hover:bg-white/[0.1] transition-colors">
+          <SelectTrigger className="h-10 rounded-lg bg-white/[0.05] border-white/[0.06] text-white/70 text-[13px] hover:bg-white/[0.08] transition-colors" style={{ fontWeight: 420 }}>
             <SelectValue placeholder="Especialidade" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
@@ -59,7 +59,7 @@ export function HeroFilters({
         </Select>
 
         <Select value={cidade} onValueChange={handleCidadeChange}>
-          <SelectTrigger className="h-11 rounded-xl bg-white/[0.06] border-white/[0.08] text-white/80 text-[13px] backdrop-blur-md hover:bg-white/[0.1] transition-colors">
+          <SelectTrigger className="h-10 rounded-lg bg-white/[0.05] border-white/[0.06] text-white/70 text-[13px] hover:bg-white/[0.08] transition-colors" style={{ fontWeight: 420 }}>
             <SelectValue placeholder="Cidade" />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
@@ -71,7 +71,7 @@ export function HeroFilters({
         </Select>
 
         <Select value={regiao} onValueChange={onRegiaoChange} disabled={cidade === "all"}>
-          <SelectTrigger className="h-11 rounded-xl bg-white/[0.06] border-white/[0.08] text-white/80 text-[13px] backdrop-blur-md hover:bg-white/[0.1] transition-colors disabled:opacity-30">
+          <SelectTrigger className="h-10 rounded-lg bg-white/[0.05] border-white/[0.06] text-white/70 text-[13px] hover:bg-white/[0.08] transition-colors disabled:opacity-25" style={{ fontWeight: 420 }}>
             <SelectValue placeholder={cidade === "all" ? "Selecione a cidade" : "Região"} />
           </SelectTrigger>
           <SelectContent className="rounded-xl">
@@ -81,16 +81,16 @@ export function HeroFilters({
             ))}
           </SelectContent>
         </Select>
-      </div>
 
-      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-        <Button asChild className="h-11 px-6 rounded-xl text-[13px] gap-2 whitespace-nowrap" style={{ fontWeight: 420 }}>
-          <Link to={buildSearchUrl()}>
-            Buscar síndicos
-            <ArrowRight size={14} />
-          </Link>
-        </Button>
-      </motion.div>
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="shrink-0">
+          <Button asChild className="h-10 px-5 rounded-lg text-[13px] gap-1.5 w-full sm:w-auto" style={{ fontWeight: 450 }}>
+            <Link to={buildSearchUrl()}>
+              Buscar
+              <ArrowRight size={13} />
+            </Link>
+          </Button>
+        </motion.div>
+      </div>
     </motion.div>
   );
 }
