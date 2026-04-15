@@ -20,7 +20,7 @@ export type Database = {
           ano_inicio_profissao: number | null
           autoriza_divulgacao_clientes: boolean | null
           breve_resumo: string | null
-          cidade: string | null
+          cidade: string[]
           contato_whatsapp: string
           created_at: string
           data_nascimento: string | null
@@ -42,7 +42,7 @@ export type Database = {
           ano_inicio_profissao?: number | null
           autoriza_divulgacao_clientes?: boolean | null
           breve_resumo?: string | null
-          cidade?: string | null
+          cidade?: string[]
           contato_whatsapp: string
           created_at?: string
           data_nascimento?: string | null
@@ -64,7 +64,7 @@ export type Database = {
           ano_inicio_profissao?: number | null
           autoriza_divulgacao_clientes?: boolean | null
           breve_resumo?: string | null
-          cidade?: string | null
+          cidade?: string[]
           contato_whatsapp?: string
           created_at?: string
           data_nascimento?: string | null
@@ -83,14 +83,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "moderator" | "user"
       approval_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
@@ -219,6 +244,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "moderator", "user"],
       approval_status: ["pending", "approved", "rejected"],
     },
   },

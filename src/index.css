@@ -2,56 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@font-face {
+  font-family: 'Mona Sans';
+  src: url('./assets/fonts/MonaSans.woff2') format('woff2 supports variations'),
+       url('./assets/fonts/MonaSans.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-display: swap;
+  font-style: normal;
+}
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 15%;
+    --background: 0 0% 99%;
+    --foreground: 240 10% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 15%;
+    --card-foreground: 240 10% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 15%;
+    --popover-foreground: 240 10% 10%;
 
-    /* Magenta/Rosa vibrante para CTA principal */
     --primary: 288 80% 55%;
     --primary-foreground: 0 0% 100%;
 
-    /* Roxo escuro para elementos secundários */
-    --secondary: 260 60% 25%;
+    --secondary: 260 60% 20%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 240 5% 96%;
     --muted-foreground: 240 4% 46%;
 
-    /* Accent magenta mais claro */
     --accent: 288 70% 65%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
+    --border: 240 6% 92%;
+    --input: 240 6% 92%;
     --ring: 288 80% 55%;
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
-    /* Cores customizadas */
-    --purple-dark: 248 25% 12%;
-    --purple-darker: 248 30% 8%;
+    --purple-dark: 248 25% 10%;
+    --purple-darker: 248 30% 6%;
     --magenta: 288 80% 55%;
     --magenta-light: 288 70% 65%;
     --cyan: 180 70% 50%;
     --green-whatsapp: 142 70% 45%;
 
-    /* Gradientes */
-    --gradient-hero: linear-gradient(135deg, hsl(260 60% 25%) 0%, hsl(280 50% 35%) 50%, hsl(288 70% 45%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(260 60% 20%) 0%, hsl(280 50% 30%) 50%, hsl(288 70% 42%) 100%);
     --gradient-cta: linear-gradient(135deg, hsl(288 80% 55%) 0%, hsl(300 70% 60%) 100%);
     
-    /* Sidebar */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5% 26%;
     --sidebar-primary: 240 6% 10%;
@@ -63,22 +64,22 @@
   }
 
   .dark {
-    --background: 248 25% 12%;
+    --background: 248 25% 8%;
     --foreground: 0 0% 98%;
 
-    --card: 248 30% 15%;
+    --card: 248 30% 12%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 248 30% 15%;
+    --popover: 248 30% 12%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 288 80% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 260 40% 30%;
+    --secondary: 260 40% 25%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 248 20% 20%;
+    --muted: 248 20% 16%;
     --muted-foreground: 240 5% 65%;
 
     --accent: 288 70% 65%;
@@ -87,17 +88,17 @@
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 248 20% 25%;
-    --input: 248 20% 25%;
+    --border: 248 20% 20%;
+    --input: 248 20% 20%;
     --ring: 288 80% 55%;
 
-    --sidebar-background: 248 30% 10%;
+    --sidebar-background: 248 30% 8%;
     --sidebar-foreground: 240 5% 95%;
     --sidebar-primary: 288 80% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 248 25% 18%;
+    --sidebar-accent: 248 25% 14%;
     --sidebar-accent-foreground: 240 5% 95%;
-    --sidebar-border: 248 25% 18%;
+    --sidebar-border: 248 25% 14%;
     --sidebar-ring: 288 80% 55%;
   }
 }
@@ -112,8 +113,9 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Mona Sans', system-ui, -apple-system, sans-serif;
+    font-weight: 400;
   }
 }
 
@@ -127,40 +129,10 @@
   }
 
   .glass-card {
-    @apply bg-card/80 backdrop-blur-lg border border-border/50 shadow-lg;
+    @apply bg-card/80 backdrop-blur-lg border border-border/30;
   }
 
   .text-gradient {
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
-  }
-}
-
-@layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
-  }
-
-  .animate-slide-up {
-    animation: slideUp 0.5s ease-out forwards;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 }

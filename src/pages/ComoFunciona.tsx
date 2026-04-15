@@ -2,61 +2,58 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+};
 
 export default function ComoFunciona() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      {/* Hero Section */}
-      <section className="gradient-hero py-16 md:py-24">
+      <section className="gradient-hero py-14 md:py-20">
         <div className="container">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="text-secondary-foreground">
-              <h1 className="text-2xl md:text-4xl font-bold mb-4">
-                Nossa plataforma simplifica o processo de encontrar o síndico ideal para o seu condomínio.
-              </h1>
-              <a href="#video" className="inline-flex items-center gap-2 text-secondary-foreground hover:underline">
-                Assista o vídeo ao lado →
-              </a>
-            </div>
-            <div className="relative aspect-video rounded-xl overflow-hidden bg-purple-dark/50">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
-                  <div className="w-0 h-0 border-l-[20px] border-l-secondary-foreground border-y-[12px] border-y-transparent ml-1" />
-                </div>
-              </div>
-              <p className="absolute bottom-4 left-4 text-secondary-foreground text-sm">
-                Conquiste novos<br />
-                <span className="text-primary font-semibold">condomínios!</span>
-              </p>
-            </div>
-          </div>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            className="max-w-2xl"
+          >
+            <h1 className="text-2xl md:text-3xl text-secondary-foreground mb-3 tracking-tight" style={{ fontWeight: 500 }}>
+              Nossa plataforma simplifica o processo de encontrar o síndico ideal.
+            </h1>
+            <p className="text-secondary-foreground/70 text-sm">
+              Conheça como funciona o Quero 1 Síndico e comece a usar.
+            </p>
+          </motion.div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-12 md:py-16">
-        <div className="container max-w-4xl">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary mb-6">
+      <section className="py-10 md:py-14">
+        <div className="container max-w-3xl">
+          <h2 className="text-xl text-primary mb-4 tracking-tight" style={{ fontWeight: 500 }}>
             Perguntas frequentes
           </h2>
-          <p className="text-muted-foreground mb-8">
-            A seleção do síndico adequado para liderar e administrar o condomínio é de extrema importância. Estamos comprometidos em auxiliá-lo nesse processo. Nossa plataforma foi pensada e desenvolvida para atender às necessidades dos síndicos e dos empregadores de síndicos que buscam otimizar seu tempo e alcançar sucesso nessa etapa crucial. Esclareça suas principais dúvidas e comece a utilizar nossa plataforma!
+          <p className="text-sm text-muted-foreground leading-relaxed mb-6">
+            A seleção do síndico adequado para liderar e administrar o condomínio é de extrema importância. Nossa plataforma foi desenvolvida para atender às necessidades dos síndicos e dos empregadores que buscam otimizar seu tempo.
           </p>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-12 md:py-16 bg-muted/50">
-        <div className="container max-w-4xl">
-          <p className="text-muted-foreground mb-6">
-            Gerenciar um condomínio é uma responsabilidade complexa que demanda habilidades administrativas e conhecimento especializado para enfrentar os desafios do dia a dia. Estamos aqui para oferecer suporte em todas as frentes. Se surgirem dúvidas, não hesite em entrar em contato conosco através do nosso canal no WhatsApp. Estamos prontos para ajudar.
+      <section className="py-10 md:py-14 bg-muted/20">
+        <div className="container max-w-3xl">
+          <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+            Gerenciar um condomínio é uma responsabilidade complexa. Estamos aqui para oferecer suporte. Se surgirem dúvidas, entre em contato pelo WhatsApp.
           </p>
-          <Button className="gap-2 bg-green-whatsapp hover:bg-green-whatsapp/90">
-            <MessageCircle size={18} />
-            Entre em contato
-          </Button>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button size="sm" className="gap-1.5 bg-green-whatsapp hover:bg-green-whatsapp/90 rounded-full">
+              <MessageCircle size={14} />
+              Entre em contato
+            </Button>
+          </motion.div>
         </div>
       </section>
 

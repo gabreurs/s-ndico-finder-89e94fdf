@@ -6,16 +6,8 @@ import { SindicoCard } from "@/components/SindicoCard";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useSindicos } from "@/hooks/useSindicos";
-import { 
-  MapPin, 
-  Award, 
-  Clock, 
-  User,
-  ChevronLeft,
-  ChevronRight,
-  ExternalLink,
-  MessageCircle
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { MapPin, Award, Clock, User, ExternalLink, MessageCircle } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Sindico = Tables<"sindicos">;
@@ -26,7 +18,6 @@ export default function SindicoPerfil() {
   const [sindico, setSindico] = useState<Sindico | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Get filters from URL params to show related síndicos
   const especialidadeFilter = searchParams.get("especialidade") || "all";
   const cidadeFilter = searchParams.get("cidade") || "all";
   const regiaoFilter = searchParams.get("regiao") || "all";
@@ -37,13 +28,11 @@ export default function SindicoPerfil() {
     regiao: regiaoFilter,
   });
 
-  // Filter out current síndico from related
   const otherSindicos = relatedSindicos?.filter((s) => s.id !== id) || [];
 
   useEffect(() => {
     async function fetchSindico() {
       if (!id) return;
-      
       const { data, error } = await supabase
         .from("sindicos")
         .select("*")
@@ -51,28 +40,21 @@ export default function SindicoPerfil() {
         .eq("status", "approved")
         .single();
 
-      if (!error && data) {
-        setSindico(data);
-      }
+      if (!error && data) setSindico(data);
       setLoading(false);
     }
-
     fetchSindico();
   }, [id]);
 
-  const getExperienceYears = () => {
-    if (!sindico?.ano_inicio_profissao) return null;
-    const years = new Date().getFullYear() - sindico.ano_inicio_profissao;
-    return years;
-  };
-
-  const experienceYears = getExperienceYears();
+  const experienceYears = sindico?.ano_inicio_profissao
+    ? new Date().getFullYear() - sindico.ano_inicio_profissao
+    : null;
 
   const handleWhatsAppClick = () => {
     if (!sindico?.contato_whatsapp) return;
     const phone = sindico.contato_whatsapp.replace(/\D/g, "");
     const message = encodeURIComponent(
-      `Olá ${sindico.nome_completo}! Encontrei seu perfil na plataforma Quero 1 Síndico e gostaria de saber mais sobre seus serviços.`
+      `Olá ${sindico.nome_completo}! Encontrei seu perfil no Quero 1 Síndico e gostaria de saber mais sobre seus serviços.`
     );
     window.open(`https://wa.me/55${phone}?text=${message}`, "_blank");
   };
@@ -82,7 +64,7 @@ export default function SindicoPerfil() {
       <div className="min-h-screen flex flex-col">
         <Header />
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
         <Footer />
       </div>
@@ -93,10 +75,10 @@ export default function SindicoPerfil() {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
-        <div className="flex-1 flex flex-col items-center justify-center gap-4">
-          <h1 className="text-2xl font-bold">Síndico não encontrado</h1>
-          <Button asChild>
-            <Link to="/sindicos">Ver todos os síndicos</Link>
+        <div className="flex-1 flex flex-col items-center justify-center gap-3">
+          <h1 className="text-xl" style={{ fontWeight: 500 }}>Síndico não encontrado</h1>
+          <Button asChild size="sm" className="rounded-full">
+            <Link to="/sindicos">Ver todos</Link>
           </Button>
         </div>
         <Footer />
@@ -104,75 +86,58 @@ export default function SindicoPerfil() {
     );
   }
 
+  const cidadeDisplay = Array.isArray(sindico.cidade) ? sindico.cidade.join(", ") : sindico.cidade;
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      {/* Hero/Header Section */}
       <section className="relative">
-        <div className="h-48 md:h-64 bg-gradient-to-r from-secondary via-primary/80 to-primary" />
+        <div className="h-40 md:h-52 gradient-hero" />
         
         <div className="container">
-          <div className="relative -mt-20 md:-mt-24 pb-8">
-            <div className="bg-card rounded-2xl shadow-xl border border-border overflow-hidden">
-              <div className="p-6 md:p-8">
-                <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
-                  {/* Profile Photo */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative -mt-16 md:-mt-20 pb-8"
+          >
+            <div className="bg-card rounded-xl border border-border/30 overflow-hidden">
+              <div className="p-5 md:p-7">
+                <div className="flex flex-col md:flex-row gap-5 md:gap-7 items-start">
                   <div className="shrink-0">
-                    <div className="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden bg-muted border-4 border-card shadow-lg">
+                    <div className="w-28 h-28 md:w-36 md:h-36 rounded-xl overflow-hidden bg-muted border-4 border-card">
                       {sindico.foto_url ? (
-                        <img
-                          src={sindico.foto_url}
-                          alt={sindico.nome_completo}
-                          className="w-full h-full object-cover"
-                        />
+                        <img src={sindico.foto_url} alt={sindico.nome_completo} className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-muted to-muted/50">
-                          <User size={64} className="text-muted-foreground/50" />
+                        <div className="w-full h-full flex items-center justify-center">
+                          <User size={48} className="text-muted-foreground/30" />
                         </div>
                       )}
                     </div>
                   </div>
 
-                  {/* Profile Info */}
-                  <div className="flex-1 space-y-4">
+                  <div className="flex-1 space-y-3">
                     <div>
-                      <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+                      <h1 className="text-xl md:text-2xl text-foreground tracking-tight" style={{ fontWeight: 500 }}>
                         {sindico.nome_completo}
                       </h1>
-                      <p className="text-muted-foreground">Síndico Profissional</p>
+                      <p className="text-sm text-muted-foreground">Síndico profissional</p>
                       {sindico.nome_empresa && (
-                        <p className="text-sm text-primary font-medium mt-1">
-                          {sindico.nome_empresa}
-                        </p>
+                        <p className="text-xs text-primary mt-0.5" style={{ fontWeight: 500 }}>{sindico.nome_empresa}</p>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap gap-3">
-                      <Button
-                        onClick={handleWhatsAppClick}
-                        className="bg-green-whatsapp hover:bg-green-whatsapp/90 text-white gap-2"
-                      >
-                        <MessageCircle size={18} />
-                        Entrar em contato
-                      </Button>
-
+                    <div className="flex flex-wrap gap-2">
+                      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <Button onClick={handleWhatsAppClick} size="sm" className="bg-green-whatsapp hover:bg-green-whatsapp/90 text-primary-foreground gap-1.5 rounded-full">
+                          <MessageCircle size={14} />
+                          Entrar em contato
+                        </Button>
+                      </motion.div>
                       {sindico.site_redes_sociais && (
-                        <Button
-                          variant="outline"
-                          asChild
-                          className="gap-2"
-                        >
-                          <a
-                            href={
-                              sindico.site_redes_sociais.startsWith("http")
-                                ? sindico.site_redes_sociais
-                                : `https://${sindico.site_redes_sociais}`
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <ExternalLink size={16} />
+                        <Button variant="outline" size="sm" asChild className="gap-1.5 rounded-full">
+                          <a href={sindico.site_redes_sociais.startsWith("http") ? sindico.site_redes_sociais : `https://${sindico.site_redes_sociais}`} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink size={12} />
                             Site / Redes
                           </a>
                         </Button>
@@ -182,82 +147,67 @@ export default function SindicoPerfil() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Main Content */}
-      <section className="py-8">
+      <section className="py-6">
         <div className="container">
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Left Column - Details */}
-            <div className="space-y-6">
-              {/* Especialidades */}
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="space-y-4">
               {sindico.especialidades.length > 0 && (
-                <div className="bg-card rounded-xl border border-border p-6">
-                  <div className="flex items-center gap-2 text-primary mb-4">
-                    <Award size={20} />
-                    <h3 className="font-semibold">Especialidade:</h3>
+                <div className="bg-card rounded-xl border border-border/30 p-5">
+                  <div className="flex items-center gap-1.5 text-primary mb-3">
+                    <Award size={16} />
+                    <h3 className="text-sm" style={{ fontWeight: 500 }}>Especialidades</h3>
                   </div>
-                  <ul className="space-y-2">
+                  <ul className="space-y-1">
                     {sindico.especialidades.map((esp) => (
-                      <li key={esp} className="text-foreground">
-                        {esp}
-                      </li>
+                      <li key={esp} className="text-sm text-foreground">{esp}</li>
                     ))}
                   </ul>
                 </div>
               )}
 
-              {/* Região de Atuação */}
               {sindico.regioes.length > 0 && (
-                <div className="bg-card rounded-xl border border-border p-6">
-                  <div className="flex items-center gap-2 text-primary mb-4">
-                    <MapPin size={20} />
-                    <h3 className="font-semibold">Região de atuação:</h3>
+                <div className="bg-card rounded-xl border border-border/30 p-5">
+                  <div className="flex items-center gap-1.5 text-primary mb-3">
+                    <MapPin size={16} />
+                    <h3 className="text-sm" style={{ fontWeight: 500 }}>Atuação</h3>
                   </div>
-                  <p className="text-foreground">
-                    {sindico.cidade && `${sindico.cidade} - `}
+                  <p className="text-sm text-foreground">
+                    {cidadeDisplay && `${cidadeDisplay} — `}
                     {sindico.regioes.join(", ")}
                   </p>
                 </div>
               )}
 
-              {/* Tempo de Atuação */}
               {experienceYears !== null && (
-                <div className="bg-card rounded-xl border border-border p-6">
-                  <div className="flex items-center gap-2 text-primary mb-4">
-                    <Clock size={20} />
-                    <h3 className="font-semibold">Tempo de atuação:</h3>
+                <div className="bg-card rounded-xl border border-border/30 p-5">
+                  <div className="flex items-center gap-1.5 text-primary mb-3">
+                    <Clock size={16} />
+                    <h3 className="text-sm" style={{ fontWeight: 500 }}>Experiência</h3>
                   </div>
-                  <p className="text-foreground">
-                    {experienceYears} {experienceYears === 1 ? "ano" : "anos"}
+                  <p className="text-sm text-foreground">
+                    {experienceYears} {experienceYears === 1 ? "ano" : "anos"} de atuação
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Right Column - About */}
-            <div className="md:col-span-2 space-y-6">
-              {/* Breve Resumo */}
+            <div className="md:col-span-2 space-y-4">
               {sindico.breve_resumo && (
-                <div className="bg-card rounded-xl border border-border p-6">
-                  <div className="flex items-center gap-2 text-primary mb-4">
-                    <Award size={20} />
-                    <h3 className="font-semibold">Breve resumo:</h3>
-                  </div>
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                <div className="bg-card rounded-xl border border-border/30 p-5">
+                  <h3 className="text-sm text-primary mb-3" style={{ fontWeight: 500 }}>Sobre</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
                     {sindico.breve_resumo}
                   </p>
                 </div>
               )}
 
-              {/* YouTube Video */}
               {sindico.link_youtube && (
-                <div className="bg-card rounded-xl border border-border p-6">
-                  <h3 className="font-semibold text-primary mb-4">
-                    Vídeo de apresentação
-                  </h3>
+                <div className="bg-card rounded-xl border border-border/30 p-5">
+                  <h3 className="text-sm text-primary mb-3" style={{ fontWeight: 500 }}>Vídeo de apresentação</h3>
                   <div className="aspect-video rounded-lg overflow-hidden bg-muted">
                     <iframe
                       src={getYouTubeEmbedUrl(sindico.link_youtube)}
@@ -265,6 +215,7 @@ export default function SindicoPerfil() {
                       className="w-full h-full"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
+                      loading="lazy"
                     />
                   </div>
                 </div>
@@ -274,30 +225,17 @@ export default function SindicoPerfil() {
         </div>
       </section>
 
-      {/* Related Síndicos Carousel */}
       {otherSindicos.length > 0 && (
-        <section className="py-12 bg-muted/50">
+        <section className="py-10 bg-muted/20">
           <div className="container">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl md:text-2xl font-bold text-foreground">
-                  Outros síndicos que podem te interessar
-                </h2>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Baseado nos seus filtros de busca
-                </p>
-              </div>
-              <div className="hidden md:flex items-center gap-2">
-                <button className="w-10 h-10 rounded-full border border-primary flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
-                  <ChevronLeft size={20} />
-                </button>
-                <button className="w-10 h-10 rounded-full border border-primary flex items-center justify-center text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
-                  <ChevronRight size={20} />
-                </button>
-              </div>
+            <div className="mb-6">
+              <h2 className="text-lg text-foreground tracking-tight" style={{ fontWeight: 500 }}>
+                Outros profissionais
+              </h2>
+              <p className="text-xs text-muted-foreground mt-0.5">Baseado nos seus filtros de busca</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {otherSindicos.slice(0, 4).map((s) => (
                 <SindicoCard
                   key={s.id}
@@ -306,24 +244,10 @@ export default function SindicoPerfil() {
                   foto={s.foto_url || undefined}
                   regioes={s.regioes}
                   especialidades={s.especialidades}
-                  cidade={s.cidade || undefined}
-                  preserveFilters={{
-                    especialidade: especialidadeFilter,
-                    cidade: cidadeFilter,
-                    regiao: regiaoFilter,
-                  }}
+                  cidade={s.cidade}
+                  preserveFilters={{ especialidade: especialidadeFilter, cidade: cidadeFilter, regiao: regiaoFilter }}
                 />
               ))}
-            </div>
-
-            <div className="text-center mt-8">
-              <Button asChild variant="outline">
-                <Link
-                  to={`/sindicos?especialidade=${especialidadeFilter}&cidade=${cidadeFilter}&regiao=${regiaoFilter}`}
-                >
-                  Ver todos os síndicos
-                </Link>
-              </Button>
             </div>
           </div>
         </section>
@@ -335,13 +259,8 @@ export default function SindicoPerfil() {
 }
 
 function getYouTubeEmbedUrl(url: string): string {
-  // Handle various YouTube URL formats
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
   const match = url.match(regExp);
   const videoId = match && match[2].length === 11 ? match[2] : null;
-  
-  if (videoId) {
-    return `https://www.youtube.com/embed/${videoId}`;
-  }
-  return url;
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
 }

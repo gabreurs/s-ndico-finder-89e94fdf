@@ -7,7 +7,7 @@ export interface Sindico {
   foto_url: string | null;
   regioes: string[];
   especialidades: string[];
-  cidade: string | null;
+  cidade: string[];
   contato_whatsapp: string;
   nome_empresa: string | null;
   breve_resumo: string | null;
@@ -31,17 +31,14 @@ export function useSindicos(params?: UseSindicosParams) {
         .select("*")
         .order("created_at", { ascending: false });
 
-      // Filter by especialidade
       if (params?.especialidade && params.especialidade !== "all") {
         query = query.contains("especialidades", [params.especialidade]);
       }
 
-      // Filter by cidade
       if (params?.cidade && params.cidade !== "all") {
-        query = query.eq("cidade", params.cidade);
+        query = query.contains("cidade", [params.cidade]);
       }
 
-      // Filter by regiao
       if (params?.regiao && params.regiao !== "all") {
         query = query.contains("regioes", [params.regiao]);
       }
@@ -49,7 +46,7 @@ export function useSindicos(params?: UseSindicosParams) {
       const { data, error } = await query;
 
       if (error) throw error;
-      return data as Sindico[];
+      return data as unknown as Sindico[];
     },
   });
 }
