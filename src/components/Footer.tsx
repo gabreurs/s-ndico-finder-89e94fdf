@@ -63,7 +63,11 @@ export function Footer() {
 
             <div>
               <h4 className="text-[11px] mb-4 text-white/20 tracking-widest uppercase" style={{ fontWeight: 460 }}>Contato</h4>
-              <a href="mailto:ola@queroumsindico.com" className="text-[13px] text-primary/60 hover:text-primary transition-colors duration-300" style={{ fontWeight: 420 }}>
+              <a href="https://wa.me/5511960841033" target="_blank" rel="noopener noreferrer" className="text-[13px] text-[hsl(var(--green-whatsapp))]/80 hover:text-[hsl(var(--green-whatsapp))] transition-colors duration-300 flex items-center gap-1.5" style={{ fontWeight: 420 }}>
+                <MessageCircle size={14} />
+                +55 11 96084-1033
+              </a>
+              <a href="mailto:ola@queroumsindico.com" className="text-[13px] text-primary/60 hover:text-primary transition-colors duration-300 mt-2 block" style={{ fontWeight: 420 }}>
                 ola@queroumsindico.com
               </a>
             </div>
@@ -78,7 +82,7 @@ export function Footer() {
       </div>
 
       <a
-        href="https://wa.me/5511999999999"
+        href="https://wa.me/5511960841033"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[hsl(var(--green-whatsapp))] flex items-center justify-center hover:scale-110 transition-transform duration-300 z-50 shadow-xl shadow-[hsl(var(--green-whatsapp))]/20"
