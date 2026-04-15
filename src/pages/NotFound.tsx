@@ -1,36 +1,22 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
 
-const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404: Route not found:", location.pathname);
-  }, [location.pathname]);
-
+export default function NotFound() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
+    <div className="min-h-screen flex items-center justify-center gradient-mesh">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center"
+        className="text-center px-6"
       >
-        <p className="text-6xl text-primary mb-4" style={{ fontWeight: 300 }}>404</p>
-        <h1 className="text-xl text-foreground mb-2 tracking-tight" style={{ fontWeight: 450 }}>Página não encontrada</h1>
-        <p className="text-sm text-muted-foreground mb-6">A página que você procura não existe ou foi movida.</p>
-        <Button asChild variant="outline" size="sm" className="rounded-full px-6 gap-1.5 border-border/30">
-          <Link to="/">
-            <ArrowLeft size={14} />
-            Voltar ao início
-          </Link>
+        <p className="text-[80px] text-white/[0.04] leading-none mb-[-20px]" style={{ fontWeight: 200 }}>404</p>
+        <h1 className="text-xl text-white/80 mb-2" style={{ fontWeight: 380 }}>Página não encontrada</h1>
+        <p className="text-[13px] text-white/30 mb-6" style={{ fontWeight: 350 }}>O endereço que você buscou não existe ou foi movido.</p>
+        <Button asChild className="rounded-full px-6 h-10 text-[13px]" style={{ fontWeight: 420 }}>
+          <Link to="/">Voltar ao início</Link>
         </Button>
       </motion.div>
     </div>
   );
-};
-
-export default NotFound;
+}
