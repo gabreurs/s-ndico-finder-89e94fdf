@@ -8,7 +8,7 @@ import Sindicos from "./pages/Sindicos";
 import SindicoPerfil from "./pages/SindicoPerfil";
 import Cadastro from "./pages/Cadastro";
 import ComoFunciona from "./pages/ComoFunciona";
-import Patrocinadores from "./pages/Patrocinadores";
+import QuemSomos from "./pages/QuemSomos";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
@@ -26,7 +26,7 @@ const App = () => (
           <Route path="/sindico/:id" element={<SindicoPerfil />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/como-funciona" element={<ComoFunciona />} />
-          <Route path="/patrocinadores" element={<Patrocinadores />} />
+          <Route path="/quem-somos" element={<QuemSomos />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

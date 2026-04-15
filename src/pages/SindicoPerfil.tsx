@@ -64,7 +64,7 @@ export default function SindicoPerfil() {
       <div className="min-h-screen flex flex-col">
         <Header />
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-primary/40 border-t-transparent rounded-full animate-spin" />
         </div>
         <Footer />
       </div>
@@ -76,8 +76,8 @@ export default function SindicoPerfil() {
       <div className="min-h-screen flex flex-col">
         <Header />
         <div className="flex-1 flex flex-col items-center justify-center gap-3">
-          <h1 className="text-xl" style={{ fontWeight: 500 }}>Síndico não encontrado</h1>
-          <Button asChild size="sm" className="rounded-full">
+          <h1 className="text-lg text-foreground" style={{ fontWeight: 400 }}>Síndico não encontrado</h1>
+          <Button asChild size="sm" className="rounded-full" style={{ fontWeight: 420 }}>
             <Link to="/sindicos">Ver todos</Link>
           </Button>
         </div>
@@ -93,24 +93,24 @@ export default function SindicoPerfil() {
       <Header />
 
       <section className="relative">
-        <div className="h-40 md:h-52 gradient-hero" />
-        
+        <div className="h-36 md:h-48 gradient-mesh" />
+
         <div className="container">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative -mt-16 md:-mt-20 pb-8"
+            className="relative -mt-14 md:-mt-18 pb-8"
           >
-            <div className="bg-card rounded-xl border border-border/30 overflow-hidden">
-              <div className="p-5 md:p-7">
-                <div className="flex flex-col md:flex-row gap-5 md:gap-7 items-start">
+            <div className="rounded-2xl border border-border/10 bg-card overflow-hidden">
+              <div className="p-6 md:p-8">
+                <div className="flex flex-col md:flex-row gap-6 items-start">
                   <div className="shrink-0">
-                    <div className="w-28 h-28 md:w-36 md:h-36 rounded-xl overflow-hidden bg-muted border-4 border-card">
+                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden bg-muted">
                       {sindico.foto_url ? (
                         <img src={sindico.foto_url} alt={sindico.nome_completo} className="w-full h-full object-cover" />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <User size={48} className="text-muted-foreground/30" />
+                          <User size={40} className="text-muted-foreground/20" />
                         </div>
                       )}
                     </div>
@@ -118,26 +118,26 @@ export default function SindicoPerfil() {
 
                   <div className="flex-1 space-y-3">
                     <div>
-                      <h1 className="text-xl md:text-2xl text-foreground tracking-tight" style={{ fontWeight: 500 }}>
+                      <h1 className="text-xl md:text-2xl text-foreground tracking-[-0.02em]" style={{ fontWeight: 400 }}>
                         {sindico.nome_completo}
                       </h1>
-                      <p className="text-sm text-muted-foreground">Síndico profissional</p>
+                      <p className="text-[13px] text-muted-foreground" style={{ fontWeight: 370 }}>Síndico profissional</p>
                       {sindico.nome_empresa && (
-                        <p className="text-xs text-primary mt-0.5" style={{ fontWeight: 500 }}>{sindico.nome_empresa}</p>
+                        <p className="text-[12px] text-primary/70 mt-0.5" style={{ fontWeight: 420 }}>{sindico.nome_empresa}</p>
                       )}
                     </div>
 
                     <div className="flex flex-wrap gap-2">
                       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        <Button onClick={handleWhatsAppClick} size="sm" className="bg-green-whatsapp hover:bg-green-whatsapp/90 text-primary-foreground gap-1.5 rounded-full">
-                          <MessageCircle size={14} />
+                        <Button onClick={handleWhatsAppClick} size="sm" className="bg-green-whatsapp hover:bg-green-whatsapp/90 gap-1.5 rounded-full text-[12px]" style={{ fontWeight: 420 }}>
+                          <MessageCircle size={13} />
                           Entrar em contato
                         </Button>
                       </motion.div>
                       {sindico.site_redes_sociais && (
-                        <Button variant="outline" size="sm" asChild className="gap-1.5 rounded-full">
+                        <Button variant="outline" size="sm" asChild className="gap-1.5 rounded-full text-[12px] border-border/15" style={{ fontWeight: 400 }}>
                           <a href={sindico.site_redes_sociais.startsWith("http") ? sindico.site_redes_sociais : `https://${sindico.site_redes_sociais}`} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink size={12} />
+                            <ExternalLink size={11} />
                             Site / Redes
                           </a>
                         </Button>
@@ -156,26 +156,26 @@ export default function SindicoPerfil() {
           <div className="grid md:grid-cols-3 gap-4">
             <div className="space-y-4">
               {sindico.especialidades.length > 0 && (
-                <div className="bg-card rounded-xl border border-border/30 p-5">
-                  <div className="flex items-center gap-1.5 text-primary mb-3">
-                    <Award size={16} />
-                    <h3 className="text-sm" style={{ fontWeight: 500 }}>Especialidades</h3>
+                <div className="rounded-2xl border border-border/10 bg-card p-5">
+                  <div className="flex items-center gap-1.5 text-primary/60 mb-3">
+                    <Award size={14} />
+                    <h3 className="text-[13px] text-foreground" style={{ fontWeight: 420 }}>Especialidades</h3>
                   </div>
-                  <ul className="space-y-1">
+                  <ul className="space-y-1.5">
                     {sindico.especialidades.map((esp) => (
-                      <li key={esp} className="text-sm text-foreground">{esp}</li>
+                      <li key={esp} className="text-[13px] text-muted-foreground" style={{ fontWeight: 380 }}>{esp}</li>
                     ))}
                   </ul>
                 </div>
               )}
 
               {sindico.regioes.length > 0 && (
-                <div className="bg-card rounded-xl border border-border/30 p-5">
-                  <div className="flex items-center gap-1.5 text-primary mb-3">
-                    <MapPin size={16} />
-                    <h3 className="text-sm" style={{ fontWeight: 500 }}>Atuação</h3>
+                <div className="rounded-2xl border border-border/10 bg-card p-5">
+                  <div className="flex items-center gap-1.5 text-primary/60 mb-3">
+                    <MapPin size={14} />
+                    <h3 className="text-[13px] text-foreground" style={{ fontWeight: 420 }}>Atuação</h3>
                   </div>
-                  <p className="text-sm text-foreground">
+                  <p className="text-[13px] text-muted-foreground" style={{ fontWeight: 380 }}>
                     {cidadeDisplay && `${cidadeDisplay} — `}
                     {sindico.regioes.join(", ")}
                   </p>
@@ -183,12 +183,12 @@ export default function SindicoPerfil() {
               )}
 
               {experienceYears !== null && (
-                <div className="bg-card rounded-xl border border-border/30 p-5">
-                  <div className="flex items-center gap-1.5 text-primary mb-3">
-                    <Clock size={16} />
-                    <h3 className="text-sm" style={{ fontWeight: 500 }}>Experiência</h3>
+                <div className="rounded-2xl border border-border/10 bg-card p-5">
+                  <div className="flex items-center gap-1.5 text-primary/60 mb-3">
+                    <Clock size={14} />
+                    <h3 className="text-[13px] text-foreground" style={{ fontWeight: 420 }}>Experiência</h3>
                   </div>
-                  <p className="text-sm text-foreground">
+                  <p className="text-[13px] text-muted-foreground" style={{ fontWeight: 380 }}>
                     {experienceYears} {experienceYears === 1 ? "ano" : "anos"} de atuação
                   </p>
                 </div>
@@ -197,18 +197,18 @@ export default function SindicoPerfil() {
 
             <div className="md:col-span-2 space-y-4">
               {sindico.breve_resumo && (
-                <div className="bg-card rounded-xl border border-border/30 p-5">
-                  <h3 className="text-sm text-primary mb-3" style={{ fontWeight: 500 }}>Sobre</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+                <div className="rounded-2xl border border-border/10 bg-card p-5">
+                  <h3 className="text-[13px] text-foreground mb-3" style={{ fontWeight: 420 }}>Sobre</h3>
+                  <p className="text-[13px] text-muted-foreground leading-relaxed whitespace-pre-line" style={{ fontWeight: 370 }}>
                     {sindico.breve_resumo}
                   </p>
                 </div>
               )}
 
               {sindico.link_youtube && (
-                <div className="bg-card rounded-xl border border-border/30 p-5">
-                  <h3 className="text-sm text-primary mb-3" style={{ fontWeight: 500 }}>Vídeo de apresentação</h3>
-                  <div className="aspect-video rounded-lg overflow-hidden bg-muted">
+                <div className="rounded-2xl border border-border/10 bg-card p-5">
+                  <h3 className="text-[13px] text-foreground mb-3" style={{ fontWeight: 420 }}>Vídeo de apresentação</h3>
+                  <div className="aspect-video rounded-xl overflow-hidden bg-muted">
                     <iframe
                       src={getYouTubeEmbedUrl(sindico.link_youtube)}
                       title="Vídeo de apresentação"
@@ -226,13 +226,11 @@ export default function SindicoPerfil() {
       </section>
 
       {otherSindicos.length > 0 && (
-        <section className="py-10 bg-muted/20">
+        <section className="py-12 section-dark">
           <div className="container">
             <div className="mb-6">
-              <h2 className="text-lg text-foreground tracking-tight" style={{ fontWeight: 500 }}>
-                Outros profissionais
-              </h2>
-              <p className="text-xs text-muted-foreground mt-0.5">Baseado nos seus filtros de busca</p>
+              <h2 className="text-base text-white/80 tracking-tight" style={{ fontWeight: 400 }}>Outros profissionais</h2>
+              <p className="text-[11px] text-white/25 mt-0.5" style={{ fontWeight: 370 }}>Baseado nos seus filtros de busca</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
