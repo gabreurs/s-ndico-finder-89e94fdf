@@ -15,7 +15,7 @@ const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   visible: (i: number = 0) => ({
     opacity: 1, y: 0,
-    transition: { duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.7, delay: i * 0.1, ease: "easeOut" as const },
   }),
 };
 
@@ -89,7 +89,7 @@ const Index = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.8, ease: "easeOut" as const }}
             className="max-w-3xl"
           >
             <motion.p
