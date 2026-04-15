@@ -3,137 +3,184 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Search, UserCheck, MessageCircle, Building2, Shield, Star, Zap } from "lucide-react";
+import { ArrowRight, Search, UserCheck, MessageCircle, CheckCircle2 } from "lucide-react";
 import { useRef } from "react";
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 20 },
   visible: (i: number = 0) => ({
     opacity: 1, y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: "easeOut" as const },
+    transition: { duration: 0.7, delay: i * 0.1, ease: [0.25, 0.46, 0.45, 0.94] },
   }),
 };
 
 const steps = [
   {
-    icon: <Search size={24} />,
-    title: "Pesquise profissionais",
-    description: "Utilize os filtros por cidade, região, especialidade e perfil para encontrar síndicos que atendam às necessidades do seu condomínio.",
+    num: "01",
+    icon: <Search size={20} />,
+    title: "Pesquise com filtros inteligentes",
+    description: "Escolha cidade, região, tipo de condomínio e especialidade. A plataforma mostra apenas profissionais verificados e aprovados pela nossa curadoria.",
+    detail: "Filtros por cidade, região, especialidade e tipo de condomínio",
   },
   {
-    icon: <UserCheck size={24} />,
+    num: "02",
+    icon: <UserCheck size={20} />,
     title: "Compare perfis detalhados",
-    description: "Analise resumo profissional, áreas de atuação, tempo de experiência, especialidades e certificações de cada síndico.",
+    description: "Cada profissional tem um perfil completo com resumo, áreas de atuação, experiência e especializações. Tudo para você tomar a melhor decisão.",
+    detail: "Resumo profissional, experiência, certificações e diferenciais",
   },
   {
-    icon: <MessageCircle size={24} />,
-    title: "Entre em contato direto",
-    description: "Converse diretamente com o profissional via WhatsApp. Sem intermediários, sem burocracia, sem custos.",
+    num: "03",
+    icon: <MessageCircle size={20} />,
+    title: "Converse direto pelo WhatsApp",
+    description: "Sem intermediários, sem burocracia, sem custos. Você entra em contato direto com o profissional e negocia nos seus termos.",
+    detail: "Contato direto, sem intermediários, 100% gratuito",
   },
 ];
 
-const audiences = [
-  { icon: <Building2 size={20} />, title: "Moradores", description: "Encontre o síndico ideal para garantir valorização e boa gestão do seu patrimônio." },
-  { icon: <Shield size={20} />, title: "Conselheiros", description: "Compare profissionais qualificados para recomendar na próxima assembleia." },
-  { icon: <Star size={20} />, title: "Síndicos", description: "Cadastre-se gratuitamente e amplie sua visibilidade para novos condomínios." },
-  { icon: <Zap size={20} />, title: "Zeladores", description: "Indique a plataforma para o conselho e facilite a transição profissional." },
+const comparisons = [
+  { old: "Indicação por boca a boca", new: "Curadoria com filtros avançados" },
+  { old: "Poucos candidatos disponíveis", new: "Dezenas de perfis verificados" },
+  { old: "Sem informações de experiência", new: "Perfis detalhados e transparentes" },
+  { old: "Processo demorado e incerto", new: "Busca e contato em minutos" },
 ];
 
 export default function ComoFunciona() {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 60]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      {/* Hero */}
-      <section ref={heroRef} className="relative gradient-hero py-20 md:py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.06),transparent_60%)]" />
-        <motion.div style={{ opacity: heroOpacity }} className="container relative">
-          <motion.div initial="hidden" animate="visible" className="max-w-2xl mx-auto text-center">
-            <motion.p variants={fadeUp} className="text-[11px] text-secondary-foreground/50 tracking-widest uppercase mb-4">Como funciona</motion.p>
-            <motion.h1 variants={fadeUp} custom={1} className="text-3xl md:text-4xl lg:text-5xl text-secondary-foreground mb-4 tracking-tight leading-tight" style={{ fontWeight: 450 }}>
-              Encontrar o síndico ideal nunca foi tão simples
+      {/* ===== HERO ===== */}
+      <section ref={heroRef} className="relative min-h-[80vh] flex items-center gradient-mesh overflow-hidden">
+        <div className="absolute top-[15%] right-[10%] w-[400px] h-[400px] rounded-full bg-primary/[0.04] blur-[120px]" />
+        
+        <motion.div style={{ opacity: heroOpacity, y: heroY }} className="container relative py-24 md:py-32">
+          <motion.div initial="hidden" animate="visible" className="max-w-2xl">
+            <motion.p variants={fadeUp} className="text-[11px] text-white/25 tracking-[0.2em] uppercase mb-6" style={{ fontWeight: 380 }}>
+              Como funciona
+            </motion.p>
+            <motion.h1 variants={fadeUp} custom={1} className="text-3xl md:text-4xl lg:text-5xl text-white/90 leading-[1.1] tracking-[-0.025em] mb-6" style={{ fontWeight: 300 }}>
+              Do primeiro filtro ao contato direto — em{" "}
+              <span className="text-primary" style={{ fontWeight: 380 }}>poucos minutos</span>
             </motion.h1>
-            <motion.p variants={fadeUp} custom={2} className="text-secondary-foreground/60 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
-              Do primeiro filtro ao contato direto pelo WhatsApp — tudo em poucos minutos, sem custos e sem burocracia.
+            <motion.p variants={fadeUp} custom={2} className="text-white/30 text-base md:text-lg max-w-lg leading-relaxed" style={{ fontWeight: 350 }}>
+              Uma jornada simples, transparente e sem custos para encontrar o síndico ideal para o seu condomínio.
             </motion.p>
           </motion.div>
         </motion.div>
       </section>
 
-      {/* Steps */}
-      <section className="py-20 md:py-28">
-        <div className="container max-w-4xl">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="space-y-0">
-            {steps.map((step, i) => (
-              <motion.div key={i} variants={fadeUp} custom={i} className="flex gap-6 md:gap-8 relative">
-                {i < steps.length - 1 && (
-                  <div className="absolute left-5 top-14 w-px h-[calc(100%-2rem)] bg-border/30" />
-                )}
-                <div className="shrink-0">
-                  <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-                    {step.icon}
-                  </div>
-                </div>
-                <div className="pb-12">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[10px] text-primary/60 tracking-widest uppercase">Passo {i + 1}</span>
-                  </div>
-                  <h3 className="text-lg text-foreground mb-2 tracking-tight" style={{ fontWeight: 450 }}>{step.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed max-w-md">{step.description}</p>
+      {/* ===== JOURNEY STEPS ===== */}
+      <section className="py-24 md:py-36">
+        <div className="container max-w-5xl">
+          {steps.map((step, i) => (
+            <motion.div
+              key={i}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-50px" }}
+              className={`grid lg:grid-cols-2 gap-12 lg:gap-20 items-center ${i < steps.length - 1 ? 'mb-24 md:mb-36' : ''}`}
+            >
+              <motion.div variants={fadeUp} className={i % 2 === 1 ? "lg:order-2" : ""}>
+                <span className="text-[80px] md:text-[120px] text-foreground/[0.03] leading-none block mb-[-40px] md:mb-[-60px]" style={{ fontWeight: 200 }}>
+                  {step.num}
+                </span>
+                <div className="text-primary/50 mb-4">{step.icon}</div>
+                <h3 className="text-xl md:text-2xl text-foreground tracking-[-0.02em] mb-4" style={{ fontWeight: 380 }}>
+                  {step.title}
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-4" style={{ fontWeight: 370 }}>
+                  {step.description}
+                </p>
+                <p className="text-[11px] text-primary/50 tracking-wide" style={{ fontWeight: 420 }}>
+                  {step.detail}
+                </p>
+              </motion.div>
+              <motion.div
+                variants={fadeUp}
+                custom={2}
+                className={`aspect-[4/3] rounded-2xl overflow-hidden bg-muted/30 ${i % 2 === 1 ? "lg:order-1" : ""}`}
+              >
+                <div className="w-full h-full bg-gradient-to-br from-primary/[0.04] to-accent/[0.02] flex items-center justify-center">
+                  <div className="text-primary/10">{step.icon && <div className="scale-[4]">{step.icon}</div>}</div>
                 </div>
               </motion.div>
-            ))}
-          </motion.div>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* Audiences */}
-      <section className="py-20 md:py-28 bg-muted/15">
-        <div className="container">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-12">
-            <motion.p variants={fadeUp} className="text-[11px] text-primary tracking-widest uppercase mb-2">Para quem é</motion.p>
-            <motion.h2 variants={fadeUp} custom={1} className="text-2xl md:text-3xl text-foreground tracking-tight" style={{ fontWeight: 450 }}>
-              Uma plataforma para todo o ecossistema condominial
+      {/* ===== COMPARISON ===== */}
+      <section className="py-24 md:py-32 section-dark relative overflow-hidden">
+        <div className="absolute top-[30%] left-[20%] w-[500px] h-[500px] rounded-full bg-primary/[0.03] blur-[150px]" />
+        <div className="container max-w-4xl relative">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <motion.p variants={fadeUp} className="text-[11px] text-primary/50 tracking-[0.2em] uppercase mb-3" style={{ fontWeight: 420 }}>Comparação</motion.p>
+            <motion.h2 variants={fadeUp} custom={1} className="text-2xl md:text-3xl text-white/90 tracking-[-0.02em] mb-14" style={{ fontWeight: 320 }}>
+              O jeito antigo versus a nova experiência
             </motion.h2>
           </motion.div>
 
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {audiences.map((item, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUp}
-                custom={i}
-                whileHover={{ y: -4 }}
-                className="bg-card rounded-2xl p-6 border border-border/20 hover:border-primary/10 transition-colors"
-              >
-                <div className="w-10 h-10 rounded-xl bg-primary/8 text-primary flex items-center justify-center mb-4">
-                  {item.icon}
-                </div>
-                <h3 className="text-foreground text-sm mb-1.5" style={{ fontWeight: 450 }}>{item.title}</h3>
-                <p className="text-muted-foreground text-xs leading-relaxed">{item.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="glass rounded-2xl p-6 md:p-8"
+            >
+              <p className="text-[11px] text-white/20 tracking-[0.15em] uppercase mb-6" style={{ fontWeight: 420 }}>Processo tradicional</p>
+              <div className="space-y-4">
+                {comparisons.map((c, i) => (
+                  <motion.div key={i} variants={fadeUp} custom={i} className="flex items-start gap-3">
+                    <span className="text-white/10 mt-0.5">✕</span>
+                    <p className="text-white/30 text-sm" style={{ fontWeight: 370 }}>{c.old}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="glass rounded-2xl p-6 md:p-8 border-primary/10"
+            >
+              <p className="text-[11px] text-primary/50 tracking-[0.15em] uppercase mb-6" style={{ fontWeight: 420 }}>Com Quero 1 Síndico</p>
+              <div className="space-y-4">
+                {comparisons.map((c, i) => (
+                  <motion.div key={i} variants={fadeUp} custom={i} className="flex items-start gap-3">
+                    <CheckCircle2 size={14} className="text-primary/60 mt-0.5 shrink-0" />
+                    <p className="text-white/60 text-sm" style={{ fontWeight: 400 }}>{c.new}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 md:py-28">
-        <div className="container max-w-3xl text-center">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <motion.h2 variants={fadeUp} className="text-2xl md:text-3xl text-foreground mb-3 tracking-tight" style={{ fontWeight: 450 }}>
+      {/* ===== CTA ===== */}
+      <section className="py-24 md:py-32">
+        <div className="container max-w-3xl">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <motion.h2 variants={fadeUp} className="text-2xl md:text-3xl text-foreground tracking-[-0.02em] mb-4" style={{ fontWeight: 350 }}>
               Pronto para encontrar seu síndico?
             </motion.h2>
-            <motion.p variants={fadeUp} custom={1} className="text-sm text-muted-foreground mb-7 max-w-md mx-auto leading-relaxed">
+            <motion.p variants={fadeUp} custom={1} className="text-muted-foreground text-sm mb-8 max-w-md leading-relaxed" style={{ fontWeight: 370 }}>
               Explore os perfis disponíveis ou cadastre-se como profissional e amplie sua visibilidade.
             </motion.p>
-            <motion.div variants={fadeUp} custom={2} className="flex flex-col sm:flex-row gap-3 justify-center">
+            <motion.div variants={fadeUp} custom={2} className="flex flex-col sm:flex-row gap-3">
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button asChild className="rounded-full px-7 h-11 text-sm gap-1.5">
+                <Button asChild className="rounded-full px-7 h-11 text-[13px] gap-2" style={{ fontWeight: 420 }}>
                   <Link to="/sindicos">
                     Buscar síndicos
                     <ArrowRight size={14} />
@@ -141,7 +188,7 @@ export default function ComoFunciona() {
                 </Button>
               </motion.div>
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button asChild variant="outline" className="rounded-full px-7 h-11 text-sm border-border/30">
+                <Button asChild variant="outline" className="rounded-full px-7 h-11 text-[13px] border-border/20" style={{ fontWeight: 400 }}>
                   <Link to="/cadastro">Sou síndico profissional</Link>
                 </Button>
               </motion.div>
