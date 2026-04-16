@@ -30,6 +30,7 @@ export function useSindicos(params?: UseSindicosParams) {
       let query = supabase
         .from("sindicos")
         .select("*")
+        .eq("status", "approved")
         .order("created_at", { ascending: false });
 
       if (params?.especialidade && params.especialidade !== "all") {
