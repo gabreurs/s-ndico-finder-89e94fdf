@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
-import { extractIdFromSlug } from "@/lib/slug";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
@@ -41,8 +40,6 @@ export default function SindicoPerfil() {
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
 
-  const idPrefix = slug ? extractIdFromSlug(slug) : null;
-
   const especialidadeFilter = searchParams.get("especialidade") || "all";
   const cidadeFilter = searchParams.get("cidade") || "all";
   const regiaoFilter = searchParams.get("regiao") || "all";
@@ -58,21 +55,21 @@ export default function SindicoPerfil() {
   useEffect(() => {
     setImgError(false);
     async function fetchSindico() {
-      if (!idPrefix) return;
-      // Match by UUID prefix
+      if (!slug) return;
       const { data, error } = await supabase
         .from("sindicos")
         .select("*")
-        .eq("status", "approved");
+        .eq("slug", slug)
+        .eq("status", "approved")
+        .maybeSingle();
 
       if (!error && data) {
-        const match = data.find((s) => s.id.startsWith(idPrefix));
-        if (match) setSindico(match);
+        setSindico(data);
       }
       setLoading(false);
     }
     fetchSindico();
-  }, [idPrefix]);
+  }, [slug]);
 
   const experienceYears = sindico?.ano_inicio_profissao
     ? new Date().getFullYear() - sindico.ano_inicio_profissao
@@ -528,6 +525,7 @@ export default function SindicoPerfil() {
                 <motion.div key={s.id} variants={fadeUp} custom={i}>
                   <SindicoCard
                     id={s.id}
+                    slug={(s as any).slug || s.id}
                     nome={s.nome_completo}
                     foto={s.foto_url || undefined}
                     resumo={s.breve_resumo || undefined}

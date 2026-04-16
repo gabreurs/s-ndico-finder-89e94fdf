@@ -150,6 +150,7 @@ export default function Sindicos() {
                   <motion.div key={sindico.id} variants={fadeUp} custom={i}>
                     <SindicoCard
                       id={sindico.id}
+                      slug={(sindico as any).slug || sindico.id}
                       nome={sindico.nome_completo}
                       foto={sindico.foto_url || undefined}
                       resumo={sindico.breve_resumo || undefined}

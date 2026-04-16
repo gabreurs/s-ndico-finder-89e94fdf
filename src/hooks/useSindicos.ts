@@ -3,6 +3,7 @@ import { supabase } from "@/lib/supabase";
 
 export interface Sindico {
   id: string;
+  slug: string;
   nome_completo: string;
   foto_url: string | null;
   regioes: string[];
