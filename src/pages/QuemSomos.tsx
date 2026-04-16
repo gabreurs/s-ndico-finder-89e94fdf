@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Users, Shield, Target, Sparkles } from "lucide-react";
 import { useRef } from "react";
-import teamMeeting from "@/assets/team-meeting.jpg";
+import teamMeeting from "@/assets/quem-somos.webp";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
