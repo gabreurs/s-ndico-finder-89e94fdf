@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
@@ -36,6 +36,7 @@ const fadeUp = {
 export default function SindicoPerfil() {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [sindico, setSindico] = useState<Sindico | null>(null);
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
@@ -58,14 +59,14 @@ export default function SindicoPerfil() {
       if (!slug) return;
 
       // Try by slug first
-      let { data, error } = await supabase
+      let { data } = await supabase
         .from("sindicos")
         .select("*")
         .eq("slug", slug)
         .eq("status", "approved")
         .maybeSingle();
 
-      // Fallback: if slug looks like a UUID, try by id
+      // Fallback: if slug looks like a UUID, try by id and redirect to slug URL
       if (!data && /^[0-9a-f-]{36}$/.test(slug)) {
         const res = await supabase
           .from("sindicos")
@@ -74,13 +75,17 @@ export default function SindicoPerfil() {
           .eq("status", "approved")
           .maybeSingle();
         data = res.data;
+        if (data && (data as any).slug) {
+          navigate(`/sindico/${(data as any).slug}`, { replace: true });
+          return;
+        }
       }
 
       if (data) setSindico(data);
       setLoading(false);
     }
     fetchSindico();
-  }, [slug]);
+  }, [slug, navigate]);
 
   const experienceYears = sindico?.ano_inicio_profissao
     ? new Date().getFullYear() - sindico.ano_inicio_profissao
