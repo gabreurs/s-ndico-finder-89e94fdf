@@ -85,6 +85,12 @@ export default function Admin() {
     else { toast({ title: status === "approved" ? "Síndico aprovado" : status === "rejected" ? "Síndico rejeitado" : "Marcado como pendente" }); fetchSindicos(); }
   };
 
+  const deleteSindico = async (id: string, nome: string) => {
+    const { error } = await supabase.from("sindicos").delete().eq("id", id);
+    if (error) toast({ title: "Erro ao excluir", description: error.message, variant: "destructive" });
+    else { toast({ title: `${nome} excluído com sucesso` }); fetchSindicos(); }
+  };
+
   const startEdit = (sindico: Sindico) => {
     setEditingId(sindico.id);
     setEditData({
