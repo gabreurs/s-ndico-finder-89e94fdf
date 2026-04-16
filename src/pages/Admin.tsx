@@ -7,7 +7,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { PhotoUpload } from "@/components/PhotoUpload";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import { LogOut, Check, X, Clock, User, MapPin, Search, Edit2, Save, ChevronLeft } from "lucide-react";
+import { LogOut, Check, X, Clock, User, MapPin, Search, Edit2, Save, ChevronLeft, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Sindico = Tables<"sindicos">;
@@ -72,6 +83,12 @@ export default function Admin() {
     const { error } = await supabase.from("sindicos").update({ status }).eq("id", id);
     if (error) toast({ title: "Erro", description: error.message, variant: "destructive" });
     else { toast({ title: status === "approved" ? "Síndico aprovado" : status === "rejected" ? "Síndico rejeitado" : "Marcado como pendente" }); fetchSindicos(); }
+  };
+
+  const deleteSindico = async (id: string, nome: string) => {
+    const { error } = await supabase.from("sindicos").delete().eq("id", id);
+    if (error) toast({ title: "Erro ao excluir", description: error.message, variant: "destructive" });
+    else { toast({ title: `${nome} excluído com sucesso` }); fetchSindicos(); }
   };
 
   const startEdit = (sindico: Sindico) => {
@@ -292,6 +309,27 @@ export default function Admin() {
                           <Clock size={12} /> Pendente
                         </Button>
                       )}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button size="sm" variant="ghost" className="h-8 px-3 text-xs rounded-full gap-1 text-destructive hover:text-destructive hover:bg-destructive/10">
+                            <Trash2 size={12} /> Excluir
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Excluir síndico?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Tem certeza que deseja excluir <strong>{sindico.nome_completo}</strong>? Essa ação não pode ser desfeita.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => deleteSindico(sindico.id, sindico.nome_completo)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                              Excluir
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 )}
