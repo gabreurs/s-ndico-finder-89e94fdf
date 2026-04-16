@@ -20,6 +20,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import type { Tables } from "@/integrations/supabase/types";
+import { AdminMetrics } from "@/components/AdminMetrics";
 
 type Sindico = Tables<"sindicos">;
 type Status = "pending" | "approved" | "rejected";
@@ -175,6 +176,8 @@ export default function Admin() {
       </header>
 
       <div className="container py-6">
+        <AdminMetrics />
+
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-4">
           {(["all", "pending", "approved", "rejected"] as const).map((s) => (
