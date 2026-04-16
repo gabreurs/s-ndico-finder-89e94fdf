@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, AlertCircle, CheckCircle2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 
 interface PhotoUploadProps {
   value?: string;
