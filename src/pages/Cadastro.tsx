@@ -27,6 +27,8 @@ export default function Cadastro() {
     contato_whatsapp: "",
     nome_empresa: "",
     email: "",
+    senha: "",
+    senha_confirma: "",
     ano_inicio_profissao: new Date().getFullYear(),
     site_redes_sociais: "",
     breve_resumo: "",
@@ -52,6 +54,23 @@ export default function Cadastro() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      // Validate password match
+      if (formData.senha !== formData.senha_confirma) {
+        toast({ title: "Senhas não conferem", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+      if (formData.senha.length < 6) {
+        toast({ title: "Senha muito curta", description: "Mínimo 6 caracteres.", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+      if (!formData.email) {
+        toast({ title: "E-mail obrigatório", description: "Necessário para acessar a aba de membros.", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+
       // Check for existing registration with same WhatsApp
       const digits = formData.contato_whatsapp.replace(/\D/g, "");
       const { data: existing } = await supabase
@@ -71,6 +90,21 @@ export default function Cadastro() {
         });
         setLoading(false);
         return;
+      }
+
+      // Create auth account first so user can access /meu-perfil
+      const redirectUrl = `${window.location.origin}/meu-perfil`;
+      const { error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.senha,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: { nome_completo: formData.nome_completo },
+        },
+      });
+
+      if (authError && !authError.message.toLowerCase().includes("already")) {
+        throw authError;
       }
 
       const { error } = await supabase.from("sindicos").insert({
@@ -94,13 +128,13 @@ export default function Cadastro() {
 
       toast({
         title: "Cadastro enviado com sucesso",
-        description: "Seu perfil foi enviado para aprovação. Você será notificado quando for publicado.",
+        description: "Seu perfil foi enviado para aprovação. Você já pode acessar a aba de membros.",
       });
-      navigate("/");
-    } catch (error) {
+      navigate("/meu-perfil");
+    } catch (error: any) {
       toast({
         title: "Erro ao cadastrar",
-        description: "Ocorreu um erro inesperado. Tente novamente.",
+        description: error?.message || "Ocorreu um erro inesperado. Tente novamente.",
         variant: "destructive",
       });
     } finally {
