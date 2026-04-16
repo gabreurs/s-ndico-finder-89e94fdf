@@ -205,11 +205,15 @@ export default function MeuPerfil() {
       <div className="min-h-screen flex flex-col bg-background">
         <Header />
         <div className="flex-1 flex flex-col items-center justify-center p-4 gap-4">
-          <p className="text-foreground text-center" style={{ fontWeight: 420 }}>
-            Nenhum perfil de síndico vinculado a este e-mail.
+          <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mb-2">
+            <Mail size={28} className="text-destructive" />
+          </div>
+          <p className="text-foreground text-center text-lg" style={{ fontWeight: 420 }}>
+            E-mail não vinculado a nenhum perfil
           </p>
           <p className="text-[13px] text-muted-foreground text-center max-w-md">
-            O e-mail que você usou para logar deve ser o mesmo cadastrado no seu perfil de síndico. Se não tem cadastro, crie um primeiro.
+            O e-mail <strong>{session.user.email}</strong> não corresponde a nenhum cadastro de síndico.
+            Para acessar, use o mesmo e-mail que foi informado no formulário de cadastro.
           </p>
           <div className="flex gap-2">
             <Button asChild variant="outline" className="rounded-full text-xs h-9">
