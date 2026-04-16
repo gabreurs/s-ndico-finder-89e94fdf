@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { PhotoUpload } from "@/components/PhotoUpload";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogOut, Check, X, Clock, User, MapPin, Search, Edit2, Save, ChevronLeft } from "lucide-react";
@@ -81,6 +82,10 @@ export default function Admin() {
       contato_whatsapp: sindico.contato_whatsapp,
       nome_empresa: sindico.nome_empresa,
       breve_resumo: sindico.breve_resumo,
+      site_redes_sociais: sindico.site_redes_sociais,
+      link_youtube: sindico.link_youtube,
+      ano_inicio_profissao: sindico.ano_inicio_profissao,
+      foto_url: sindico.foto_url,
     });
   };
 
@@ -205,6 +210,10 @@ export default function Admin() {
                       </Button>
                       <span className="text-sm text-foreground" style={{ fontWeight: 450 }}>Editando perfil</span>
                     </div>
+                    <div>
+                      <label className="text-[11px] text-muted-foreground mb-1.5 block">Foto</label>
+                      <PhotoUpload value={editData.foto_url || undefined} onChange={(url) => setEditData({ ...editData, foto_url: url })} />
+                    </div>
                     <Input value={editData.nome_completo || ""} onChange={(e) => setEditData({ ...editData, nome_completo: e.target.value })} placeholder="Nome completo" className="h-9 text-sm rounded-lg" />
                     <div className="grid md:grid-cols-2 gap-3">
                       <Input value={editData.email || ""} onChange={(e) => setEditData({ ...editData, email: e.target.value })} placeholder="Email" className="h-9 text-sm rounded-lg" />
@@ -212,6 +221,11 @@ export default function Admin() {
                     </div>
                     <Input value={editData.nome_empresa || ""} onChange={(e) => setEditData({ ...editData, nome_empresa: e.target.value })} placeholder="Empresa" className="h-9 text-sm rounded-lg" />
                     <Textarea value={editData.breve_resumo || ""} onChange={(e) => setEditData({ ...editData, breve_resumo: e.target.value })} placeholder="Resumo" className="min-h-[80px] text-sm rounded-lg resize-none" />
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <Input value={editData.site_redes_sociais || ""} onChange={(e) => setEditData({ ...editData, site_redes_sociais: e.target.value })} placeholder="Site / Redes sociais" className="h-9 text-sm rounded-lg" />
+                      <Input value={editData.link_youtube || ""} onChange={(e) => setEditData({ ...editData, link_youtube: e.target.value })} placeholder="Link YouTube" className="h-9 text-sm rounded-lg" />
+                    </div>
+                    <Input type="number" value={editData.ano_inicio_profissao || ""} onChange={(e) => setEditData({ ...editData, ano_inicio_profissao: parseInt(e.target.value) || null })} placeholder="Ano início profissão" className="h-9 text-sm rounded-lg max-w-[200px]" />
                     <Button size="sm" onClick={saveEdit} className="h-8 px-4 text-xs rounded-full gap-1">
                       <Save size={12} /> Salvar
                     </Button>
