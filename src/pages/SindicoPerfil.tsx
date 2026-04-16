@@ -8,6 +8,7 @@ import { SpinBadge } from "@/components/SpinBadge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { useSindicos } from "@/hooks/useSindicos";
+import { buildRafaelWhatsAppUrl } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
 import {
   MapPin,

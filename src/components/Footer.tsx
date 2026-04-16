@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import { SpinBadge } from "./SpinBadge";
+import { buildRafaelWhatsAppUrl } from "@/lib/whatsapp";
 
 export function Footer() {
   return (
