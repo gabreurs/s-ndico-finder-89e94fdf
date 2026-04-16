@@ -159,7 +159,9 @@ export default function Cadastro() {
               {step === 1 && (
                 <div className="space-y-6">
                   <div>
-                    <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 430 }}>Foto de perfil</Label>
+                    <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 430 }}>
+                      Foto de perfil <span className="text-destructive">*</span>
+                    </Label>
                     <PhotoUpload value={formData.foto_url || undefined} onChange={(url) => setFormData({ ...formData, foto_url: url })} />
                   </div>
 
@@ -213,7 +215,7 @@ export default function Cadastro() {
 
                   <Button
                     onClick={() => setStep(2)}
-                    disabled={!formData.nome_completo || !formData.contato_whatsapp}
+                    disabled={!formData.nome_completo || !formData.contato_whatsapp || !formData.foto_url}
                     className="h-11 px-6 text-[13px] rounded-full gap-2"
                     style={{ fontWeight: 450 }}
                   >
@@ -383,7 +385,7 @@ export default function Cadastro() {
                     </Button>
                     <Button
                       onClick={handleSubmit}
-                      disabled={loading || formData.especialidades.length === 0}
+                      disabled={loading || formData.especialidades.length === 0 || !formData.foto_url}
                       className="h-11 px-6 text-[13px] rounded-full gap-2"
                       style={{ fontWeight: 450 }}
                     >
