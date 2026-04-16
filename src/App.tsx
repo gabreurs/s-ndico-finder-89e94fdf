@@ -14,6 +14,7 @@ import ComoFunciona from "./pages/ComoFunciona";
 import QuemSomos from "./pages/QuemSomos";
 import Admin from "./pages/Admin";
 import MeuPerfil from "./pages/MeuPerfil";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
@@ -58,6 +59,7 @@ const App = () => {
               <Route path="/como-funciona" element={<ComoFunciona />} />
               <Route path="/quem-somos" element={<QuemSomos />} />
               <Route path="/meu-perfil" element={<MeuPerfil />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
