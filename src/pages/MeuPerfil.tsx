@@ -1,0 +1,404 @@
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import { PhotoUpload } from "@/components/PhotoUpload";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
+import { motion } from "framer-motion";
+import { LogOut, Save, Mail, ArrowRight, Loader2 } from "lucide-react";
+import type { Tables } from "@/integrations/supabase/types";
+
+type Sindico = Tables<"sindicos">;
+
+export default function MeuPerfil() {
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [sindico, setSindico] = useState<Sindico | null>(null);
+  const [email, setEmail] = useState("");
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [sendingLink, setSendingLink] = useState(false);
+  const [formData, setFormData] = useState<Partial<Sindico>>({});
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (session) fetchProfile(session.user.email!);
+      else { setSindico(null); setLoading(false); }
+    });
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) fetchProfile(session.user.email!);
+      else setLoading(false);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const fetchProfile = async (userEmail: string) => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("sindicos")
+      .select("*")
+      .eq("email", userEmail)
+      .maybeSingle();
+
+    if (data) {
+      setSindico(data);
+      setFormData(data);
+    } else {
+      setSindico(null);
+    }
+    setLoading(false);
+  };
+
+  const handleSendMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSendingLink(true);
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin + "/meu-perfil" },
+    });
+    if (error) {
+      toast({ title: "Erro", description: error.message, variant: "destructive" });
+    } else {
+      setMagicLinkSent(true);
+      toast({ title: "Link enviado!", description: "Verifique sua caixa de entrada e clique no link para acessar." });
+    }
+    setSendingLink(false);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+    setSindico(null);
+  };
+
+  const handleSave = async () => {
+    if (!sindico) return;
+    setSaving(true);
+    const { error } = await supabase
+      .from("sindicos")
+      .update({
+        nome_completo: formData.nome_completo,
+        contato_whatsapp: formData.contato_whatsapp,
+        nome_empresa: formData.nome_empresa,
+        breve_resumo: formData.breve_resumo,
+        site_redes_sociais: formData.site_redes_sociais,
+        link_youtube: formData.link_youtube,
+        ano_inicio_profissao: formData.ano_inicio_profissao,
+        especialidades: formData.especialidades,
+        cidade: formData.cidade,
+        regioes: formData.regioes,
+        foto_url: formData.foto_url,
+      })
+      .eq("id", sindico.id);
+
+    if (error) {
+      toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Perfil atualizado!" });
+      setSindico({ ...sindico, ...formData } as Sindico);
+    }
+    setSaving(false);
+  };
+
+  const availableRegioes = (formData.cidade || []).flatMap(c => CIDADES_REGIOES[c] || []);
+  const uniqueRegioes = [...new Set(availableRegioes)];
+
+  /* ── Loading ── */
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-primary/40 border-t-transparent rounded-full animate-spin" />
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  /* ── Login screen ── */
+  if (!session) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <div className="flex-1 flex items-center justify-center p-4">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm">
+            <div className="text-center mb-6">
+              <h1 className="text-xl text-foreground tracking-tight" style={{ fontWeight: 450 }}>
+                Meu Perfil
+              </h1>
+              <p className="text-[13px] text-muted-foreground mt-1">
+                Acesse com o e-mail cadastrado no seu perfil de síndico.
+              </p>
+            </div>
+
+            {!magicLinkSent ? (
+              <form onSubmit={handleSendMagicLink} className="bg-card rounded-2xl border border-border/20 p-6 space-y-4">
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1.5 block">E-mail cadastrado</label>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    className="h-11 text-sm rounded-lg"
+                    required
+                  />
+                </div>
+                <Button type="submit" disabled={sendingLink} className="w-full h-11 text-sm rounded-full gap-2">
+                  {sendingLink ? <Loader2 size={14} className="animate-spin" /> : <Mail size={14} />}
+                  Enviar link de acesso
+                </Button>
+                <p className="text-[11px] text-muted-foreground/60 text-center">
+                  Enviaremos um link mágico para seu e-mail. Sem senha necessária.
+                </p>
+              </form>
+            ) : (
+              <div className="bg-card rounded-2xl border border-border/20 p-6 text-center space-y-3">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                  <Mail size={20} className="text-primary" />
+                </div>
+                <h2 className="text-sm text-foreground" style={{ fontWeight: 450 }}>Link enviado!</h2>
+                <p className="text-[12px] text-muted-foreground">
+                  Enviamos um link de acesso para <strong>{email}</strong>. Verifique sua caixa de entrada (e spam).
+                </p>
+                <Button variant="ghost" size="sm" onClick={() => setMagicLinkSent(false)} className="text-xs">
+                  Enviar novamente
+                </Button>
+              </div>
+            )}
+          </motion.div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  /* ── No profile found ── */
+  if (!sindico) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <div className="flex-1 flex flex-col items-center justify-center p-4 gap-4">
+          <p className="text-foreground text-center" style={{ fontWeight: 420 }}>
+            Nenhum perfil de síndico vinculado a este e-mail.
+          </p>
+          <p className="text-[13px] text-muted-foreground text-center max-w-md">
+            O e-mail que você usou para logar deve ser o mesmo cadastrado no seu perfil de síndico. Se não tem cadastro, crie um primeiro.
+          </p>
+          <div className="flex gap-2">
+            <Button asChild variant="outline" className="rounded-full text-xs h-9">
+              <a href="/cadastro">Criar cadastro</a>
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1 text-xs h-9">
+              <LogOut size={12} /> Sair
+            </Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  /* ── Profile edit ── */
+  return (
+    <div className="min-h-screen flex flex-col bg-background">
+      <Header />
+
+      <section className="py-10 md:py-16 flex-1">
+        <div className="container max-w-2xl">
+          <PageBreadcrumb items={[{ label: "Meu Perfil" }]} className="mb-6" />
+
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-xl text-foreground tracking-[-0.02em]" style={{ fontWeight: 400 }}>
+                Editar meu perfil
+              </h1>
+              <p className="text-[12px] text-muted-foreground mt-1">
+                {session.user.email}
+              </p>
+            </div>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="gap-1.5 text-xs">
+              <LogOut size={14} /> Sair
+            </Button>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-xl border border-border/30 bg-card p-6 md:p-8 space-y-6"
+          >
+            {/* Photo */}
+            <div>
+              <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 430 }}>Foto de perfil</Label>
+              <PhotoUpload
+                value={formData.foto_url || undefined}
+                onChange={(url) => setFormData({ ...formData, foto_url: url })}
+              />
+            </div>
+
+            {/* Basic info */}
+            <div className="grid gap-4">
+              <div>
+                <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Nome completo</Label>
+                <Input
+                  value={formData.nome_completo || ""}
+                  onChange={(e) => setFormData({ ...formData, nome_completo: e.target.value })}
+                  className="h-11 text-[13px] rounded-lg border-border/30"
+                />
+              </div>
+              <div>
+                <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>WhatsApp</Label>
+                <Input
+                  value={formData.contato_whatsapp || ""}
+                  onChange={(e) => setFormData({ ...formData, contato_whatsapp: e.target.value })}
+                  className="h-11 text-[13px] rounded-lg border-border/30"
+                />
+              </div>
+              <div>
+                <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Empresa</Label>
+                <Input
+                  value={formData.nome_empresa || ""}
+                  onChange={(e) => setFormData({ ...formData, nome_empresa: e.target.value })}
+                  className="h-11 text-[13px] rounded-lg border-border/30"
+                />
+              </div>
+            </div>
+
+            {/* Professional */}
+            <div>
+              <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Ano de início na profissão</Label>
+              <Input
+                type="number"
+                value={formData.ano_inicio_profissao || ""}
+                onChange={(e) => setFormData({ ...formData, ano_inicio_profissao: parseInt(e.target.value) || null })}
+                className="h-11 text-[13px] rounded-lg border-border/30 max-w-[160px]"
+                min={1990}
+                max={new Date().getFullYear()}
+              />
+            </div>
+
+            <div>
+              <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Resumo profissional</Label>
+              <Textarea
+                value={formData.breve_resumo || ""}
+                onChange={(e) => setFormData({ ...formData, breve_resumo: e.target.value })}
+                className="min-h-[120px] resize-none text-[13px] rounded-lg border-border/30"
+              />
+            </div>
+
+            <div className="grid gap-4">
+              <div>
+                <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Site / Redes sociais</Label>
+                <Input
+                  value={formData.site_redes_sociais || ""}
+                  onChange={(e) => setFormData({ ...formData, site_redes_sociais: e.target.value })}
+                  className="h-11 text-[13px] rounded-lg border-border/30"
+                />
+              </div>
+              <div>
+                <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Vídeo YouTube</Label>
+                <Input
+                  value={formData.link_youtube || ""}
+                  onChange={(e) => setFormData({ ...formData, link_youtube: e.target.value })}
+                  className="h-11 text-[13px] rounded-lg border-border/30"
+                />
+              </div>
+            </div>
+
+            {/* Cities */}
+            <div>
+              <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 430 }}>Cidades de atuação</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {CIDADES.map((cid) => (
+                  <label
+                    key={cid}
+                    className={`flex items-center gap-2.5 p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
+                      (formData.cidade || []).includes(cid) ? "border-primary/30 bg-primary/[0.04]" : "border-border/20 hover:border-border/40"
+                    }`}
+                  >
+                    <Checkbox
+                      checked={(formData.cidade || []).includes(cid)}
+                      onCheckedChange={(c) =>
+                        setFormData({
+                          ...formData,
+                          cidade: c ? [...(formData.cidade || []), cid] : (formData.cidade || []).filter((x) => x !== cid),
+                          regioes: c ? formData.regioes : (formData.regioes || []).filter(r => !(CIDADES_REGIOES[cid] || []).includes(r)),
+                        })
+                      }
+                    />
+                    <span className="text-[12px]" style={{ fontWeight: 420 }}>{cid}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Regions */}
+            {uniqueRegioes.length > 0 && (
+              <div>
+                <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 430 }}>Regiões de atuação</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {uniqueRegioes.map((r) => (
+                    <label
+                      key={r}
+                      className={`flex items-center gap-2.5 p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
+                        (formData.regioes || []).includes(r) ? "border-primary/30 bg-primary/[0.04]" : "border-border/20 hover:border-border/40"
+                      }`}
+                    >
+                      <Checkbox
+                        checked={(formData.regioes || []).includes(r)}
+                        onCheckedChange={(c) => setFormData({ ...formData, regioes: c ? [...(formData.regioes || []), r] : (formData.regioes || []).filter((x) => x !== r) })}
+                      />
+                      <span className="text-[12px]" style={{ fontWeight: 420 }}>{r}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Specialties */}
+            <div>
+              <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 430 }}>Especialidades</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {ESPECIALIDADES.map((esp) => (
+                  <label
+                    key={esp}
+                    className={`flex items-center gap-2.5 p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
+                      (formData.especialidades || []).includes(esp) ? "border-primary/30 bg-primary/[0.04]" : "border-border/20 hover:border-border/40"
+                    }`}
+                  >
+                    <Checkbox
+                      checked={(formData.especialidades || []).includes(esp)}
+                      onCheckedChange={(c) => setFormData({ ...formData, especialidades: c ? [...(formData.especialidades || []), esp] : (formData.especialidades || []).filter((x) => x !== esp) })}
+                    />
+                    <span className="text-[12px]" style={{ fontWeight: 420 }}>{esp}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Save */}
+            <div className="pt-2">
+              <Button onClick={handleSave} disabled={saving} className="h-11 px-8 text-[13px] rounded-full gap-2" style={{ fontWeight: 450 }}>
+                {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                Salvar alterações
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
