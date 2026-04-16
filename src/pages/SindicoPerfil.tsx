@@ -92,12 +92,12 @@ export default function SindicoPerfil() {
     : null;
 
   const handleWhatsAppClick = () => {
-    if (!sindico?.contato_whatsapp) return;
-    const phone = sindico.contato_whatsapp.replace(/\D/g, "");
+    if (!sindico) return;
+    const phone = "5511960841033"; // Rafael Bernardes
     const message = encodeURIComponent(
-      `Olá ${sindico.nome_completo}! Encontrei seu perfil no Quero 1 Síndico e gostaria de saber mais sobre seus serviços.`
+      `Olá! Encontrei o perfil de ${sindico.nome_completo} no Quero 1 Síndico e gostaria de saber mais sobre este profissional.`
     );
-    window.open(`https://wa.me/55${phone}?text=${message}`, "_blank");
+    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
   };
 
   /* ---------- loading / 404 ---------- */
