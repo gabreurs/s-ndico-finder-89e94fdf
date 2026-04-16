@@ -13,7 +13,9 @@ import Cadastro from "./pages/Cadastro";
 import ComoFunciona from "./pages/ComoFunciona";
 import QuemSomos from "./pages/QuemSomos";
 import Admin from "./pages/Admin";
+import MeuPerfil from "./pages/MeuPerfil";
 import NotFound from "./pages/NotFound";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -46,18 +48,20 @@ const App = () => {
         <Sonner />
         {showIntro && <IntroAnimation onComplete={handleIntroComplete} />}
         {!showIntro && <ScrollBlur />}
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/sindicos" element={<Sindicos />} />
-            <Route path="/sindico/:id" element={<SindicoPerfil />} />
-            <Route path="/cadastro" element={<Cadastro />} />
-            <Route path="/como-funciona" element={<ComoFunciona />} />
-            <Route path="/quem-somos" element={<QuemSomos />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+         <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/sindicos" element={<Sindicos />} />
+              <Route path="/sindico/:id" element={<SindicoPerfil />} />
+              <Route path="/cadastro" element={<Cadastro />} />
+              <Route path="/como-funciona" element={<ComoFunciona />} />
+              <Route path="/quem-somos" element={<QuemSomos />} />
+              <Route path="/meu-perfil" element={<MeuPerfil />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );

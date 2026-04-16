@@ -171,7 +171,7 @@ export default function SindicoPerfil() {
               className="lg:col-span-4 flex justify-center lg:justify-start"
             >
               <div className="relative w-full max-w-[280px] lg:max-w-none">
-                <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06]">
+                <div className="aspect-square rounded-2xl overflow-hidden bg-white/[0.03] border border-white/[0.06]">
                   {hasPhoto ? (
                     <img
                       src={sindico.foto_url!}
