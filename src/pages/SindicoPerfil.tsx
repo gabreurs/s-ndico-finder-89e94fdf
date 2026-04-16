@@ -35,11 +35,13 @@ const fadeUp = {
 };
 
 export default function SindicoPerfil() {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const [sindico, setSindico] = useState<Sindico | null>(null);
   const [loading, setLoading] = useState(true);
   const [imgError, setImgError] = useState(false);
+
+  const idPrefix = slug ? extractIdFromSlug(slug) : null;
 
   const especialidadeFilter = searchParams.get("especialidade") || "all";
   const cidadeFilter = searchParams.get("cidade") || "all";
@@ -51,24 +53,26 @@ export default function SindicoPerfil() {
     regiao: regiaoFilter,
   });
 
-  const otherSindicos = relatedSindicos?.filter((s) => s.id !== id) || [];
+  const otherSindicos = relatedSindicos?.filter((s) => s.id !== sindico?.id) || [];
 
   useEffect(() => {
     setImgError(false);
     async function fetchSindico() {
-      if (!id) return;
+      if (!idPrefix) return;
+      // Match by UUID prefix
       const { data, error } = await supabase
         .from("sindicos")
         .select("*")
-        .eq("id", id)
-        .eq("status", "approved")
-        .single();
+        .eq("status", "approved");
 
-      if (!error && data) setSindico(data);
+      if (!error && data) {
+        const match = data.find((s) => s.id.startsWith(idPrefix));
+        if (match) setSindico(match);
+      }
       setLoading(false);
     }
     fetchSindico();
-  }, [id]);
+  }, [idPrefix]);
 
   const experienceYears = sindico?.ano_inicio_profissao
     ? new Date().getFullYear() - sindico.ano_inicio_profissao
