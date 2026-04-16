@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { getMeuPerfilRedirectUrl, supabase } from "@/lib/supabase";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
 import { motion } from "framer-motion";
-import { LogOut, Save, Mail, ArrowRight, Loader2 } from "lucide-react";
+import { LogOut, Save, Mail, Loader2 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Sindico = Tables<"sindicos">;
@@ -29,22 +29,37 @@ export default function MeuPerfil() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session) fetchProfile(session.user.email!);
-      else { setSindico(null); setLoading(false); }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession);
+
+      if (nextSession?.user.email) {
+        fetchProfile(nextSession.user.email);
+        return;
+      }
+
+      setSindico(null);
+      setLoading(false);
     });
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session) fetchProfile(session.user.email!);
-      else setLoading(false);
+
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+
+      if (currentSession?.user.email) {
+        fetchProfile(currentSession.user.email);
+        return;
+      }
+
+      setLoading(false);
     });
+
     return () => subscription.unsubscribe();
   }, []);
 
   const fetchProfile = async (userEmail: string) => {
     setLoading(true);
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("sindicos")
       .select("*")
       .eq("email", userEmail)
@@ -64,7 +79,7 @@ export default function MeuPerfil() {
     setSendingLink(true);
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: window.location.origin + "/meu-perfil" },
+      options: { emailRedirectTo: getMeuPerfilRedirectUrl() },
     });
     if (error) {
       toast({ title: "Erro", description: error.message, variant: "destructive" });
