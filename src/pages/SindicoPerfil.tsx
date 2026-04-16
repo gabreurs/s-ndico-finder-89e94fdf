@@ -56,16 +56,27 @@ export default function SindicoPerfil() {
     setImgError(false);
     async function fetchSindico() {
       if (!slug) return;
-      const { data, error } = await supabase
+
+      // Try by slug first
+      let { data, error } = await supabase
         .from("sindicos")
         .select("*")
         .eq("slug", slug)
         .eq("status", "approved")
         .maybeSingle();
 
-      if (!error && data) {
-        setSindico(data);
+      // Fallback: if slug looks like a UUID, try by id
+      if (!data && /^[0-9a-f-]{36}$/.test(slug)) {
+        const res = await supabase
+          .from("sindicos")
+          .select("*")
+          .eq("id", slug)
+          .eq("status", "approved")
+          .maybeSingle();
+        data = res.data;
       }
+
+      if (data) setSindico(data);
       setLoading(false);
     }
     fetchSindico();
