@@ -1,10 +1,10 @@
 import { MapPin, User, ArrowRight, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { buildSindicoSlug } from "@/lib/slug";
 
 interface SindicoCardProps {
   id: string;
+  slug: string;
   nome: string;
   foto?: string;
   resumo?: string;
@@ -19,9 +19,9 @@ interface SindicoCardProps {
   };
 }
 
-export function SindicoCard({ id, nome, foto, resumo, regioes, especialidades, cidade, anoInicio, preserveFilters }: SindicoCardProps) {
+export function SindicoCard({ slug, nome, foto, resumo, regioes, especialidades, cidade, anoInicio, preserveFilters }: SindicoCardProps) {
   const buildProfileUrl = () => {
-    const base = `/sindico/${buildSindicoSlug(nome, id)}`;
+    const base = `/sindico/${slug}`;
     if (!preserveFilters) return base;
     const params = new URLSearchParams();
     if (preserveFilters.especialidade && preserveFilters.especialidade !== "all") params.set("especialidade", preserveFilters.especialidade);
