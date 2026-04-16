@@ -52,6 +52,27 @@ export default function Cadastro() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      // Check for existing registration with same WhatsApp
+      const digits = formData.contato_whatsapp.replace(/\D/g, "");
+      const { data: existing } = await supabase
+        .from("sindicos")
+        .select("id, status")
+        .or(`contato_whatsapp.eq.${formData.contato_whatsapp},contato_whatsapp.eq.${digits}`)
+        .in("status", ["pending", "approved"]);
+
+      if (existing && existing.length > 0) {
+        const isPending = existing.some((e) => e.status === "pending");
+        toast({
+          title: "Cadastro já existente",
+          description: isPending
+            ? "Você já possui um cadastro pendente de aprovação. Aguarde a análise."
+            : "Você já possui um perfil aprovado na plataforma.",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.from("sindicos").insert({
         nome_completo: formData.nome_completo,
         contato_whatsapp: formData.contato_whatsapp,
