@@ -7,6 +7,9 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Search, UserCheck, MessageCircle, CheckCircle2 } from "lucide-react";
 import { useRef } from "react";
+import imgFiltros from "@/assets/como-funciona-1-filtros.webp";
+import imgPerfis from "@/assets/como-funciona-2-perfis.webp";
+import imgWhatsapp from "@/assets/como-funciona-3-whatsapp.webp";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -20,6 +23,7 @@ const steps = [
   {
     num: "01",
     icon: <Search size={24} />,
+    image: imgFiltros,
     title: "Pesquise com filtros inteligentes",
     description: "Escolha cidade, região, tipo de condomínio e especialidade. A plataforma mostra apenas profissionais verificados e aprovados pela nossa curadoria.",
     detail: "Filtros por cidade, região, especialidade e tipo de condomínio",
@@ -27,6 +31,7 @@ const steps = [
   {
     num: "02",
     icon: <UserCheck size={24} />,
+    image: imgPerfis,
     title: "Compare perfis detalhados",
     description: "Cada profissional tem um perfil completo com resumo, áreas de atuação, experiência e especializações. Tudo para você tomar a melhor decisão.",
     detail: "Resumo profissional, experiência, certificações e diferenciais",
@@ -34,6 +39,7 @@ const steps = [
   {
     num: "03",
     icon: <MessageCircle size={24} />,
+    image: imgWhatsapp,
     title: "Converse direto pelo WhatsApp",
     description: "Sem intermediários, sem burocracia, sem custos. Você entra em contato direto com o profissional e negocia nos seus termos.",
     detail: "Contato direto, sem intermediários, 100% gratuito",
@@ -124,12 +130,14 @@ export default function ComoFunciona() {
               <motion.div
                 variants={fadeUp}
                 custom={2}
-                className={`aspect-[4/3] rounded-xl overflow-hidden ${i % 2 === 1 ? "lg:order-1" : ""}`}
+                className={`aspect-[4/3] rounded-xl overflow-hidden border border-border/30 ${i % 2 === 1 ? "lg:order-1" : ""}`}
               >
-                <div className="w-full h-full bg-gradient-to-br from-muted/40 to-muted/20 border border-border/30 rounded-xl flex items-center justify-center relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] to-accent/[0.02]" />
-                  <div className="text-primary/15 scale-[3]">{step.icon}</div>
-                </div>
+                <img
+                  src={step.image}
+                  alt={step.title}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
               </motion.div>
             </motion.div>
           ))}

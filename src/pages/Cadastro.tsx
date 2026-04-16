@@ -27,6 +27,8 @@ export default function Cadastro() {
     contato_whatsapp: "",
     nome_empresa: "",
     email: "",
+    senha: "",
+    senha_confirma: "",
     ano_inicio_profissao: new Date().getFullYear(),
     site_redes_sociais: "",
     breve_resumo: "",
@@ -52,6 +54,23 @@ export default function Cadastro() {
   const handleSubmit = async () => {
     setLoading(true);
     try {
+      // Validate password match
+      if (formData.senha !== formData.senha_confirma) {
+        toast({ title: "Senhas não conferem", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+      if (formData.senha.length < 6) {
+        toast({ title: "Senha muito curta", description: "Mínimo 6 caracteres.", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+      if (!formData.email) {
+        toast({ title: "E-mail obrigatório", description: "Necessário para acessar a aba de membros.", variant: "destructive" });
+        setLoading(false);
+        return;
+      }
+
       // Check for existing registration with same WhatsApp
       const digits = formData.contato_whatsapp.replace(/\D/g, "");
       const { data: existing } = await supabase
@@ -71,6 +90,21 @@ export default function Cadastro() {
         });
         setLoading(false);
         return;
+      }
+
+      // Create auth account first so user can access /meu-perfil
+      const redirectUrl = `${window.location.origin}/meu-perfil`;
+      const { error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.senha,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: { nome_completo: formData.nome_completo },
+        },
+      });
+
+      if (authError && !authError.message.toLowerCase().includes("already")) {
+        throw authError;
       }
 
       const { error } = await supabase.from("sindicos").insert({
@@ -94,13 +128,13 @@ export default function Cadastro() {
 
       toast({
         title: "Cadastro enviado com sucesso",
-        description: "Seu perfil foi enviado para aprovação. Você será notificado quando for publicado.",
+        description: "Seu perfil foi enviado para aprovação. Você já pode acessar a aba de membros.",
       });
-      navigate("/");
-    } catch (error) {
+      navigate("/meu-perfil");
+    } catch (error: any) {
       toast({
         title: "Erro ao cadastrar",
-        description: "Ocorreu um erro inesperado. Tente novamente.",
+        description: error?.message || "Ocorreu um erro inesperado. Tente novamente.",
         variant: "destructive",
       });
     } finally {
@@ -191,7 +225,9 @@ export default function Cadastro() {
                       />
                     </div>
                     <div>
-                      <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>E-mail</Label>
+                      <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>
+                        E-mail <span className="text-destructive">*</span>
+                      </Label>
                       <Input
                         type="email"
                         value={formData.email}
@@ -200,6 +236,37 @@ export default function Cadastro() {
                         className="h-11 text-[13px] rounded-lg border-border/30"
                         style={{ fontWeight: 420 }}
                       />
+                      <p className="text-[10px] text-muted-foreground/60 mt-1">Será seu acesso à área de membros.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>
+                          Senha <span className="text-destructive">*</span>
+                        </Label>
+                        <Input
+                          type="password"
+                          value={formData.senha}
+                          onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
+                          placeholder="Mínimo 6 caracteres"
+                          className="h-11 text-[13px] rounded-lg border-border/30"
+                          style={{ fontWeight: 420 }}
+                          minLength={6}
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>
+                          Confirmar senha <span className="text-destructive">*</span>
+                        </Label>
+                        <Input
+                          type="password"
+                          value={formData.senha_confirma}
+                          onChange={(e) => setFormData({ ...formData, senha_confirma: e.target.value })}
+                          placeholder="Repita a senha"
+                          className="h-11 text-[13px] rounded-lg border-border/30"
+                          style={{ fontWeight: 420 }}
+                          minLength={6}
+                        />
+                      </div>
                     </div>
                     <div>
                       <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Empresa (opcional)</Label>
@@ -215,7 +282,7 @@ export default function Cadastro() {
 
                   <Button
                     onClick={() => setStep(2)}
-                    disabled={!formData.nome_completo || !formData.contato_whatsapp || !formData.foto_url}
+                    disabled={!formData.nome_completo || !formData.contato_whatsapp || !formData.foto_url || !formData.email || formData.senha.length < 6 || formData.senha !== formData.senha_confirma}
                     className="h-11 px-6 text-[13px] rounded-full gap-2"
                     style={{ fontWeight: 450 }}
                   >

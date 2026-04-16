@@ -8,6 +8,7 @@ import { SpinBadge } from "@/components/SpinBadge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { useSindicos } from "@/hooks/useSindicos";
+import { buildRafaelWhatsAppUrl } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
 import {
   MapPin,
@@ -93,11 +94,8 @@ export default function SindicoPerfil() {
 
   const handleWhatsAppClick = () => {
     if (!sindico) return;
-    const phone = "5511960841033"; // Rafael Bernardes
-    const message = encodeURIComponent(
-      `Olá! Encontrei o perfil de ${sindico.nome_completo} no Quero 1 Síndico e gostaria de saber mais sobre este profissional.`
-    );
-    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+    const message = `Olá! Encontrei o perfil de ${sindico.nome_completo} no Quero 1 Síndico e gostaria de saber mais sobre este profissional.`;
+    window.open(buildRafaelWhatsAppUrl(message), "_blank");
   };
 
   /* ---------- loading / 404 ---------- */
