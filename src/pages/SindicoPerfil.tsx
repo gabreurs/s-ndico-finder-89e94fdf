@@ -6,7 +6,7 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { SindicoCard } from "@/components/SindicoCard";
 import { SpinBadge } from "@/components/SpinBadge";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { useSindicos } from "@/hooks/useSindicos";
 import { motion } from "framer-motion";
 import {
