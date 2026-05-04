@@ -12,8 +12,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
+import { BioBuilder } from "@/components/BioBuilder";
+import { BioData, buildBio } from "@/lib/bioBuilder";
 import { motion } from "framer-motion";
-import { LogOut, Save, Mail, Loader2, Lock, KeyRound } from "lucide-react";
+import { LogOut, Save, Mail, Loader2, Lock, KeyRound, Sparkles, Pencil } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Sindico = Tables<"sindicos">;
