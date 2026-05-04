@@ -344,17 +344,10 @@ export default function Cadastro() {
                   </div>
 
                   <div>
-                    <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Resumo profissional</Label>
-                    <Textarea
-                      value={formData.breve_resumo}
-                      onChange={(e) => setFormData({ ...formData, breve_resumo: e.target.value })}
-                      placeholder="Descreva sua experiência, diferenciais e abordagem como síndico profissional..."
-                      className="min-h-[120px] resize-none text-[13px] rounded-lg border-border/30"
-                      style={{ fontWeight: 420 }}
-                    />
-                    <p className="text-[10px] text-muted-foreground/50 mt-1.5" style={{ fontWeight: 400 }}>
-                      Um bom resumo ajuda moradores a entenderem seu perfil rapidamente.
-                    </p>
+                    <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 430 }}>
+                      Resumo profissional <span className="text-destructive">*</span>
+                    </Label>
+                    <BioBuilder value={bioData} onChange={setBioData} especialidades={formData.especialidades} />
                   </div>
 
                   <div className="grid gap-4">
