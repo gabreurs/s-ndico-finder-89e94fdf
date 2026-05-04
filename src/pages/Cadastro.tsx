@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
+import { BioBuilder } from "@/components/BioBuilder";
+import { BioData, buildBio, isBioComplete } from "@/lib/bioBuilder";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +23,13 @@ export default function Cadastro() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const [bioData, setBioData] = useState<BioData>({
+    anos_experiencia: undefined,
+    diferenciais: [],
+    porte_preferido: [],
+    formacoes: [],
+  });
+
   const [formData, setFormData] = useState({
     nome_completo: "",
     data_nascimento: "",
@@ -31,7 +40,6 @@ export default function Cadastro() {
     senha_confirma: "",
     ano_inicio_profissao: new Date().getFullYear(),
     site_redes_sociais: "",
-    breve_resumo: "",
     link_youtube: "",
     regioes: [] as string[],
     especialidades: [] as string[],
@@ -114,7 +122,8 @@ export default function Cadastro() {
         email: formData.email || null,
         ano_inicio_profissao: formData.ano_inicio_profissao,
         site_redes_sociais: formData.site_redes_sociais || null,
-        breve_resumo: formData.breve_resumo || null,
+        breve_resumo: buildBio(bioData, formData.especialidades) || null,
+        bio_data: bioData as any,
         link_youtube: formData.link_youtube || null,
         regioes: formData.regioes,
         especialidades: formData.especialidades,
@@ -335,17 +344,10 @@ export default function Cadastro() {
                   </div>
 
                   <div>
-                    <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Resumo profissional</Label>
-                    <Textarea
-                      value={formData.breve_resumo}
-                      onChange={(e) => setFormData({ ...formData, breve_resumo: e.target.value })}
-                      placeholder="Descreva sua experiência, diferenciais e abordagem como síndico profissional..."
-                      className="min-h-[120px] resize-none text-[13px] rounded-lg border-border/30"
-                      style={{ fontWeight: 420 }}
-                    />
-                    <p className="text-[10px] text-muted-foreground/50 mt-1.5" style={{ fontWeight: 400 }}>
-                      Um bom resumo ajuda moradores a entenderem seu perfil rapidamente.
-                    </p>
+                    <Label className="text-[12px] text-muted-foreground mb-2 block" style={{ fontWeight: 430 }}>
+                      Resumo profissional <span className="text-destructive">*</span>
+                    </Label>
+                    <BioBuilder value={bioData} onChange={setBioData} especialidades={formData.especialidades} />
                   </div>
 
                   <div className="grid gap-4">
@@ -452,7 +454,7 @@ export default function Cadastro() {
                     </Button>
                     <Button
                       onClick={handleSubmit}
-                      disabled={loading || formData.especialidades.length === 0 || !formData.foto_url}
+                      disabled={loading || formData.especialidades.length === 0 || !formData.foto_url || !isBioComplete(bioData)}
                       className="h-11 px-6 text-[13px] rounded-full gap-2"
                       style={{ fontWeight: 450 }}
                     >

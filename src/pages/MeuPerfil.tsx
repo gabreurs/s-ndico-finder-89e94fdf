@@ -12,8 +12,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
+import { BioBuilder } from "@/components/BioBuilder";
+import { BioData, buildBio } from "@/lib/bioBuilder";
 import { motion } from "framer-motion";
-import { LogOut, Save, Mail, Loader2, Lock, KeyRound } from "lucide-react";
+import { LogOut, Save, Mail, Loader2, Lock, KeyRound, Sparkles, Pencil } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Sindico = Tables<"sindicos">;
@@ -30,6 +32,8 @@ export default function MeuPerfil() {
   const [submitting, setSubmitting] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [formData, setFormData] = useState<Partial<Sindico>>({});
+  const [bioMode, setBioMode] = useState<"text" | "builder">("text");
+  const [bioData, setBioData] = useState<BioData>({});
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -69,6 +73,14 @@ export default function MeuPerfil() {
     if (data) {
       setSindico(data);
       setFormData(data);
+      const existing = (data as any).bio_data as BioData | null;
+      if (existing) {
+        setBioData(existing);
+        setBioMode("builder");
+      } else {
+        setBioData({});
+        setBioMode("text");
+      }
     } else {
       setSindico(null);
     }
@@ -109,13 +121,18 @@ export default function MeuPerfil() {
   const handleSave = async () => {
     if (!sindico) return;
     setSaving(true);
+    const finalResumo = bioMode === "builder"
+      ? buildBio(bioData, formData.especialidades || [])
+      : formData.breve_resumo;
+
     const { error } = await supabase
       .from("sindicos")
       .update({
         nome_completo: formData.nome_completo,
         contato_whatsapp: formData.contato_whatsapp,
         nome_empresa: formData.nome_empresa,
-        breve_resumo: formData.breve_resumo,
+        breve_resumo: finalResumo,
+        bio_data: bioMode === "builder" ? (bioData as any) : null,
         site_redes_sociais: formData.site_redes_sociais,
         link_youtube: formData.link_youtube,
         ano_inicio_profissao: formData.ano_inicio_profissao,
@@ -130,7 +147,7 @@ export default function MeuPerfil() {
       toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Perfil atualizado!" });
-      setSindico({ ...sindico, ...formData } as Sindico);
+      setSindico({ ...sindico, ...formData, breve_resumo: finalResumo } as Sindico);
     }
     setSaving(false);
   };
@@ -318,8 +335,21 @@ export default function MeuPerfil() {
             </div>
 
             <div>
-              <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Resumo profissional</Label>
-              <Textarea value={formData.breve_resumo || ""} onChange={(e) => setFormData({ ...formData, breve_resumo: e.target.value })} className="min-h-[120px] resize-none text-[13px] rounded-lg border-border/30" />
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-[12px] text-muted-foreground" style={{ fontWeight: 430 }}>Resumo profissional</Label>
+                <button
+                  type="button"
+                  onClick={() => setBioMode(bioMode === "builder" ? "text" : "builder")}
+                  className="text-[11px] text-primary hover:underline flex items-center gap-1"
+                >
+                  {bioMode === "builder" ? <><Pencil size={11} /> Usar texto livre</> : <><Sparkles size={11} /> Gerar resumo guiado</>}
+                </button>
+              </div>
+              {bioMode === "builder" ? (
+                <BioBuilder value={bioData} onChange={setBioData} especialidades={formData.especialidades || []} />
+              ) : (
+                <Textarea value={formData.breve_resumo || ""} onChange={(e) => setFormData({ ...formData, breve_resumo: e.target.value })} className="min-h-[120px] resize-none text-[13px] rounded-lg border-border/30" />
+              )}
             </div>
 
             <div className="grid gap-4">
