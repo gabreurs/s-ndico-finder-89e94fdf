@@ -73,6 +73,14 @@ export default function MeuPerfil() {
     if (data) {
       setSindico(data);
       setFormData(data);
+      const existing = (data as any).bio_data as BioData | null;
+      if (existing) {
+        setBioData(existing);
+        setBioMode("builder");
+      } else {
+        setBioData({});
+        setBioMode("text");
+      }
     } else {
       setSindico(null);
     }
