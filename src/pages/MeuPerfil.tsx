@@ -121,13 +121,18 @@ export default function MeuPerfil() {
   const handleSave = async () => {
     if (!sindico) return;
     setSaving(true);
+    const finalResumo = bioMode === "builder"
+      ? buildBio(bioData, formData.especialidades || [])
+      : formData.breve_resumo;
+
     const { error } = await supabase
       .from("sindicos")
       .update({
         nome_completo: formData.nome_completo,
         contato_whatsapp: formData.contato_whatsapp,
         nome_empresa: formData.nome_empresa,
-        breve_resumo: formData.breve_resumo,
+        breve_resumo: finalResumo,
+        bio_data: bioMode === "builder" ? (bioData as any) : null,
         site_redes_sociais: formData.site_redes_sociais,
         link_youtube: formData.link_youtube,
         ano_inicio_profissao: formData.ano_inicio_profissao,
@@ -142,7 +147,7 @@ export default function MeuPerfil() {
       toast({ title: "Erro ao salvar", description: error.message, variant: "destructive" });
     } else {
       toast({ title: "Perfil atualizado!" });
-      setSindico({ ...sindico, ...formData } as Sindico);
+      setSindico({ ...sindico, ...formData, breve_resumo: finalResumo } as Sindico);
     }
     setSaving(false);
   };
