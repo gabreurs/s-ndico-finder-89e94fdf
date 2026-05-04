@@ -335,8 +335,21 @@ export default function MeuPerfil() {
             </div>
 
             <div>
-              <Label className="text-[12px] text-muted-foreground mb-1.5 block" style={{ fontWeight: 430 }}>Resumo profissional</Label>
-              <Textarea value={formData.breve_resumo || ""} onChange={(e) => setFormData({ ...formData, breve_resumo: e.target.value })} className="min-h-[120px] resize-none text-[13px] rounded-lg border-border/30" />
+              <div className="flex items-center justify-between mb-2">
+                <Label className="text-[12px] text-muted-foreground" style={{ fontWeight: 430 }}>Resumo profissional</Label>
+                <button
+                  type="button"
+                  onClick={() => setBioMode(bioMode === "builder" ? "text" : "builder")}
+                  className="text-[11px] text-primary hover:underline flex items-center gap-1"
+                >
+                  {bioMode === "builder" ? <><Pencil size={11} /> Usar texto livre</> : <><Sparkles size={11} /> Gerar resumo guiado</>}
+                </button>
+              </div>
+              {bioMode === "builder" ? (
+                <BioBuilder value={bioData} onChange={setBioData} especialidades={formData.especialidades || []} />
+              ) : (
+                <Textarea value={formData.breve_resumo || ""} onChange={(e) => setFormData({ ...formData, breve_resumo: e.target.value })} className="min-h-[120px] resize-none text-[13px] rounded-lg border-border/30" />
+              )}
             </div>
 
             <div className="grid gap-4">
