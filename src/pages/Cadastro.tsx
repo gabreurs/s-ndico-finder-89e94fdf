@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
+import { BioBuilder } from "@/components/BioBuilder";
+import { BioData, buildBio, isBioComplete } from "@/lib/bioBuilder";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
