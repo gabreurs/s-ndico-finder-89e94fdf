@@ -454,7 +454,7 @@ export default function Cadastro() {
                     </Button>
                     <Button
                       onClick={handleSubmit}
-                      disabled={loading || formData.especialidades.length === 0 || !formData.foto_url}
+                      disabled={loading || formData.especialidades.length === 0 || !formData.foto_url || !isBioComplete(bioData)}
                       className="h-11 px-6 text-[13px] rounded-full gap-2"
                       style={{ fontWeight: 450 }}
                     >
