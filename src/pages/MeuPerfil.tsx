@@ -32,6 +32,8 @@ export default function MeuPerfil() {
   const [submitting, setSubmitting] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [formData, setFormData] = useState<Partial<Sindico>>({});
+  const [bioMode, setBioMode] = useState<"text" | "builder">("text");
+  const [bioData, setBioData] = useState<BioData>({});
   const { toast } = useToast();
   const navigate = useNavigate();
 
