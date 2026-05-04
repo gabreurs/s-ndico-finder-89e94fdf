@@ -23,6 +23,13 @@ export default function Cadastro() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const [bioData, setBioData] = useState<BioData>({
+    anos_experiencia: undefined,
+    diferenciais: [],
+    porte_preferido: [],
+    formacoes: [],
+  });
+
   const [formData, setFormData] = useState({
     nome_completo: "",
     data_nascimento: "",
@@ -33,7 +40,6 @@ export default function Cadastro() {
     senha_confirma: "",
     ano_inicio_profissao: new Date().getFullYear(),
     site_redes_sociais: "",
-    breve_resumo: "",
     link_youtube: "",
     regioes: [] as string[],
     especialidades: [] as string[],
