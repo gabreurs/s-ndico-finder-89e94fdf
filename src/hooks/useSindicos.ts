@@ -9,7 +9,6 @@ export interface Sindico {
   regioes: string[];
   especialidades: string[];
   cidade: string[];
-  contato_whatsapp: string;
   nome_empresa: string | null;
   breve_resumo: string | null;
   ano_inicio_profissao: number | null;
@@ -27,10 +26,9 @@ export function useSindicos(params?: UseSindicosParams) {
   return useQuery({
     queryKey: ["sindicos", params],
     queryFn: async () => {
-      let query = supabase
-        .from("sindicos")
+      let query = (supabase as any)
+        .from("sindicos_public")
         .select("*")
-        .eq("status", "approved")
         .order("created_at", { ascending: false });
 
       if (params?.especialidade && params.especialidade !== "all") {
