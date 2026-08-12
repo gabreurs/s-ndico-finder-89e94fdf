@@ -74,8 +74,10 @@ Camada de artigos com conteúdo redigido de verdade (contratação, custo, compa
 
 ## Detalhes técnicos
 
-- **Banco**: o app aponta para o Supabase externo em `src/lib/supabase.ts`. Persistir diagnósticos exige uma tabela nova (`diagnosticos`) nesse projeto — vou entregar o SQL pronto para você rodar no SQL Editor. Até você rodar, o wizard funciona ponta a ponta com o resultado calculado no cliente, sem gravar lead. Nada é simulado visualmente sem indicação.
-- **Matching**: função pura em `src/lib/matching.ts`, com pesos legíveis e testável, cruzando respostas do diagnóstico com `especialidades`, `cidade`, `regioes` e anos de experiência dos registros aprovados.
+- **Persistência obrigatória**: o diagnóstico só é considerado pronto com gravação. O wizard termina em captura de nome, WhatsApp, e-mail e condomínio, e o resultado só aparece depois do registro na tabela `diagnosticos`. O SQL está em `supabase-diagnosticos.sql` para rodar no SQL Editor do projeto externo.
+- **Matching por evidência**: `src/lib/matching.ts` cruza dimensões (porte, tipo, obras, financeiro, recuperação, implantação, conflitos, equipe, governança, perfil operacional, jurídico, custos) extraídas de dados reais do cadastro — especialidades, `bio_data` (diferenciais, faixa de unidades, porte preferido, formação), cidade/região e anos de atuação. Sem percentual artificial: nível de aderência (alta/parcial/limitada) + motivos citando o dado que sustenta e lacunas declaradas.
+- **Taxonomia combinável**: `src/lib/dimensoes.ts` separa tipo de empreendimento, porte, padrão, desafio e perfil de gestão. As 12 Especialidades Q1S continuam agrupadas na interface, mas são combinações de dimensões — um condomínio pode ser Alto Padrão + Grande + Obras + Recuperação ao mesmo tempo.
+- **Admin**: aba Diagnósticos em `/admin` com contato, condomínio, respostas, perfil indicado e profissionais sugeridos com os motivos. Pipeline, candidaturas e notificações ficam fora desta fase.
 - **Componentes novos**: `WhatsAppFloat` (link `wa.me/message/GZ5YOZ3EGOA2F1`), `ProcessSteps` (9 etapas), `IntentSplit`, `SolutionCard`, `DiagnosticWizard` — todos montados sobre os tokens e o glass já existentes.
 - **SEO**: `react-helmet-async` para title/description/canonical por rota, JSON-LD `Service` nas soluções e `Article` no conteúdo, `sitemap.xml` atualizado com as novas rotas. Corrijo também o canonical do `index.html`, hoje apontando para o domínio antigo `queroumsindico.com.br`.
 - **Nenhuma URL existente muda.**
