@@ -78,8 +78,8 @@ const Index = () => {
         </motion.div>
 
         {/* Ambient light */}
-        <div className="absolute top-[15%] left-[5%] w-[500px] h-[500px] rounded-full bg-primary/[0.06] blur-[150px]" />
-        <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] rounded-full bg-accent/[0.04] blur-[120px]" />
+        <div className="absolute top-[15%] left-[5%] w-[500px] h-[500px] rounded-full bg-primary/[0.06] blur-[150px] transform-gpu" />
+        <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] rounded-full bg-accent/[0.04] blur-[120px] transform-gpu" />
 
         {/* Grid overlay */}
         <div
@@ -209,7 +209,7 @@ const Index = () => {
               <motion.div
                 animate={{ y: [0, -7, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-                className="absolute top-20 right-24 w-44 h-56 rounded-xl bg-white/[0.02] backdrop-blur-sm border border-white/[0.04] overflow-hidden"
+                className="absolute top-20 right-24 w-44 h-56 rounded-xl bg-white/[0.02] border border-white/[0.04] overflow-hidden"
               >
                 <div className="h-24 bg-white/[0.02]" />
                 <div className="p-3 space-y-2">
@@ -289,7 +289,7 @@ const Index = () => {
 
       {/* ===== PERFIL CERTO / SEIS ATRIBUTOS ===== */}
       <section className="py-20 md:py-28 section-dark relative overflow-hidden">
-        <div className="absolute top-[10%] right-[15%] w-[420px] h-[420px] rounded-full bg-primary/[0.04] blur-[150px]" />
+        <div className="absolute top-[10%] right-[15%] w-[420px] h-[420px] rounded-full bg-primary/[0.04] blur-[150px] transform-gpu" />
         <div className="container relative">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="max-w-2xl mb-12">
             <motion.p variants={fadeUp} className="text-[11px] text-primary/50 tracking-[0.2em] uppercase mb-3" style={{ fontWeight: 450 }}>Não é sobre um nome, é sobre um perfil</motion.p>
@@ -403,7 +403,7 @@ const Index = () => {
 
       {/* ===== VALUE PROPS ===== */}
       <section className="py-28 md:py-36 section-dark relative overflow-hidden">
-        <div className="absolute top-0 left-[30%] w-[600px] h-[600px] rounded-full bg-primary/[0.04] blur-[150px]" />
+        <div className="absolute top-0 left-[30%] w-[600px] h-[600px] rounded-full bg-primary/[0.04] blur-[150px] transform-gpu" />
         <div className="container relative">
           <motion.div
             initial="hidden"

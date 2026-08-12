@@ -56,7 +56,7 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full backdrop-blur-2xl transition-[background-color,box-shadow] duration-300 ${
+      className={`sticky top-0 z-50 w-full transition-[background-color,box-shadow] duration-300 ${
         scrolled
           ? "bg-background shadow-[0_1px_0_hsl(var(--border)/0.6),0_12px_30px_-22px_hsl(var(--foreground)/0.35)]"
           : "bg-background"
