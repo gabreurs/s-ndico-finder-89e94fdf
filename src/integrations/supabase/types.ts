@@ -160,7 +160,66 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      sindicos_public: {
+        Row: {
+          ano_inicio_profissao: number | null
+          bio_data: Json | null
+          breve_resumo: string | null
+          cidade: string[] | null
+          created_at: string | null
+          especialidades: string[] | null
+          foto_url: string | null
+          galeria_urls: string[] | null
+          id: string | null
+          link_youtube: string | null
+          nome_completo: string | null
+          nome_empresa: string | null
+          regioes: string[] | null
+          site_redes_sociais: string | null
+          slug: string | null
+          status: Database["public"]["Enums"]["approval_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          ano_inicio_profissao?: number | null
+          bio_data?: Json | null
+          breve_resumo?: string | null
+          cidade?: string[] | null
+          created_at?: string | null
+          especialidades?: string[] | null
+          foto_url?: string | null
+          galeria_urls?: string[] | null
+          id?: string | null
+          link_youtube?: string | null
+          nome_completo?: string | null
+          nome_empresa?: string | null
+          regioes?: string[] | null
+          site_redes_sociais?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["approval_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          ano_inicio_profissao?: number | null
+          bio_data?: Json | null
+          breve_resumo?: string | null
+          cidade?: string[] | null
+          created_at?: string | null
+          especialidades?: string[] | null
+          foto_url?: string | null
+          galeria_urls?: string[] | null
+          id?: string | null
+          link_youtube?: string | null
+          nome_completo?: string | null
+          nome_empresa?: string | null
+          regioes?: string[] | null
+          site_redes_sociais?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["approval_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       generate_slug: { Args: { input_text: string }; Returns: string }
