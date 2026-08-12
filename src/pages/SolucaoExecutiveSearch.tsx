@@ -39,7 +39,8 @@ export default function SolucaoExecutiveSearch() {
         "Mediação na proposta e contrato",
         "Acompanhamento pós-contratação",
       ]}
-      cta={{ label: "Solicitar vaga exclusiva", href: "https://api.whatsapp.com/send/?phone=5511960841033&text&type=phone_number&app_absent=0", whatsapp: true }}
+      cta={{ label: "Solicitar vaga exclusiva", href: "#whatsapp", whatsapp: true }}
+      whatsappMessage="Olá, Rafael. Quero abrir uma vaga exclusiva de Executive Search para encontrar um síndico."
     >
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} className="space-y-8">
         <div className="rounded-xl border border-border/30 bg-card/40 p-6">
