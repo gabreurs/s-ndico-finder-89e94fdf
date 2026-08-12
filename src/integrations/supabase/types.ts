@@ -140,6 +140,21 @@ export type Database = {
         }
         Relationships: []
       }
+      test_rls: {
+        Row: {
+          id: string
+          nome: string | null
+        }
+        Insert: {
+          id?: string
+          nome?: string | null
+        }
+        Update: {
+          id?: string
+          nome?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
