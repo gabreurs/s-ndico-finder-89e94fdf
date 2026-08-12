@@ -1,6 +1,7 @@
 # DOCUMENTAÇÃO DE HANDOFF E HOMOLOGAÇÃO — QUERO 1 SÍNDICO
 
 Documento gerado para a rodada de estabilização anterior à publicação da nova `dist` em produção.
+**Revisão 2 — 12/08/2026:** funções publicadas em produção, SQL de cadastro aplicado, dependências atualizadas e rodada de performance no hero/home (ver seções 20, 25 e 27).
 Use-o literalmente como roteiro: cada teste tem passo, resultado esperado e onde investigar em caso de falha.
 
 ---
@@ -509,14 +510,23 @@ Otimizações aplicadas:
 - **Cleanup de ScrollTrigger** e remoção de listeners (`scroll`, `resize`, `orientationchange`, ticker do GSAP) em todos os `useEffect`.
 - **Um único RAF** no site (Lenis dirigido pelo ticker do GSAP) — não há loops concorrentes.
 - **Remoção de `backdrop-blur`** do header e do overlay fixo do rodapé (reprocessavam a tela inteira a cada frame).
-- **Promoção para GPU** (`transform-gpu`, `will-change: transform`) nas camadas animadas do hero e nos blobs desfocados.
+- **Zero `filter: blur()` em camadas de fundo** — todas as luzes ambientes usam `radial-gradient` (`.ambient-glow`).
+- **Promoção para GPU** (`transform-gpu`, `will-change: transform`) nas camadas animadas do hero.
 - **Parallax do hero removido**; animações restritas a `transform`/`opacity`.
 - **Skeletons** em `/sindicos` para evitar layout shift durante o carregamento.
 - **Lazy loading** de imagens de card e dimensões reservadas.
 - **`prefers-reduced-motion`** desliga Lenis e reduz as animações.
 - **Cache de dados** com React Query e `staleTime` ajustado; invalidação manual após edições.
 
-Jank encontrado e corrigido: engasgo na região do hero/processo, causado por blur em camada fixa + parallax de fundo + suavização de scroll longa demais (sensação de atraso). Corrigido conforme itens acima.
+### Rodada 2 de performance (12/08/2026) — lag do hero em produção
+
+Após a publicação, o site apresentou lag forte na home, principalmente ao descer do hero para a próxima seção. Causas e correções:
+
+1. **`filter: blur()` em camadas gigantes.** Havia 25 divs de "luz ambiente" com `blur-[100px]`–`blur-[160px]` sobre círculos de até 600 px. Cada uma força o navegador a rasterizar e reprocessar uma área enorme a cada frame de scroll — é o item mais caro da página. Substituídos por `.ambient-glow` / `.ambient-glow-accent` (`radial-gradient`), efeito visual praticamente idêntico e custo próximo de zero.
+2. **Transform de scroll sobre todo o conteúdo do hero.** O `useScroll` + `useTransform` do Framer Motion animava `opacity` e `y` do container inteiro do hero (texto, botões, cards, badge) a cada frame — repintura de tela cheia exatamente na transição hero → próxima seção. Removido; a entrada do hero continua animada na montagem.
+3. **Overlay fixo do rodapé (`ScrollBlur`).** Tinha `mask-image` + `box-shadow: inset` — ambos recompostos a cada frame. Reduzido a um gradiente simples.
+
+Correções anteriores (rodada 1): remoção de `backdrop-blur` do header, parallax do hero desligado, suavização do Lenis encurtada, animações restritas a `transform`/`opacity`.
 
 ### Checklist de motion (seção 28 do briefing)
 ☐ scroll lento · ☐ scroll rápido (flick) · ☐ resize da janela · ☐ troca de rota · ☐ voltar/avançar do navegador · ☐ mobile real · ☐ gesto de toque · ☐ `prefers-reduced-motion` ativo · ☐ múltiplas navegações seguidas · ☐ scroll logo após o carregamento das imagens.
@@ -627,6 +637,13 @@ No DevTools → Network, confirmar chamadas a `ddopekrratkjytkqcqho.supabase.co`
 
 ## 25. CHANGELOG TÉCNICO
 
+### Rev. 2 — 12/08/2026
+- Performance: luzes ambientes migradas de `blur()` para `radial-gradient` (`.ambient-glow` em `src/index.css`, 25 ocorrências em 15 arquivos).
+- Performance: removido o `useScroll`/`useTransform` do hero da home (`src/pages/Index.tsx`).
+- Performance: `ScrollBlur` simplificado (sem `mask-image` nem `box-shadow` inset).
+- Segurança: `react-router-dom` 6.30.4, `vite` 5.4.21, `postcss` 8.5.26, `vitest` 4, `jsdom` 30.
+- Infra: `submit-sindico`, `submit-diagnostico` e `upload-sindico-photo` publicadas em produção; `supabase-fix-cadastro.sql` aplicado.
+
 ### Added
 - Diagnóstico do condomínio em 6 etapas (`/diagnostico`) com persistência.
 - Motor de matching por evidência (`src/lib/matching.ts`) e taxonomia multidimensional (`src/lib/dimensoes.ts`).
@@ -711,12 +728,12 @@ No DevTools → Network, confirmar chamadas a `ddopekrratkjytkqcqho.supabase.co`
 
 ### Críticas — resolver antes ou logo após a publicação
 1. **176 fotos apontando para o WordPress morto.** `queroumsindico.com.br` não resolve; essas imagens aparecem quebradas em `/sindicos` e nos perfis. Solução: rodar a migração de imagens para o Storage (script `migrate.js`, exige a chave de serviço **executada localmente por você**, nunca neste documento) ou substituir manualmente pelo `/admin`.
-2. **Edge Function `upload-sindico-photo` não publicada.** Hoje o cadastro só funciona graças ao fallback de upload direto ao Storage. Publicar com `supabase functions deploy upload-sindico-photo` para voltar ao caminho seguro.
+2. ~~**Edge Function `upload-sindico-photo` não publicada.**~~ **Resolvido** — as três funções estão publicadas em produção.
 3. **Nenhuma conta de QA existente** (admin ou síndico). Criar conforme a seção 11 antes de iniciar a homologação.
 
 ### Importantes — podem ser validadas durante a homologação
-4. **View `sindicos_public` ausente no banco.** O site funciona pelo fallback, mas cada sessão dispara um 404 no console. Aplicar o SQL da view elimina isso e restabelece o isolamento de PII na camada do banco.
-5. **`supabase-fix-cadastro.sql` (grants e políticas de RLS) ainda não confirmado como aplicado.** Sem ele, alterações futuras de política podem quebrar o cadastro.
+4. ~~**View `sindicos_public` ausente no banco.**~~ **Resolvido** — a view existe em produção; o fallback permanece no código apenas como rede de segurança.
+5. ~~**`supabase-fix-cadastro.sql` não aplicado.**~~ **Resolvido** — aplicado no banco de produção.
 6. **Permissão de escrita anônima no bucket `sindicos` ainda ativa** em produção (é o que permite o fallback). Depois de publicar a função de upload, revogar.
 7. **Páginas legais inexistentes** (Termos de Uso e Política de Privacidade) — relevantes por captar dados pessoais no diagnóstico e no cadastro.
 
