@@ -146,6 +146,23 @@ const Index = () => {
                 onCidadeChange={setCidade}
                 onRegiaoChange={setRegiao}
               />
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+                className="mt-6 flex flex-wrap items-center gap-4"
+              >
+                <Button asChild size="sm" className="rounded-full px-6 h-10 text-[13px] gap-2" style={{ fontWeight: 450 }}>
+                  <Link to="/diagnostico">
+                    Fazer o diagnóstico do condomínio
+                    <ArrowRight size={14} />
+                  </Link>
+                </Button>
+                <span className="text-[12px] text-white/30" style={{ fontWeight: 390 }}>
+                  Buscamos o perfil certo, não apenas um nome de lista.
+                </span>
+              </motion.div>
             </div>
 
             {/* Right — floating glass cards */}
