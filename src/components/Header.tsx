@@ -58,8 +58,8 @@ export function Header() {
     <header
       className={`sticky top-0 z-50 w-full backdrop-blur-2xl transition-[background-color,box-shadow] duration-300 ${
         scrolled
-          ? "bg-background/92 shadow-[0_1px_0_hsl(var(--border)/0.35),0_10px_30px_-18px_hsl(220_28%_4%_/_0.6)]"
-          : "bg-background/70"
+          ? "bg-background shadow-[0_1px_0_hsl(var(--border)/0.6),0_12px_30px_-22px_hsl(var(--foreground)/0.35)]"
+          : "bg-background"
       }`}
     >
       <div
@@ -82,12 +82,12 @@ export function Header() {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+        <nav className="hidden xl:flex items-center gap-5 2xl:gap-7">
           {navLinks.map((link) =>
             link.children ? (
               <div key={link.href} className="relative group">
                 <button
-                  className="relative flex items-center gap-1 text-[13px] tracking-wide transition-colors duration-300 hover:text-foreground text-muted-foreground"
+                  className="relative flex items-center gap-1 text-[13px] tracking-wide whitespace-nowrap transition-colors duration-300 hover:text-foreground text-muted-foreground"
                   style={{ fontWeight: 420 }}
                 >
                   {link.label}
@@ -114,7 +114,7 @@ export function Header() {
               <Link
                 key={link.href}
                 to={link.href}
-                className={`relative text-[13px] tracking-wide transition-colors duration-300 hover:text-foreground ${
+                className={`relative text-[13px] tracking-wide whitespace-nowrap transition-colors duration-300 hover:text-foreground ${
                   isActive(link.href) ? "text-foreground" : "text-muted-foreground"
                 }`}
                 style={{ fontWeight: 420 }}
@@ -132,7 +132,7 @@ export function Header() {
           )}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-2 shrink-0 pl-2">
+        <div className="hidden xl:flex items-center gap-2 shrink-0 pl-2">
           <Button asChild variant="ghost" size="sm" className="px-4 h-9 text-[12.5px] rounded-full text-muted-foreground hover:text-foreground" style={{ fontWeight: 430 }}>
             <Link to="/meu-perfil">Entrar</Link>
           </Button>
@@ -142,7 +142,7 @@ export function Header() {
         </div>
 
         <button
-          className="lg:hidden p-2 rounded-lg hover:bg-muted/50 transition-colors"
+          className="xl:hidden p-2.5 rounded-lg hover:bg-muted/50 transition-colors"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Menu de navegação"
         >
@@ -156,7 +156,7 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-border/30 bg-background/95 backdrop-blur-2xl overflow-hidden"
+            className="xl:hidden border-t border-border/30 bg-background/95 backdrop-blur-2xl overflow-hidden"
           >
             <div className="p-4 space-y-0.5">
               {navLinks.map((link) =>
