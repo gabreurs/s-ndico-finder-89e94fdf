@@ -9,9 +9,9 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: "/", label: "Início" },
+    { href: "/sindicos", label: "Encontrar um síndico" },
+    { href: "/cadastro", label: "Sou síndico" },
     { href: "/como-funciona", label: "Como funciona" },
-    { href: "/sindicos", label: "Síndicos" },
     { href: "/quem-somos", label: "Quem somos" },
   ];
 
