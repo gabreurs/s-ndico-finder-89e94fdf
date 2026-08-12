@@ -15,6 +15,9 @@ import { ArrowRight, Shield, Clock, Building2, Users, Star, Target, Search, Wall
 import { motion, useScroll, useTransform } from "framer-motion";
 import heroSp from "@/assets/hero-sp.jpg";
 import { Seo } from "@/components/Seo";
+import { HeadlineReveal } from "@/components/motion/HeadlineReveal";
+import { Reveal } from "@/components/motion/Reveal";
+import { MagneticButton } from "@/components/motion/MagneticButton";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -70,7 +73,7 @@ const Index = () => {
       <section ref={heroRef} className="relative min-h-[100vh] flex items-center overflow-hidden">
         {/* Background image with overlay */}
         <motion.div style={{ y: heroBgY }} className="absolute inset-0">
-          <img src={heroSp} alt="" className="w-full h-full object-cover" aria-hidden="true" />
+          <img src={heroSp} alt="" className="w-full h-full object-cover" aria-hidden="true" fetchPriority="high" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,25%,4%,0.88)] via-[hsl(220,25%,4%,0.92)] to-[hsl(220,25%,4%,0.97)]" />
         </motion.div>
 
@@ -101,17 +104,14 @@ const Index = () => {
                 Headhunter de síndicos profissionais
               </motion.p>
 
-              <motion.h1
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" as const }}
+              <HeadlineReveal
+                as="h1"
+                delay={0.15}
+                text="Encontre o síndico certo para o seu condomínio — com método"
+                accentWords={["certo"]}
                 className="text-4xl md:text-5xl lg:text-[3.6rem] text-white leading-[1.06] tracking-[-0.03em] mb-6"
                 style={{ fontWeight: 300 }}
-              >
-                Encontre o síndico{" "}
-                <span className="text-primary" style={{ fontWeight: 460 }}>certo</span>{" "}
-                para o seu condomínio — com método
-              </motion.h1>
+              />
 
               <motion.p
                 initial={{ opacity: 0, y: 12 }}
