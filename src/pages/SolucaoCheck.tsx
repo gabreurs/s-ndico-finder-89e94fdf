@@ -38,7 +38,9 @@ export default function SolucaoCheck() {
         "Relatório de red flags e pontos de atenção",
         "Parecer resumido para o conselho",
       ]}
-      cta={{ label: "Validar candidato", href: "https://api.whatsapp.com/send/?phone=5511960841033&text&type=phone_number&app_absent=0", whatsapp: true }}
+      cta={{ label: "Enviar candidato para validação", href: "#whatsapp", whatsapp: true }}
+      whatsappMessage="Olá, Rafael. Quero contratar o Q1S Check para validar um candidato a síndico do meu condomínio."
+      secondaryCta={{ label: "Ver síndicos já validados", href: "/solucoes/referencias" }}
     >
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} className="space-y-8">
         <div className="grid sm:grid-cols-2 gap-4">

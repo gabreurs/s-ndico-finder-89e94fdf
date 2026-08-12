@@ -41,8 +41,18 @@ export function useSindicos(params?: UseSindicosParams) {
         return q;
       });
 
-      if (error) throw error;
+      if (error) {
+        // Erro de banco nunca deve virar "nenhum resultado" na tela.
+        console.error("[useSindicos] falha ao consultar sindicos", { params, error });
+        throw error;
+      }
+
+      if (import.meta.env.DEV) {
+        console.info("[useSindicos] registros recebidos", { params, total: data?.length ?? 0 });
+      }
+
       return data as unknown as Sindico[];
     },
+    retry: 1,
   });
 }

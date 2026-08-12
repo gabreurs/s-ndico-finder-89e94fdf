@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, Award, Target, Search, CheckCircle2 } from "lucide-react";
-import { especialidadePorSlug, dimensaoLabel } from "@/lib/dimensoes";
+import { especialidadePorSlug, dimensaoLabel, urlBuscaEspecialidade } from "@/lib/dimensoes";
 import { especialidadeConteudoPorSlug } from "@/lib/especialidadesConteudo";
 import { Seo } from "@/components/Seo";
 
@@ -65,7 +65,7 @@ export default function Especialidade() {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full px-6 h-12 text-[13px] border-white/10 text-white/60 hover:text-white hover:border-white/20 bg-transparent" style={{ fontWeight: 430 }}>
-                <Link to={`/sindicos?especialidade=${especialidade.slug}`}>
+                <Link to={urlBuscaEspecialidade(especialidade.slug)}>
                   Ver profissionais aderentes
                   <ArrowRight size={14} />
                 </Link>
@@ -167,7 +167,7 @@ export default function Especialidade() {
                   Veja síndicos com repertório declarado nesta especialidade no banco de referências Q1S.
                 </p>
                 <Button asChild variant="outline" className="w-full rounded-full h-10 text-[12px] gap-1.5" style={{ fontWeight: 430 }}>
-                  <Link to={`/sindicos?especialidade=${especialidade.slug}`}>
+                  <Link to={urlBuscaEspecialidade(especialidade.slug)}>
                     Ver perfis
                     <ArrowRight size={13} />
                   </Link>

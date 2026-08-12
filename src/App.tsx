@@ -11,6 +11,7 @@ const Sindicos = lazy(() => import("./pages/Sindicos"));
 const SindicoPerfil = lazy(() => import("./pages/SindicoPerfil"));
 const Cadastro = lazy(() => import("./pages/Cadastro"));
 const Diagnostico = lazy(() => import("./pages/Diagnostico"));
+const Solucoes = lazy(() => import("./pages/Solucoes"));
 const SolucaoMatch = lazy(() => import("./pages/SolucaoMatch"));
 const SolucaoExecutiveSearch = lazy(() => import("./pages/SolucaoExecutiveSearch"));
 const SolucaoCheck = lazy(() => import("./pages/SolucaoCheck"));
@@ -70,6 +71,7 @@ const App = () => {
               <Route path="/sindico/:slug" element={<SindicoPerfil />} />
               <Route path="/cadastro" element={<Cadastro />} />
                <Route path="/diagnostico" element={<Diagnostico />} />
+               <Route path="/solucoes" element={<Solucoes />} />
                <Route path="/solucoes/match" element={<SolucaoMatch />} />
                <Route path="/solucoes/executive-search" element={<SolucaoExecutiveSearch />} />
                <Route path="/solucoes/check" element={<SolucaoCheck />} />

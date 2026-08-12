@@ -15,6 +15,12 @@ interface SolucaoLayoutProps {
   description: string;
   benefits: string[];
   cta: { label: string; href: string; whatsapp?: boolean };
+  /** Segunda intenção da página — precisa ser diferente do CTA principal. */
+  secondaryCta?: { label: string; href: string };
+  /** Mensagem pré-preenchida do WhatsApp, para dar contexto do serviço solicitado. */
+  whatsappMessage?: string;
+  /** Texto do botão de WhatsApp da barra lateral (dúvida, não contratação). */
+  ajudaLabel?: string;
   children?: ReactNode;
   /** SEO da página da solução. */
   seo: { title: string; description: string; path: string };
@@ -29,7 +35,8 @@ const fadeUp = {
   }),
 };
 
-export function SolucaoLayout({ icon, title, subtitle, description, benefits, cta, children, seo }: SolucaoLayoutProps) {
+export function SolucaoLayout({ icon, title, subtitle, description, benefits, cta, secondaryCta, whatsappMessage, ajudaLabel, children, seo }: SolucaoLayoutProps) {
+  const secundario = secondaryCta ?? { label: "Fazer diagnóstico", href: "/diagnostico" };
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Seo title={seo.title} description={seo.description} path={seo.path} />
@@ -55,7 +62,7 @@ export function SolucaoLayout({ icon, title, subtitle, description, benefits, ct
             <motion.div variants={fadeUp} custom={4} className="flex flex-wrap gap-3">
               {cta.whatsapp ? (
                 <Button asChild size="lg" className="rounded-full px-7 h-12 text-[13px] gap-2 bg-[hsl(var(--green-whatsapp))] hover:bg-[hsl(var(--green-whatsapp))]/90 text-white" style={{ fontWeight: 450 }}>
-                  <a href={buildRafaelWhatsAppUrl()} target="_blank" rel="noopener noreferrer">
+                  <a href={buildRafaelWhatsAppUrl(whatsappMessage)} target="_blank" rel="noopener noreferrer">
                     <MessageCircle size={16} />
                     {cta.label}
                   </a>
@@ -69,7 +76,7 @@ export function SolucaoLayout({ icon, title, subtitle, description, benefits, ct
                 </Button>
               )}
               <Button asChild variant="outline" size="lg" className="rounded-full px-6 h-12 text-[13px] border-white/10 text-white/60 hover:text-white hover:border-white/20 bg-transparent" style={{ fontWeight: 430 }}>
-                <Link to="/diagnostico">Fazer diagnóstico</Link>
+                <Link to={secundario.href}>{secundario.label}</Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -101,9 +108,13 @@ export function SolucaoLayout({ icon, title, subtitle, description, benefits, ct
                   Fale com Rafael Bernardes para entender qual serviço faz sentido para o seu condomínio.
                 </p>
                 <Button asChild variant="outline" className="w-full rounded-full h-10 text-[12px] gap-1.5 border-[hsl(var(--green-whatsapp))]/30 text-[hsl(var(--green-whatsapp))] hover:bg-[hsl(var(--green-whatsapp))]/10" style={{ fontWeight: 430 }}>
-                  <a href={buildRafaelWhatsAppUrl()} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={buildRafaelWhatsAppUrl(`Olá, Rafael. Tenho uma dúvida sobre o ${title} e quero entender se é o serviço certo para o meu condomínio.`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <MessageCircle size={14} />
-                    WhatsApp
+                    {ajudaLabel ?? "Tirar dúvida no WhatsApp"}
                   </a>
                 </Button>
               </div>

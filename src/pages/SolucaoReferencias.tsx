@@ -38,6 +38,7 @@ export default function SolucaoReferencias() {
         "Sem custo para o condomínio",
       ]}
       cta={{ label: "Ver banco de referências", href: "/sindicos" }}
+      secondaryCta={{ label: "Descobrir o perfil ideal", href: "/diagnostico" }}
     >
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} className="space-y-8">
         <div className="grid sm:grid-cols-2 gap-4">

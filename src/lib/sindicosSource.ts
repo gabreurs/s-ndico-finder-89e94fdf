@@ -28,19 +28,35 @@ function viewAusente(error: any) {
  * Se a view ainda não existir no banco, cai para a tabela base lendo apenas as colunas
  * públicas e filtrando `status = 'approved'` — o resultado é equivalente.
  */
-export async function selecionarSindicosPublicos(
-  aplicarFiltros: (query: any) => any = (q) => q,
-) {
-  const viaView = await aplicarFiltros(
-    (supabase as any).from("sindicos_public").select(COLUNAS_PUBLICAS_SINDICO),
-  );
+let fonte: "view" | "tabela" | null = null;
 
-  if (!viaView.error || !viewAusente(viaView.error)) return viaView;
-
-  return await aplicarFiltros(
+const consultarTabela = (aplicarFiltros: (q: any) => any) =>
+  aplicarFiltros(
     (supabase as any)
       .from("sindicos")
       .select(COLUNAS_PUBLICAS_SINDICO)
       .eq("status", "approved"),
   );
+
+export async function selecionarSindicosPublicos(
+  aplicarFiltros: (query: any) => any = (q) => q,
+) {
+  if (fonte === "tabela") return await consultarTabela(aplicarFiltros);
+
+  const viaView = await aplicarFiltros(
+    (supabase as any).from("sindicos_public").select(COLUNAS_PUBLICAS_SINDICO),
+  );
+
+  if (!viaView.error) {
+    fonte = "view";
+    return viaView;
+  }
+
+  if (!viewAusente(viaView.error)) return viaView;
+
+  // A view ainda não existe neste banco: passa a consultar a tabela direto (mesmos dados
+  // reais, apenas aprovados e sem colunas sensíveis) e para de tentar a view a cada busca.
+  fonte = "tabela";
+  console.warn("[sindicos] view sindicos_public ausente — consultando a tabela base.");
+  return await consultarTabela(aplicarFiltros);
 }

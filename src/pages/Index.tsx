@@ -157,7 +157,7 @@ const Index = () => {
                 </Button>
                 <Button asChild variant="outline" size="sm" className="rounded-full px-6 h-11 text-[13px] border-white/10 text-white/60 hover:text-white hover:border-white/20 bg-transparent" style={{ fontWeight: 430 }}>
                   <Link to="/sindicos">
-                    Ver banco de referências
+                    Buscar síndicos direto
                     <ArrowRight size={14} />
                   </Link>
                 </Button>
@@ -180,7 +180,7 @@ const Index = () => {
                 className="mt-6 flex flex-wrap items-center gap-4"
               >
                 <Button asChild size="sm" variant="ghost" className="rounded-full px-4 h-9 text-[12px] text-white/30 hover:text-white hover:bg-white/5" style={{ fontWeight: 430 }}>
-                  <Link to="/solucoes/match">Conhecer Q1S Match</Link>
+                  <Link to="/solucoes">Ver todas as soluções</Link>
                 </Button>
                 <span className="text-[12px] text-white/30" style={{ fontWeight: 390 }}>
                   Buscamos o perfil certo, não apenas um nome de lista.

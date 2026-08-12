@@ -38,6 +38,7 @@ export default function SolucaoMatch() {
         "Contato direto com a Q1S ou com os síndicos",
       ]}
       cta={{ label: "Iniciar diagnóstico", href: "/diagnostico" }}
+      secondaryCta={{ label: "Ver todos os profissionais", href: "/sindicos" }}
     >
       <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} className="space-y-12">
         <div className="grid sm:grid-cols-2 gap-4">
