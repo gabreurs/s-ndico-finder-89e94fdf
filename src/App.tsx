@@ -11,6 +11,10 @@ import Sindicos from "./pages/Sindicos";
 import SindicoPerfil from "./pages/SindicoPerfil";
 import Cadastro from "./pages/Cadastro";
 import Diagnostico from "./pages/Diagnostico";
+import SolucaoMatch from "./pages/SolucaoMatch";
+import SolucaoExecutiveSearch from "./pages/SolucaoExecutiveSearch";
+import SolucaoCheck from "./pages/SolucaoCheck";
+import SolucaoReferencias from "./pages/SolucaoReferencias";
 import ComoFunciona from "./pages/ComoFunciona";
 import QuemSomos from "./pages/QuemSomos";
 import Admin from "./pages/Admin";
@@ -57,8 +61,12 @@ const App = () => {
               <Route path="/sindicos" element={<Sindicos />} />
               <Route path="/sindico/:slug" element={<SindicoPerfil />} />
               <Route path="/cadastro" element={<Cadastro />} />
-              <Route path="/diagnostico" element={<Diagnostico />} />
-              <Route path="/como-funciona" element={<ComoFunciona />} />
+               <Route path="/diagnostico" element={<Diagnostico />} />
+               <Route path="/solucoes/match" element={<SolucaoMatch />} />
+               <Route path="/solucoes/executive-search" element={<SolucaoExecutiveSearch />} />
+               <Route path="/solucoes/check" element={<SolucaoCheck />} />
+               <Route path="/solucoes/referencias" element={<SolucaoReferencias />} />
+               <Route path="/como-funciona" element={<ComoFunciona />} />
               <Route path="/quem-somos" element={<QuemSomos />} />
               <Route path="/meu-perfil" element={<MeuPerfil />} />
               <Route path="/reset-password" element={<ResetPassword />} />

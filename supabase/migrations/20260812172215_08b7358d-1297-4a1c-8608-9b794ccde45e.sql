@@ -1,0 +1,1 @@
+ALTER TABLE public.diagnosticos DISABLE TRIGGER update_diagnosticos_updated_at;
