@@ -60,20 +60,18 @@ export default function SindicoPerfil() {
       if (!slug) return;
 
       // Try by slug first
-      let { data } = await supabase
-        .from("sindicos")
+      let { data } = await (supabase as any)
+        .from("sindicos_public")
         .select("*")
         .eq("slug", slug)
-        .eq("status", "approved")
         .maybeSingle();
 
       // Fallback: if slug looks like a UUID, try by id and redirect to slug URL
       if (!data && /^[0-9a-f-]{36}$/.test(slug)) {
-        const res = await supabase
-          .from("sindicos")
+        const res = await (supabase as any)
+          .from("sindicos_public")
           .select("*")
           .eq("id", slug)
-          .eq("status", "approved")
           .maybeSingle();
         data = res.data;
         if (data && (data as any).slug) {

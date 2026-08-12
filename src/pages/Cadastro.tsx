@@ -79,27 +79,6 @@ export default function Cadastro() {
         return;
       }
 
-      // Check for existing registration with same WhatsApp
-      const digits = formData.contato_whatsapp.replace(/\D/g, "");
-      const { data: existing } = await supabase
-        .from("sindicos")
-        .select("id, status")
-        .or(`contato_whatsapp.eq.${formData.contato_whatsapp},contato_whatsapp.eq.${digits}`)
-        .in("status", ["pending", "approved"]);
-
-      if (existing && existing.length > 0) {
-        const isPending = existing.some((e) => e.status === "pending");
-        toast({
-          title: "Cadastro já existente",
-          description: isPending
-            ? "Você já possui um cadastro pendente de aprovação. Aguarde a análise."
-            : "Você já possui um perfil aprovado na plataforma.",
-          variant: "destructive",
-        });
-        setLoading(false);
-        return;
-      }
-
       // Create auth account first so user can access /meu-perfil
       const redirectUrl = `${window.location.origin}/meu-perfil`;
       const { error: authError } = await supabase.auth.signUp({
@@ -133,20 +112,12 @@ export default function Cadastro() {
         foto_url: formData.foto_url,
       };
 
-      const { error } = await supabase.from("sindicos").insert(payload);
-
-      // Alguns ambientes bloqueiam INSERT público por RLS (42501).
-      // Nesse caso o cadastro segue pela função de servidor.
-      if (error) {
-        const isRls = error.code === "42501" || /row-level security/i.test(error.message ?? "");
-        if (!isRls) throw error;
-
-        const { data: fnData, error: fnError } = await supabase.functions.invoke("submit-sindico", {
-          body: payload,
-        });
-        if (fnError) throw fnError;
-        if (fnData?.error) throw new Error(fnData.message || "Não foi possível concluir o cadastro.");
-      }
+      // O cadastro público é sempre validado no servidor (duplicidade + dados).
+      const { data: fnData, error: fnError } = await supabase.functions.invoke("submit-sindico", {
+        body: payload,
+      });
+      if (fnError) throw fnError;
+      if (fnData?.error) throw new Error(fnData.message || "Não foi possível concluir o cadastro.");
 
 
       toast({
