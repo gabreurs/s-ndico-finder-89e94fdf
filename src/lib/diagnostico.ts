@@ -273,3 +273,19 @@ export async function atualizarStatusDiagnostico(id: string, status: string) {
   const { error } = await supabase.from("diagnosticos").update({ status }).eq("id", id);
   if (error) throw error;
 }
+
+export async function excluirDiagnostico(id: string) {
+  const { error } = await supabase.from("diagnosticos").delete().eq("id", id);
+  if (error) throw error;
+}
+
+/** Rótulos operacionais dos status usados no /admin. */
+export const STATUS_DIAGNOSTICO: { value: string; label: string }[] = [
+  { value: "novo", label: "Novo" },
+  { value: "em-contato", label: "Em contato" },
+  { value: "em-analise", label: "Em análise" },
+  { value: "concluido", label: "Concluído" },
+];
+
+export const statusDiagnosticoLabel = (value: string) =>
+  STATUS_DIAGNOSTICO.find((s) => s.value === value)?.label ?? value;

@@ -2,6 +2,16 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors'
 import { z } from 'https://esm.sh/zod@3'
 
+// Perfis válidos definidos pelo servidor — o cliente não pode inventar rótulos.
+const PERFIS_VALIDOS = [
+  'executivo',
+  'financeiro',
+  'operacional',
+  'tecnico',
+  'mediador',
+  'implantador',
+] as const
+
 const BodySchema = z.object({
   nome: z.string().min(2).max(200),
   whatsapp: z.string().min(10).max(30),
@@ -9,10 +19,24 @@ const BodySchema = z.object({
   condominio: z.string().min(1).max(200),
   cidade: z.string().max(100).optional().nullable(),
   regiao: z.string().max(100).optional().nullable(),
-  respostas: z.record(z.any()),
-  perfil_recomendado: z.string().max(100).optional().nullable(),
-  perfis_secundarios: z.array(z.string()).default([]),
-  sindicos_sugeridos: z.array(z.any()).default([]),
+  respostas: z.record(z.any()).refine(
+    (r) => Object.keys(r).length <= 40 && JSON.stringify(r).length <= 20000,
+    'respostas payload too large',
+  ),
+  perfil_recomendado: z.enum(PERFIS_VALIDOS).optional().nullable(),
+  perfis_secundarios: z.array(z.enum(PERFIS_VALIDOS)).max(5).default([]),
+  sindicos_sugeridos: z
+    .array(
+      z.object({
+        id: z.string().uuid(),
+        slug: z.string().max(200),
+        nome: z.string().max(200),
+        nivel: z.enum(['alta', 'media', 'baixa']),
+        motivos: z.array(z.string().max(300)).max(6).default([]),
+      }),
+    )
+    .max(12)
+    .default([]),
 })
 
 Deno.serve(async (req) => {
@@ -63,7 +87,7 @@ Deno.serve(async (req) => {
       perfil_recomendado: parsed.data.perfil_recomendado,
       perfis_secundarios: parsed.data.perfis_secundarios,
       sindicos_sugeridos: parsed.data.sindicos_sugeridos,
-      status: 'novo',
+      status: 'novo', // campo administrativo definido apenas pelo servidor
     })
     .select('id')
     .single()

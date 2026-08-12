@@ -27,6 +27,7 @@ import {
 } from "@/lib/diagnostico";
 import { ranquearSindicos, type SindicoComBio } from "@/lib/matching";
 import { useSindicos } from "@/hooks/useSindicos";
+import { Seo } from "@/components/Seo";
 
 const ESTADOS = ["SP", "RJ", "MG", "PR", "SC", "RS", "BA", "DF", "Outro"];
 
@@ -101,6 +102,7 @@ export default function Diagnostico() {
   if (concluido) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
+        <Seo title={'Diagnóstico do condomínio — descubra o perfil de síndico ideal'} description={'Responda ao diagnóstico Q1S e receba o perfil de síndico recomendado e profissionais com aderência ao seu contexto.'} path={'/diagnostico'} />
         <Header />
         <main className="flex-1 container py-10">
           <PageBreadcrumb items={[{ label: "Diagnóstico" }]} className="mb-6" />
@@ -113,6 +115,7 @@ export default function Diagnostico() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo title={'Diagnóstico do condomínio — descubra o perfil de síndico ideal'} description={'Responda ao diagnóstico Q1S e receba o perfil de síndico recomendado e profissionais com aderência ao seu contexto.'} path={'/diagnostico'} />
       <Header />
       <main className="flex-1 container py-10 max-w-3xl">
         <PageBreadcrumb items={[{ label: "Diagnóstico" }]} className="mb-6" />

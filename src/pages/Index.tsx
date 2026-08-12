@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Shield, Clock, Building2, Users, Star, Target, Search, Wallet, HardHat, AlertTriangle, Gavel, BookOpen } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import heroSp from "@/assets/hero-sp.jpg";
+import { Seo } from "@/components/Seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -62,6 +63,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo title={'Quero 1 Síndico — headhunting de síndicos profissionais'} description={'Encontre o síndico profissional certo para o seu condomínio com método: diagnóstico, aderência por evidências e checagem de referências.'} path={'/'} />
       <Header />
 
       {/* ===== HERO ===== */}

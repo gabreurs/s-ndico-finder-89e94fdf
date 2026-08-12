@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Award, Target, Search, CheckCircle2 } from "lucide-react";
 import { especialidadePorSlug, dimensaoLabel } from "@/lib/dimensoes";
 import { especialidadeConteudoPorSlug } from "@/lib/especialidadesConteudo";
+import { Seo } from "@/components/Seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -27,6 +28,11 @@ export default function Especialidade() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo
+        title={`${especialidade.titulo} | Quero 1 Síndico`}
+        description={especialidade.chamada.slice(0, 155)}
+        path={`/especialidades/${especialidade.slug}`}
+      />
       <Header />
 
       <section className="relative gradient-mesh overflow-hidden pt-10 pb-16 md:pt-16 md:pb-24">

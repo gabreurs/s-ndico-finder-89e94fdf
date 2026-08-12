@@ -10,6 +10,7 @@ import { useRef } from "react";
 import imgFiltros from "@/assets/como-funciona-1-filtros.webp";
 import imgPerfis from "@/assets/como-funciona-2-perfis.webp";
 import imgWhatsapp from "@/assets/como-funciona-3-whatsapp.webp";
+import { Seo } from "@/components/Seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -61,6 +62,7 @@ export default function ComoFunciona() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo title={'Como funciona a Quero 1 Síndico'} description={'Do diagnóstico à checagem de referências: entenda as etapas do método Q1S para contratar um síndico profissional.'} path={'/como-funciona'} />
       <Header />
 
       {/* ===== HERO ===== */}

@@ -7,6 +7,7 @@ import { SindicoCard } from "@/components/SindicoCard";
 import { SpinBadge } from "@/components/SpinBadge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { selecionarSindicosPublicos } from "@/lib/sindicosSource";
 import { useSindicos } from "@/hooks/useSindicos";
 import { buildRafaelWhatsAppUrl } from "@/lib/whatsapp";
 import { motion } from "framer-motion";
@@ -60,19 +61,11 @@ export default function SindicoPerfil() {
       if (!slug) return;
 
       // Try by slug first
-      let { data } = await (supabase as any)
-        .from("sindicos_public")
-        .select("*")
-        .eq("slug", slug)
-        .maybeSingle();
+      let { data } = await selecionarSindicosPublicos((q) => q.eq("slug", slug).maybeSingle());
 
       // Fallback: if slug looks like a UUID, try by id and redirect to slug URL
       if (!data && /^[0-9a-f-]{36}$/.test(slug)) {
-        const res = await (supabase as any)
-          .from("sindicos_public")
-          .select("*")
-          .eq("id", slug)
-          .maybeSingle();
+        const res = await selecionarSindicosPublicos((q) => q.eq("id", slug).maybeSingle());
         data = res.data;
         if (data && (data as any).slug) {
           navigate(`/sindico/${(data as any).slug}`, { replace: true });

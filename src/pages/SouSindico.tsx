@@ -14,6 +14,7 @@ import {
   Target,
   MessageSquareQuote,
 } from "lucide-react";
+import { Seo } from "@/components/Seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -43,6 +44,7 @@ const AVALIADO = [
 export default function SouSindico() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo title={'Sou síndico — cadastre seu repertório profissional'} description={'Cadastre-se na Quero 1 Síndico e estruture seu dossiê profissional para ser encontrado por condomínios com o seu perfil.'} path={'/sou-sindico'} />
       <Header />
 
       <section className="relative gradient-mesh overflow-hidden pt-10 pb-16 md:pt-16 md:pb-24">

@@ -8,6 +8,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Users, Shield, Target, Sparkles } from "lucide-react";
 import { useRef } from "react";
 import teamMeeting from "@/assets/quem-somos.webp";
+import { Seo } from "@/components/Seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -32,6 +33,7 @@ export default function QuemSomos() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo title={'Quem somos | Quero 1 Síndico'} description={'Somos uma plataforma de headhunting de síndicos profissionais focada em gestão condominial profissional.'} path={'/quem-somos'} />
       <Header />
 
       {/* ===== HERO ===== */}

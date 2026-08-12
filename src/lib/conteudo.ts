@@ -51,6 +51,8 @@ import { artigoCurriculo } from "@/content/artigos/o-que-analisar-no-curriculo-d
 import { artigoSindicoIdeal } from "@/content/artigos/sindico-ideal-existe";
 import { artigoCondominioClube } from "@/content/artigos/o-que-muda-na-gestao-de-um-condominio-clube";
 import { artigoObras } from "@/content/artigos/como-escolher-um-sindico-para-condominio-com-obras";
+import { artigoTransicao } from "@/content/artigos/como-organizar-a-transicao-entre-sindicos";
+import { artigoExecutiveSearch } from "@/content/artigos/quando-contratar-executive-search-para-sindico";
 
 const ARTIGOS_RAW: Artigo[] = [
   artigoComoContratar,
@@ -63,6 +65,8 @@ const ARTIGOS_RAW: Artigo[] = [
   artigoSindicoIdeal,
   artigoCondominioClube,
   artigoObras,
+  artigoTransicao,
+  artigoExecutiveSearch,
 ];
 
 const ARTIGOS: ArtigoComLeitura[] = ARTIGOS_RAW.map((a) => ({
