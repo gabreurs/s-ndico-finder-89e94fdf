@@ -73,7 +73,7 @@ export default function Sindicos() {
 
       {/* Hero */}
       <section ref={heroRef} className="gradient-mesh py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute top-[20%] right-[10%] w-[300px] h-[300px] rounded-full bg-primary/[0.05] blur-[100px]" />
+        <div className="absolute top-[20%] right-[10%] w-[300px] h-[300px] rounded-full ambient-glow" />
         <motion.div style={{ opacity: heroOpacity }} className="container relative">
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <PageBreadcrumb items={[{ label: "Síndicos" }]} variant="dark" className="mb-6" />

@@ -12,7 +12,7 @@ import { useSindicos } from "@/hooks/useSindicos";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Shield, Clock, Building2, Users, Star, Target, Search, Wallet, HardHat, AlertTriangle, Gavel, BookOpen } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import heroSp from "@/assets/hero-sp.jpg";
 import { Seo } from "@/components/Seo";
 import { HeadlineReveal } from "@/components/motion/HeadlineReveal";
@@ -38,14 +38,6 @@ const Index = () => {
   const [cidade, setCidade] = useState("all");
   const [regiao, setRegiao] = useState("all");
   const heroRef = useRef<HTMLDivElement>(null);
-
-  const { scrollYProgress: heroProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-
-  const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
-  const heroY = useTransform(heroProgress, [0, 1], [0, 100]);
 
   const { data: sindicos, isLoading } = useSindicos({ especialidade, cidade, regiao });
   const featuredSindicos = sindicos?.slice(0, 4) || [];
@@ -77,8 +69,8 @@ const Index = () => {
         </div>
 
         {/* Ambient light */}
-        <div className="absolute top-[15%] left-[5%] w-[500px] h-[500px] rounded-full bg-primary/[0.06] blur-[150px] transform-gpu" />
-        <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] rounded-full bg-accent/[0.04] blur-[120px] transform-gpu" />
+        <div className="absolute top-[15%] left-[5%] w-[500px] h-[500px] rounded-full ambient-glow transform-gpu" />
+        <div className="absolute bottom-[20%] right-[10%] w-[400px] h-[400px] rounded-full ambient-glow-accent transform-gpu" />
 
         {/* Grid overlay */}
         <div
@@ -89,7 +81,7 @@ const Index = () => {
           }}
         />
 
-        <motion.div style={{ opacity: heroOpacity, y: heroY, willChange: "transform, opacity" }} className="relative container py-24 md:py-32 transform-gpu">
+        <div className="relative container py-24 md:py-32">
           <div className="grid lg:grid-cols-5 gap-12 items-center">
             {/* Left content */}
             <div className="lg:col-span-3">
@@ -229,7 +221,7 @@ const Index = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* ===== MARQUEE ===== */}
@@ -288,7 +280,7 @@ const Index = () => {
 
       {/* ===== PERFIL CERTO / SEIS ATRIBUTOS ===== */}
       <section className="py-20 md:py-28 section-dark relative overflow-hidden">
-        <div className="absolute top-[10%] right-[15%] w-[420px] h-[420px] rounded-full bg-primary/[0.04] blur-[150px] transform-gpu" />
+        <div className="absolute top-[10%] right-[15%] w-[420px] h-[420px] rounded-full ambient-glow transform-gpu" />
         <div className="container relative">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="max-w-2xl mb-12">
             <motion.p variants={fadeUp} className="text-[11px] text-primary/50 tracking-[0.2em] uppercase mb-3" style={{ fontWeight: 450 }}>Não é sobre um nome, é sobre um perfil</motion.p>
@@ -402,7 +394,7 @@ const Index = () => {
 
       {/* ===== VALUE PROPS ===== */}
       <section className="py-28 md:py-36 section-dark relative overflow-hidden">
-        <div className="absolute top-0 left-[30%] w-[600px] h-[600px] rounded-full bg-primary/[0.04] blur-[150px] transform-gpu" />
+        <div className="absolute top-0 left-[30%] w-[600px] h-[600px] rounded-full ambient-glow transform-gpu" />
         <div className="container relative">
           <motion.div
             initial="hidden"

@@ -153,8 +153,8 @@ export default function SindicoPerfil() {
       {/* ===== HERO ===== */}
       <section className="relative gradient-mesh overflow-hidden">
         {/* ambient lights */}
-        <div className="absolute top-[10%] right-[8%] w-[360px] h-[360px] rounded-full bg-primary/[0.06] blur-[120px]" />
-        <div className="absolute bottom-0 left-[15%] w-[280px] h-[280px] rounded-full bg-accent/[0.04] blur-[100px]" />
+        <div className="absolute top-[10%] right-[8%] w-[360px] h-[360px] rounded-full ambient-glow" />
+        <div className="absolute bottom-0 left-[15%] w-[280px] h-[280px] rounded-full ambient-glow-accent" />
 
         <div className="container relative pt-8 pb-14 md:pt-12 md:pb-20">
           {/* breadcrumb */}
@@ -479,7 +479,7 @@ export default function SindicoPerfil() {
       {/* ===== RELATED ===== */}
       {otherSindicos.length > 0 && (
         <section className="py-20 md:py-28 section-dark relative overflow-hidden">
-          <div className="absolute top-[20%] right-[8%] w-[400px] h-[400px] rounded-full bg-primary/[0.03] blur-[120px]" />
+          <div className="absolute top-[20%] right-[8%] w-[400px] h-[400px] rounded-full ambient-glow" />
           <div className="container relative">
             <motion.div
               initial="hidden"

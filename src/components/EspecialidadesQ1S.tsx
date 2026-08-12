@@ -7,7 +7,7 @@ import { dimensaoLabel } from "@/lib/dimensoes";
 export function EspecialidadesQ1S() {
   return (
     <section className="py-24 md:py-32 section-dark relative overflow-hidden">
-      <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full bg-primary/[0.04] blur-[150px]" />
+      <div className="absolute top-[20%] left-[10%] w-[400px] h-[400px] rounded-full ambient-glow" />
 
       <div className="container relative">
         <Reveal stagger className="max-w-2xl mb-14">

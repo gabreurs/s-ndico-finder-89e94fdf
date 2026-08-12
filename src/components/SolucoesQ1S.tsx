@@ -57,7 +57,7 @@ const SOLUCOES = [
 export function SolucoesQ1S() {
   return (
     <section className="py-24 md:py-32 bg-background relative overflow-hidden">
-      <div className="absolute bottom-0 left-[5%] w-[400px] h-[400px] rounded-full bg-accent/[0.03] blur-[140px]" />
+      <div className="absolute bottom-0 left-[5%] w-[400px] h-[400px] rounded-full ambient-glow-accent" />
 
       <div className="container relative">
         <motion.div
