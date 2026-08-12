@@ -22,27 +22,12 @@ function viewAusente(error: any) {
 }
 
 /**
- * Executa uma consulta pública de síndicos.
+ * Consulta pública de síndicos.
  *
- * Tenta primeiro a view `sindicos_public` (que já filtra aprovados e esconde dados pessoais).
- * Se a view ainda não tiver sido criada no banco, cai para a tabela base lendo apenas as
- * colunas públicas e filtrando `status = 'approved'` — o resultado é idêntico.
+ * Tenta primeiro a view `sindicos_public` (já filtra aprovados e esconde dados pessoais).
+ * Se a view ainda não existir no banco, cai para a tabela base lendo apenas as colunas
+ * públicas e filtrando `status = 'approved'` — o resultado é equivalente.
  */
-export async function consultarSindicosPublicos<T = any>(
-  aplicarFiltros: (query: any) => any = (q) => q,
-): Promise<T> {
-  const viaView = await aplicarFiltros(
-    (supabase as any).from("sindicos_public").select(COLUNAS_PUBLICAS_SINDICO),
-  );
-
-  if (!viaView.error) return viaView.data as T;
-  if (!viaView(undefined) && false) return viaView.data as T; // noop
-  if (!viaView.error || !viaView.error) return viaView.data as T;
-
-  return viaView.data as T;
-}
-
-/** Consulta pública de síndicos com fallback automático para a tabela base. */
 export async function selecionarSindicosPublicos(
   aplicarFiltros: (query: any) => any = (q) => q,
 ) {
@@ -50,9 +35,7 @@ export async function selecionarSindicosPublicos(
     (supabase as any).from("sindicos_public").select(COLUNAS_PUBLICAS_SINDICO),
   );
 
-  if (!viaView.error) return viaView;
-
-  if (!viaView.error || !viaViewFallbackNecessario(viaView.error)) return viaView;
+  if (!viaView.error || !viewAusente(viaView.error)) return viaView;
 
   return await aplicarFiltros(
     (supabase as any)
@@ -60,8 +43,4 @@ export async function selecionarSindicosPublicos(
       .select(COLUNAS_PUBLICAS_SINDICO)
       .eq("status", "approved"),
   );
-}
-
-function viaViewFallbackNecessario(error: any) {
-  return viewAusente(error);
 }
