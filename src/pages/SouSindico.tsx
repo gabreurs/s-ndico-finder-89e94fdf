@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-import { Seo } from "@/components/Seo";
   ArrowRight,
   UserPlus,
   ClipboardList,
@@ -15,6 +14,7 @@ import { Seo } from "@/components/Seo";
   Target,
   MessageSquareQuote,
 } from "lucide-react";
+import { Seo } from "@/components/Seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
