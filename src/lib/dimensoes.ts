@@ -3,7 +3,7 @@
 // são DIMENSÕES COMBINÁVEIS: tipo de empreendimento, porte/padrão, situação/desafio
 // e perfil de gestão. Um condomínio pode ser Alto Padrão + Grande + Obras + Recuperação.
 
-export type DimensaoTipo = "tipo" | "porte" | "padrao" | "desafio" | "perfil";
+export type DimensaoTipo = "tipo" | "porte" | "padrao" | "desafio" | "perfil" | "prioridade" | "problema";
 
 export interface Dimensao {
   key: string;
@@ -53,6 +53,7 @@ export const DESAFIOS: Dimensao[] = [
   { key: "custos", label: "Otimização de custos", tipo: "desafio", descricao: "Contratos, fornecedores e despesas." },
   { key: "tecnologia", label: "Modernização e tecnologia", tipo: "desafio", descricao: "Digitalização da gestão." },
   { key: "sustentabilidade", label: "Sustentabilidade e eficiência", tipo: "desafio", descricao: "Consumo, água, energia e resíduos." },
+  { key: "transicao-gestao", label: "Transição de gestão", tipo: "desafio", descricao: "Troca de síndico ou de administradora em curso." },
 ];
 
 /** Perfil de gestão */
@@ -65,12 +66,78 @@ export const PERFIS_GESTAO: Dimensao[] = [
   { key: "implantador", label: "Perfil de implantação", tipo: "perfil", descricao: "Condomínio novo, estruturação do zero." },
 ];
 
+/** As 3 prioridades do síndico procurado — peso alto na análise. */
+export const PRIORIDADES: Dimensao[] = [
+  { key: "reduzir-inadimplencia", label: "Reduzir a inadimplência", tipo: "prioridade", descricao: "Recuperar crédito e cobrar com método." },
+  { key: "organizar-financas", label: "Organizar as finanças", tipo: "prioridade", descricao: "Prestação de contas clara e orçamento sob controle." },
+  { key: "conduzir-obras", label: "Conduzir obras", tipo: "prioridade", descricao: "Fiscalizar reformas e retrofit com segurança." },
+  { key: "profissionalizar-processos", label: "Profissionalizar processos", tipo: "prioridade", descricao: "Rotinas, contratos e governança mais maduros." },
+  { key: "melhorar-comunicacao", label: "Melhorar a comunicação", tipo: "prioridade", descricao: "Diálogo mais claro com moradores e conselho." },
+  { key: "reduzir-conflitos", label: "Reduzir conflitos", tipo: "prioridade", descricao: "Mediar grupos divididos e assembleias tensas." },
+  { key: "reorganizar-fornecedores", label: "Reorganizar fornecedores", tipo: "prioridade", descricao: "Revisar contratos e prestadores de serviço." },
+  { key: "gerir-equipe", label: "Gerir a equipe", tipo: "prioridade", descricao: "Funcionários próprios, escalas e treinamento." },
+  { key: "implantar-condominio", label: "Implantar o condomínio", tipo: "prioridade", descricao: "Primeira gestão, entrega e estruturação do zero." },
+  { key: "elevar-padrao-gestao", label: "Elevar o padrão de gestão", tipo: "prioridade", descricao: "Gestão mais estratégica e sofisticada." },
+  { key: "melhorar-governanca", label: "Melhorar a governança", tipo: "prioridade", descricao: "Regras, conselho e processos decisórios mais claros." },
+  { key: "recuperar-confianca", label: "Recuperar a confiança", tipo: "prioridade", descricao: "Reconstruir credibilidade junto aos condôminos." },
+  { key: "estruturar-manutencao", label: "Estruturar a manutenção", tipo: "prioridade", descricao: "Plano de manutenção preventiva e corretiva." },
+  { key: "controlar-custos", label: "Controlar custos", tipo: "prioridade", descricao: "Reduzir desperdício e renegociar contratos." },
+];
+
+/** Cada prioridade aponta para as dimensões reais que ela exige do profissional. */
+export const PRIORIDADE_DIMENSOES: Record<string, string[]> = {
+  "reduzir-inadimplencia": ["inadimplencia", "financeiro"],
+  "organizar-financas": ["financeiro", "transparencia"],
+  "conduzir-obras": ["obras", "tecnico"],
+  "profissionalizar-processos": ["executivo", "operacional"],
+  "melhorar-comunicacao": ["transparencia", "mediador"],
+  "reduzir-conflitos": ["conflitos", "mediador"],
+  "reorganizar-fornecedores": ["custos", "operacional"],
+  "gerir-equipe": ["equipe", "operacional"],
+  "implantar-condominio": ["implantacao", "implantador"],
+  "elevar-padrao-gestao": ["executivo"],
+  "melhorar-governanca": ["transparencia", "executivo"],
+  "recuperar-confianca": ["transparencia", "mediador"],
+  "estruturar-manutencao": ["operacional", "tecnico"],
+  "controlar-custos": ["custos", "financeiro"],
+};
+
+/** Problemas administrativos do momento atual — opcional, multi. */
+export const PROBLEMAS_ADMINISTRATIVOS: Dimensao[] = [
+  { key: "documentacao", label: "Documentação desorganizada", tipo: "problema", descricao: "Atas, contratos e regularização em atraso." },
+  { key: "prestacao-contas", label: "Prestação de contas falha", tipo: "problema", descricao: "Falta de transparência com condôminos." },
+  { key: "conformidade-legal", label: "Pendências legais", tipo: "problema", descricao: "Processos judiciais ou exigências não cumpridas." },
+  { key: "comunicacao-moradores", label: "Comunicação falha com moradores", tipo: "problema", descricao: "Canais de comunicação ausentes ou ruidosos." },
+  { key: "gestao-contratos", label: "Contratos mal geridos", tipo: "problema", descricao: "Fornecedores sem controle ou fiscalização." },
+];
+
+export const PROBLEMA_DIMENSOES: Record<string, string[]> = {
+  documentacao: ["juridico"],
+  "prestacao-contas": ["transparencia", "financeiro"],
+  "conformidade-legal": ["juridico"],
+  "comunicacao-moradores": ["transparencia", "mediador"],
+  "gestao-contratos": ["custos", "operacional"],
+};
+
+export const RELACOES_CONDOMINIO: { value: string; label: string }[] = [
+  { value: "presidente-conselho", label: "Presidente do conselho" },
+  { value: "conselheiro", label: "Conselheiro" },
+  { value: "morador", label: "Morador" },
+  { value: "sindico-atual", label: "Síndico atual" },
+  { value: "subsindico", label: "Subsíndico" },
+  { value: "administradora", label: "Administradora" },
+  { value: "incorporadora", label: "Incorporadora" },
+  { value: "outro", label: "Outro" },
+];
+
 export const TODAS_DIMENSOES: Dimensao[] = [
   ...TIPOS_EMPREENDIMENTO,
   ...PORTES,
   ...PADROES,
   ...DESAFIOS,
   ...PERFIS_GESTAO,
+  ...PRIORIDADES,
+  ...PROBLEMAS_ADMINISTRATIVOS,
 ];
 
 export const dimensaoLabel = (key: string) =>
@@ -81,6 +148,12 @@ export const perfilLabel = (key: string) =>
 
 export const perfilDescricao = (key: string) =>
   PERFIS_GESTAO.find((p) => p.key === key)?.descricao ?? "";
+
+export const prioridadeLabel = (key: string) =>
+  PRIORIDADES.find((p) => p.key === key)?.label ?? key;
+
+export const relacaoLabel = (key: string) =>
+  RELACOES_CONDOMINIO.find((r) => r.value === key)?.label ?? key;
 
 /**
  * Especialidades Q1S — apresentação. Cada card é uma COMBINAÇÃO de dimensões.

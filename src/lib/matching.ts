@@ -69,6 +69,30 @@ const PORTE_PREFERIDO_DIMENSOES: Record<string, string[]> = {
   "alto-padrao": ["alto-padrao", "executivo"],
 };
 
+/** Palavras-chave no resumo livre do profissional — só vira evidência quando o texto realmente contém o termo. */
+const RESUMO_KEYWORDS: Record<string, string[]> = {
+  obras: ["obra", "retrofit", "reforma", "fachada"],
+  tecnico: ["engenharia", "arquitetura", "fiscalização técnica"],
+  "recuperacao-financeira": ["recuperação financeira", "caixa negativo", "reequilíbrio financeiro"],
+  financeiro: ["financeiro", "orçamento", "fluxo de caixa"],
+  inadimplencia: ["inadimplência", "inadimplente", "cobrança"],
+  conflitos: ["conflito", "mediação", "mediador"],
+  mediador: ["mediação", "conselho atuante"],
+  equipe: ["equipe própria", "funcionários", "gestão de pessoas", "colaboradores"],
+  operacional: ["rotina operacional", "manutenção preventiva"],
+  juridico: ["jurídico", "regularização", "processos judiciais"],
+  transparencia: ["prestação de contas", "transparência"],
+  implantacao: ["implantação", "condomínio novo", "entrega de obra"],
+  implantador: ["implantação de condomínio", "estruturação inicial"],
+  custos: ["redução de custos", "negociação de contratos", "fornecedores"],
+  executivo: ["alto padrão", "gestão estratégica", "condomínio de luxo"],
+  "alto-padrao": ["alto padrão", "luxo"],
+  clube: ["condomínio clube", "área de lazer completa"],
+  comercial: ["condomínio comercial", "centro empresarial"],
+  grande: ["grande condomínio", "grande porte"],
+  mega: ["mega condomínio", "escala"],
+};
+
 const norm = (s: string) => s.trim().toLowerCase();
 
 /** Extrai todas as dimensões comprovadas por dados reais do cadastro. */
@@ -111,6 +135,21 @@ export function extrairEvidencias(s: SindicoComBio): Evidencia[] {
     if (n.includes("contabil")) push("financeiro", `Formação em ${f}`);
     if (n.includes("administra") || n.includes("gestão")) push("executivo", `Formação em ${f}`);
   });
+
+  // Anos de profissão como evidência de senioridade executiva.
+  const anos = anosDeExperiencia(s);
+  if (anos !== null && anos >= 8) {
+    push("executivo", `${anos} anos de atuação como síndico profissional`);
+  }
+
+  // Resumo livre (breve_resumo) — busca por termos objetivos, nunca inferência.
+  const resumo = s.breve_resumo ? norm(s.breve_resumo) : "";
+  if (resumo) {
+    Object.entries(RESUMO_KEYWORDS).forEach(([dimensao, termos]) => {
+      const achado = termos.find((t) => resumo.includes(t));
+      if (achado) push(dimensao, `Menciona "${achado}" no resumo profissional`);
+    });
+  }
 
   return ev;
 }
@@ -179,10 +218,14 @@ export function avaliarAderencia(
   const exigeSenioridade =
     respostas.padrao === "alto-padrao" ||
     respostas.unidades === "grande" ||
-    respostas.unidades === "mega";
+    respostas.unidades === "mega" ||
+    respostas.complexidade === "alta";
   if (anos !== null) {
-    if (anos >= 8) motivos.push(`${anos} anos de atuação como síndico profissional.`);
-    else if (exigeSenioridade && anos < 4) lacunas.push(`Experiência declarada de ${anos} ano(s) para um cenário que pede senioridade.`);
+    if (anos >= 8 && !motivos.some((m) => m.includes("anos de atuação"))) {
+      motivos.push(`${anos} anos de atuação como síndico profissional.`);
+    } else if (exigeSenioridade && anos < 4) {
+      lacunas.push(`Experiência declarada de ${anos} ano(s) para um cenário que pede senioridade.`);
+    }
   }
 
   const cobertura = pesoTotal > 0 ? pesoAtendido / pesoTotal : 0;
@@ -212,7 +255,7 @@ export function ranquearSindicos(
 }
 
 export const NIVEL_LABEL: Record<NivelAderencia, string> = {
-  alta: "Aderência alta",
-  media: "Aderência parcial",
-  baixa: "Aderência limitada",
+  alta: "Alta aderência",
+  media: "Boa aderência",
+  baixa: "Aderência parcial",
 };

@@ -1,24 +1,43 @@
 import { supabase } from "@/lib/supabase";
-import { PERFIS_GESTAO } from "@/lib/dimensoes";
+import { PERFIS_GESTAO, PRIORIDADE_DIMENSOES, PROBLEMA_DIMENSOES } from "@/lib/dimensoes";
 
 export interface DiagnosticoRespostas {
+  // 1. Localização
   cidade: string;
+  estado: string;
   regiao: string;
+
+  // 2. Sobre o condomínio
   tipos: string[];          // dimensões de tipo de empreendimento
   unidades: string;         // pequeno | medio | grande | mega
   torres: string;           // 1 | 2-3 | 4+
   padrao: string;           // alto-padrao | medio-padrao | economico
   funcionarios: string;     // ate-5 | 6-15 | 16-30 | 30+
   lazer: string;            // nenhum | basico | completo
+  complexidade: string;     // baixa | media | alta
+
+  // 3. Momento atual
   arrecadacao: string;      // ate-50k | 50-150k | 150-400k | 400k+
   inadimplencia: string;    // baixa | media | alta
   momento_financeiro: string; // equilibrado | apertado | deficitario
   obras: string;            // nenhuma | pequenas | grandes | fachada-retrofit
-  conflitos: string;        // baixo | moderado | alto
-  conselho: string;         // ausente | participativo | muito-atuante
   novo: string;             // sim | nao  (implantação)
-  desafios: string[];       // dimensões de desafio priorizadas
-  perfil_desejado: string;  // dimensão de perfil (ou "indefinido")
+  conflitos: string;        // baixo | moderado | alto
+  transicao_gestao: string; // planejada | conturbada | nao-aplica
+  problemas_administrativos: string[]; // dimensões de problema
+  conselho: string;         // ausente | participativo | muito-atuante
+  assembleias: string;      // tranquilas | poucas-participam | tensas
+  fornecedores: string;     // estruturados | poucos-contratos | problematico
+  equipe_situacao: string;  // estavel | rotatividade | sem-equipe
+
+  // 4. Perfil procurado (opcional)
+  perfil_desejado: string[]; // dimensões de perfil desejáveis
+
+  // 5. Três prioridades (peso alto)
+  prioridades: string[];
+
+  // 6. Contato — relação com o condomínio
+  relacao: string;
 }
 
 export interface DiagnosticoLead {
@@ -30,6 +49,7 @@ export interface DiagnosticoLead {
 
 export const respostasIniciais: DiagnosticoRespostas = {
   cidade: "",
+  estado: "",
   regiao: "",
   tipos: [],
   unidades: "",
@@ -37,21 +57,28 @@ export const respostasIniciais: DiagnosticoRespostas = {
   padrao: "",
   funcionarios: "",
   lazer: "",
+  complexidade: "",
   arrecadacao: "",
   inadimplencia: "",
   momento_financeiro: "",
   obras: "",
-  conflitos: "",
-  conselho: "",
   novo: "",
-  desafios: [],
-  perfil_desejado: "indefinido",
+  conflitos: "",
+  transicao_gestao: "",
+  problemas_administrativos: [],
+  conselho: "",
+  assembleias: "",
+  fornecedores: "",
+  equipe_situacao: "",
+  perfil_desejado: [],
+  prioridades: [],
+  relacao: "",
 };
 
 /** Requisitos derivados: dimensões que o condomínio realmente exige, com peso. */
 export interface Requisito {
   key: string;
-  peso: number;   // 1 = desejável, 2 = importante, 3 = crítico
+  peso: number;   // 1 = desejável, 2 = importante, 3 = crítico, 4 = prioridade escolhida
   origem: string; // por que esse requisito existe
 }
 
@@ -66,22 +93,23 @@ export function derivarRequisitos(r: DiagnosticoRespostas): Requisito[] {
     req.push({ key, peso, origem });
   };
 
+  // 1. Localização — tratada à parte no matching (evidência de cidade/região).
+
+  // 2. Sobre o condomínio
   r.tipos.forEach((t) => add(t, 2, "Tipo de empreendimento informado"));
   if (r.unidades) add(r.unidades, 2, "Porte do condomínio");
   if (r.padrao) add(r.padrao, r.padrao === "alto-padrao" ? 3 : 1, "Padrão do condomínio");
-
-  if (r.novo === "sim") {
-    add("implantacao", 3, "Condomínio em implantação");
-    add("implantador", 3, "Condomínio em implantação");
+  if (r.torres === "4+") add("multitorres", 2, "Condomínio com 4 ou mais torres");
+  if (r.funcionarios === "16-30" || r.funcionarios === "30+") {
+    add("equipe", 3, "Equipe própria numerosa");
+    add("operacional", 2, "Equipe própria numerosa");
+  } else if (r.funcionarios === "6-15") {
+    add("equipe", 2, "Equipe própria intermediária");
   }
+  if (r.lazer === "completo") add("operacional", 2, "Estrutura de lazer completa");
+  if (r.complexidade === "alta") add("executivo", 2, "Complexidade operacional alta");
 
-  if (r.obras === "grandes" || r.obras === "fachada-retrofit") {
-    add("obras", 3, "Obras estruturais em curso ou previstas");
-    add("tecnico", 2, "Obras estruturais em curso ou previstas");
-  } else if (r.obras === "pequenas") {
-    add("obras", 1, "Reformas pontuais previstas");
-  }
-
+  // 3. Momento atual
   if (r.momento_financeiro === "deficitario") {
     add("recuperacao-financeira", 3, "Situação financeira deficitária");
     add("financeiro", 3, "Situação financeira deficitária");
@@ -97,6 +125,18 @@ export function derivarRequisitos(r: DiagnosticoRespostas): Requisito[] {
     add("inadimplencia", 2, "Inadimplência relevante");
   }
 
+  if (r.obras === "grandes" || r.obras === "fachada-retrofit") {
+    add("obras", 3, "Obras estruturais em curso ou previstas");
+    add("tecnico", 2, "Obras estruturais em curso ou previstas");
+  } else if (r.obras === "pequenas") {
+    add("obras", 1, "Reformas pontuais previstas");
+  }
+
+  if (r.novo === "sim") {
+    add("implantacao", 3, "Condomínio em implantação");
+    add("implantador", 3, "Condomínio em implantação");
+  }
+
   if (r.conflitos === "alto") {
     add("conflitos", 3, "Nível alto de conflitos");
     add("mediador", 3, "Nível alto de conflitos");
@@ -104,30 +144,49 @@ export function derivarRequisitos(r: DiagnosticoRespostas): Requisito[] {
     add("conflitos", 1, "Conflitos pontuais");
   }
 
+  if (r.transicao_gestao === "conturbada") {
+    add("transicao-gestao", 2, "Transição de gestão conturbada");
+    add("mediador", 2, "Transição de gestão conturbada");
+  }
+
+  r.problemas_administrativos.forEach((p) => {
+    (PROBLEMA_DIMENSOES[p] ?? []).forEach((d) => add(d, 2, "Problema administrativo relatado"));
+  });
+
   if (r.conselho === "muito-atuante") {
     add("transparencia", 2, "Conselho muito atuante");
     add("mediador", 1, "Conselho muito atuante");
   }
   if (r.conselho === "ausente") add("executivo", 1, "Conselho pouco presente exige autonomia");
 
-  if (r.funcionarios === "16-30" || r.funcionarios === "30+") {
-    add("equipe", 3, "Equipe própria numerosa");
-    add("operacional", 2, "Equipe própria numerosa");
-  } else if (r.funcionarios === "6-15") {
-    add("equipe", 2, "Equipe própria intermediária");
+  if (r.assembleias === "tensas") {
+    add("conflitos", 2, "Assembleias tensas");
+    add("mediador", 2, "Assembleias tensas");
   }
 
-  if (r.lazer === "completo") add("operacional", 2, "Estrutura de lazer completa");
+  if (r.fornecedores === "problematico") {
+    add("custos", 2, "Fornecedores mal geridos");
+    add("operacional", 1, "Fornecedores mal geridos");
+  }
+
+  if (r.equipe_situacao === "rotatividade" || r.equipe_situacao === "sem-equipe") {
+    add("equipe", 2, "Situação da equipe exige reestruturação");
+    add("operacional", 1, "Situação da equipe exige reestruturação");
+  }
+
   if (r.unidades === "grande" || r.unidades === "mega") add("executivo", 2, "Escala do condomínio");
   if (r.padrao === "alto-padrao") add("executivo", 3, "Alto padrão");
   if (r.arrecadacao === "400k+") add("executivo", 2, "Orçamento mensal elevado");
   if (r.tipos.includes("comercial") || r.tipos.includes("industrial")) add("executivo", 2, "Empreendimento não residencial");
   if (r.tipos.includes("associacao") || r.tipos.includes("horizontal")) add("juridico", 2, "Loteamento/associação exige regularização");
 
-  r.desafios.forEach((d) => add(d, 3, "Desafio priorizado pelo condomínio"));
-  if (r.perfil_desejado && r.perfil_desejado !== "indefinido") {
-    add(r.perfil_desejado, 2, "Perfil preferido pelo condomínio");
-  }
+  // 4. Perfil procurado — peso baixo, é preferência declarada, não crítica.
+  r.perfil_desejado.forEach((p) => add(p, 1, "Perfil de gestão preferido pelo condomínio"));
+
+  // 5. Três prioridades — peso alto, é o que mais pesa na recomendação.
+  r.prioridades.forEach((p) => {
+    (PRIORIDADE_DIMENSOES[p] ?? []).forEach((d) => add(d, 4, "Prioridade escolhida pelo condomínio"));
+  });
 
   return req;
 }
@@ -184,6 +243,7 @@ export async function salvarDiagnostico(input: SalvarDiagnosticoInput) {
     condominio: input.lead.condominio.trim() || null,
     cidade: input.respostas.cidade || null,
     regiao: input.respostas.regiao || null,
+    // respostas carrega o wizard completo, incluindo campos novos (relacao, prioridades, estado etc.)
     respostas: input.respostas as unknown as Record<string, unknown>,
     perfil_recomendado: input.perfil_recomendado,
     perfis_secundarios: input.perfis_secundarios,

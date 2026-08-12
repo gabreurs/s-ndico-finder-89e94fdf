@@ -11,7 +11,7 @@ import { SolucoesQ1S } from "@/components/SolucoesQ1S";
 import { useSindicos } from "@/hooks/useSindicos";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Clock, Building2, Users, Star, Target } from "lucide-react";
+import { ArrowRight, Shield, Clock, Building2, Users, Star, Target, Search, Wallet, HardHat, AlertTriangle, Gavel, BookOpen } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import heroSp from "@/assets/hero-sp.jpg";
 
@@ -243,6 +243,92 @@ const Index = () => {
         </Marquee>
       </section>
 
+      {/* ===== DUAS JORNADAS ===== */}
+      <section className="py-20 md:py-28 bg-background">
+        <div className="container">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="max-w-2xl mb-10">
+            <motion.p variants={fadeUp} className="text-[11px] text-primary/70 tracking-[0.2em] uppercase mb-3" style={{ fontWeight: 450 }}>Por onde começar</motion.p>
+            <motion.h2 variants={fadeUp} custom={1} className="text-2xl md:text-3xl text-foreground tracking-[-0.02em]" style={{ fontWeight: 350 }}>
+              Duas formas de encontrar o profissional certo
+            </motion.h2>
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} className="grid md:grid-cols-2 gap-4">
+            <motion.div variants={fadeUp} whileHover={{ y: -3 }} className="rounded-xl border border-border/30 bg-card/50 p-6">
+              <div className="text-primary/60 mb-3"><Search size={20} /></div>
+              <h3 className="text-[14px] text-foreground mb-1.5" style={{ fontWeight: 460 }}>Já sabe o que procura?</h3>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mb-4" style={{ fontWeight: 400 }}>
+                Filtre por especialidade, cidade e região e busque diretamente no banco de síndicos aprovados.
+              </p>
+              <Button asChild variant="outline" size="sm" className="rounded-full px-5 gap-1.5" style={{ fontWeight: 430 }}>
+                <Link to="/sindicos">
+                  Buscar profissionais
+                  <ArrowRight size={13} />
+                </Link>
+              </Button>
+            </motion.div>
+
+            <motion.div variants={fadeUp} custom={1} whileHover={{ y: -3 }} className="rounded-xl border border-primary/20 bg-card/50 p-6">
+              <div className="text-primary/60 mb-3"><Target size={20} /></div>
+              <h3 className="text-[14px] text-foreground mb-1.5" style={{ fontWeight: 460 }}>Não sabe qual perfil precisa?</h3>
+              <p className="text-[13px] text-muted-foreground leading-relaxed mb-4" style={{ fontWeight: 400 }}>
+                Faça o diagnóstico gratuito do condomínio e receba uma shortlist com o perfil de síndico mais aderente.
+              </p>
+              <Button asChild size="sm" className="rounded-full px-5 gap-1.5" style={{ fontWeight: 450 }}>
+                <Link to="/diagnostico">
+                  Fazer diagnóstico
+                  <ArrowRight size={13} />
+                </Link>
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ===== PERFIL CERTO / SEIS ATRIBUTOS ===== */}
+      <section className="py-20 md:py-28 section-dark relative overflow-hidden">
+        <div className="absolute top-[10%] right-[15%] w-[420px] h-[420px] rounded-full bg-primary/[0.04] blur-[150px]" />
+        <div className="container relative">
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="max-w-2xl mb-12">
+            <motion.p variants={fadeUp} className="text-[11px] text-primary/50 tracking-[0.2em] uppercase mb-3" style={{ fontWeight: 450 }}>Não é sobre um nome, é sobre um perfil</motion.p>
+            <motion.h2 variants={fadeUp} custom={1} className="text-2xl md:text-3xl text-white/90 tracking-[-0.02em] mb-4" style={{ fontWeight: 350 }}>
+              Não procure apenas um síndico. Procure o perfil certo.
+            </motion.h2>
+            <motion.p variants={fadeUp} custom={2} className="text-white/30 text-sm leading-relaxed" style={{ fontWeight: 400 }}>
+              O mesmo síndico não serve para todos os condomínios. Seis grandes atributos definem o perfil necessário em cada caso.
+            </motion.p>
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+            {[
+              { icon: <Building2 size={16} />, title: "Tamanho", desc: "Poucas unidades ou grande escala mudam totalmente a rotina de gestão." },
+              { icon: <Wallet size={16} />, title: "Orçamento", desc: "Caixa saudável ou recuperação financeira pedem repertórios distintos." },
+              { icon: <HardHat size={16} />, title: "Obras", desc: "Obra em andamento exige leitura técnica de cronograma e contrato." },
+              { icon: <Users size={16} />, title: "Equipe", desc: "Equipe própria numerosa muda o perfil de liderança necessário." },
+              { icon: <AlertTriangle size={16} />, title: "Desafios", desc: "Conflitos, implantação ou inadimplência pedem experiências específicas." },
+              { icon: <Gavel size={16} />, title: "Conselho", desc: "O nível de exigência e presença do conselho define o estilo de relação ideal." },
+            ].map((a, i) => (
+              <motion.div key={a.title} variants={fadeUp} custom={i * 0.08} whileHover={{ y: -3 }} className="rounded-xl border border-white/[0.08] bg-white/[0.04] p-5">
+                <div className="text-primary/60 mb-3">{a.icon}</div>
+                <h3 className="text-[13px] text-white/90 mb-1.5" style={{ fontWeight: 460 }}>{a.title}</h3>
+                <p className="text-[12px] text-white/45 leading-relaxed" style={{ fontWeight: 400 }}>{a.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-40px" }} className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 text-center">
+            {["Condomínio", "Perfil necessário", "Profissionais aderentes"].map((step, i) => (
+              <motion.div key={step} variants={fadeUp} custom={i} className="flex items-center gap-4 md:gap-6">
+                <div className="rounded-xl border border-white/[0.1] bg-white/[0.05] px-6 py-4">
+                  <p className="text-[12px] text-white/70" style={{ fontWeight: 460 }}>{step}</p>
+                </div>
+                {i < 2 && <ArrowRight size={16} className="text-primary/40 hidden md:block" />}
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
       {/* ===== SOLUTIONS ===== */}
       <SolucoesQ1S />
 
@@ -403,35 +489,76 @@ const Index = () => {
       <section className="py-28 md:py-36 section-dark relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-accent/[0.02]" />
         <div className="container relative">
-          <div className="flex items-start justify-between">
+          <div className="grid md:grid-cols-2 gap-8 mb-14">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="max-w-2xl"
+              className="rounded-xl border border-white/[0.08] bg-white/[0.04] p-8"
             >
-              <p className="text-[11px] text-primary/50 tracking-[0.2em] uppercase mb-4" style={{ fontWeight: 450 }}>É síndico profissional?</p>
-              <h2 className="text-3xl md:text-4xl text-white/90 tracking-[-0.02em] mb-4" style={{ fontWeight: 320 }}>
-                Cadastre seu perfil e seja encontrado por condomínios em toda São Paulo
+              <p className="text-[11px] text-primary/50 tracking-[0.2em] uppercase mb-4" style={{ fontWeight: 450 }}>Sou condomínio</p>
+              <h2 className="text-xl md:text-2xl text-white/90 tracking-[-0.02em] mb-4" style={{ fontWeight: 340 }}>
+                Encontre o síndico com o perfil certo para o seu cenário
               </h2>
-              <p className="text-white/30 text-sm mb-8 max-w-lg leading-relaxed" style={{ fontWeight: 390 }}>
-                Amplie sua visibilidade, receba contatos qualificados e faça parte da maior curadoria de síndicos profissionais do estado.
+              <p className="text-white/30 text-sm mb-6 leading-relaxed" style={{ fontWeight: 390 }}>
+                Faça o diagnóstico gratuito ou busque diretamente no banco de referências.
               </p>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button asChild size="lg" className="rounded-full px-8 h-12 text-[13px] gap-2" style={{ fontWeight: 450 }}>
-                  <Link to="/cadastro">
-                    Cadastre-se gratuitamente
+              <div className="flex flex-wrap gap-3">
+                <Button asChild size="sm" className="rounded-full px-6 h-11 text-[13px] gap-2" style={{ fontWeight: 450 }}>
+                  <Link to="/diagnostico">
+                    Fazer diagnóstico
                     <ArrowRight size={14} />
                   </Link>
                 </Button>
-              </motion.div>
+                <Button asChild variant="outline" size="sm" className="rounded-full px-6 h-11 text-[13px] border-white/10 text-white/60 hover:text-white hover:border-white/20 bg-transparent" style={{ fontWeight: 430 }}>
+                  <Link to="/sindicos">Ver profissionais</Link>
+                </Button>
+              </div>
             </motion.div>
 
-            <div className="hidden lg:block">
-              <SpinBadge size={100} color="rgba(255,255,255,0.08)" />
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="rounded-xl border border-white/[0.08] bg-white/[0.04] p-8"
+            >
+              <p className="text-[11px] text-primary/50 tracking-[0.2em] uppercase mb-4" style={{ fontWeight: 450 }}>É síndico profissional?</p>
+              <h2 className="text-xl md:text-2xl text-white/90 tracking-[-0.02em] mb-4" style={{ fontWeight: 340 }}>
+                Cadastre seu perfil e amplie sua visibilidade
+              </h2>
+              <p className="text-white/30 text-sm mb-6 leading-relaxed" style={{ fontWeight: 390 }}>
+                Organize seu repertório e faça parte da base consultada por condomínios em toda São Paulo.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild size="sm" className="rounded-full px-6 h-11 text-[13px] gap-2" style={{ fontWeight: 450 }}>
+                  <Link to="/sou-sindico">
+                    Saiba como funciona
+                    <ArrowRight size={14} />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="rounded-full px-6 h-11 text-[13px] border-white/10 text-white/60 hover:text-white hover:border-white/20 bg-transparent" style={{ fontWeight: 430 }}>
+                  <Link to="/cadastro">Cadastre-se</Link>
+                </Button>
+              </div>
+            </motion.div>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex items-center justify-center gap-2 text-[12px] text-white/30"
+            style={{ fontWeight: 400 }}
+          >
+            <BookOpen size={14} className="text-primary/50" />
+            Quer entender melhor o cenário condominial?{" "}
+            <Link to="/conteudo" className="text-primary/70 hover:text-primary underline underline-offset-4">
+              Veja nosso conteúdo e inteligência de mercado
+            </Link>
+          </motion.div>
         </div>
       </section>
 

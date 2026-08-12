@@ -10,7 +10,14 @@ import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { CIDADES, CIDADES_REGIOES } from "@/lib/constants";
-import { DESAFIOS, PERFIS_GESTAO, TIPOS_EMPREENDIMENTO } from "@/lib/dimensoes";
+import {
+  DESAFIOS,
+  PERFIS_GESTAO,
+  TIPOS_EMPREENDIMENTO,
+  PRIORIDADES,
+  PROBLEMAS_ADMINISTRATIVOS,
+  RELACOES_CONDOMINIO,
+} from "@/lib/dimensoes";
 import {
   respostasIniciais,
   recomendarPerfis,
@@ -21,7 +28,9 @@ import {
 import { ranquearSindicos, type SindicoComBio } from "@/lib/matching";
 import { useSindicos } from "@/hooks/useSindicos";
 
-const PASSOS = ["Localização", "Porte", "Financeiro", "Contexto", "Prioridades", "Contato"];
+const ESTADOS = ["SP", "RJ", "MG", "PR", "SC", "RS", "BA", "DF", "Outro"];
+
+const PASSOS = ["Localização", "Sobre o condomínio", "Momento atual", "Perfil procurado", "Prioridades", "Contato"];
 
 export default function Diagnostico() {
   const [passo, setPasso] = useState(0);
@@ -44,10 +53,10 @@ export default function Diagnostico() {
   const podeAvancar = () => {
     switch (passo) {
       case 0: return !!r.cidade && r.tipos.length > 0;
-      case 1: return !!r.unidades && !!r.padrao && !!r.funcionarios;
-      case 2: return !!r.arrecadacao && !!r.inadimplencia && !!r.momento_financeiro;
-      case 3: return !!r.obras && !!r.conflitos && !!r.conselho && !!r.novo;
-      case 4: return r.desafios.length > 0;
+      case 1: return !!r.unidades && !!r.funcionarios && !!r.complexidade;
+      case 2: return !!r.momento_financeiro && !!r.inadimplencia && !!r.obras && !!r.novo && !!r.conflitos && !!r.conselho;
+      case 3: return true; // perfil procurado é sempre opcional
+      case 4: return r.prioridades.length === 3;
       default: return true;
     }
   };
@@ -55,6 +64,10 @@ export default function Diagnostico() {
   const enviar = async () => {
     if (!lead.nome.trim() || lead.whatsapp.trim().length < 8) {
       toast({ title: "Preencha nome e WhatsApp", variant: "destructive" });
+      return;
+    }
+    if (!r.relacao) {
+      toast({ title: "Selecione sua relação com o condomínio", variant: "destructive" });
       return;
     }
     setSalvando(true);
@@ -134,6 +147,7 @@ export default function Diagnostico() {
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
           >
+            {/* 1. Localização */}
             {passo === 0 && (
               <>
                 <DiagnosticoOpcoes
@@ -143,7 +157,15 @@ export default function Diagnostico() {
                   onChange={(v) => { set("cidade", v); set("regiao", ""); }}
                   colunas={3}
                 />
-                {r.cidade && (
+                <DiagnosticoOpcoes
+                  label="Estado"
+                  descricao="Quando aplicável — ajuda em cidades com nomes repetidos."
+                  opcoes={ESTADOS.map((e) => ({ value: e, label: e }))}
+                  value={r.estado}
+                  onChange={(v) => set("estado", v)}
+                  colunas={3}
+                />
+                {r.cidade && (CIDADES_REGIOES[r.cidade] ?? []).length > 0 && (
                   <DiagnosticoOpcoes
                     label="Região"
                     descricao="Opcional, mas ajuda a priorizar profissionais próximos."
@@ -164,6 +186,7 @@ export default function Diagnostico() {
               </>
             )}
 
+            {/* 2. Sobre o condomínio */}
             {passo === 1 && (
               <>
                 <DiagnosticoOpcoes
@@ -221,9 +244,22 @@ export default function Diagnostico() {
                   onChange={(v) => set("lazer", v)}
                   colunas={3}
                 />
+                <DiagnosticoOpcoes
+                  label="Complexidade operacional"
+                  descricao="O quanto a rotina de gestão exige presença e estrutura."
+                  opcoes={[
+                    { value: "baixa", label: "Baixa" },
+                    { value: "media", label: "Média" },
+                    { value: "alta", label: "Alta" },
+                  ]}
+                  value={r.complexidade}
+                  onChange={(v) => set("complexidade", v)}
+                  colunas={3}
+                />
               </>
             )}
 
+            {/* 3. Momento atual */}
             {passo === 2 && (
               <>
                 <DiagnosticoOpcoes
@@ -238,6 +274,17 @@ export default function Diagnostico() {
                   onChange={(v) => set("arrecadacao", v)}
                 />
                 <DiagnosticoOpcoes
+                  label="Momento financeiro"
+                  opcoes={[
+                    { value: "equilibrado", label: "Equilibrado", hint: "Contas em dia e fundo de reserva saudável" },
+                    { value: "apertado", label: "Apertado", hint: "Fecha o mês no limite" },
+                    { value: "deficitario", label: "Deficitário", hint: "Dívidas ou caixa negativo" },
+                  ]}
+                  value={r.momento_financeiro}
+                  onChange={(v) => set("momento_financeiro", v)}
+                  colunas={3}
+                />
+                <DiagnosticoOpcoes
                   label="Nível de inadimplência"
                   opcoes={[
                     { value: "baixa", label: "Baixa", hint: "Até 5%" },
@@ -249,22 +296,6 @@ export default function Diagnostico() {
                   colunas={3}
                 />
                 <DiagnosticoOpcoes
-                  label="Momento financeiro"
-                  opcoes={[
-                    { value: "equilibrado", label: "Equilibrado", hint: "Contas em dia e fundo de reserva saudável" },
-                    { value: "apertado", label: "Apertado", hint: "Fecha o mês no limite" },
-                    { value: "deficitario", label: "Deficitário", hint: "Dívidas ou caixa negativo" },
-                  ]}
-                  value={r.momento_financeiro}
-                  onChange={(v) => set("momento_financeiro", v)}
-                  colunas={3}
-                />
-              </>
-            )}
-
-            {passo === 3 && (
-              <>
-                <DiagnosticoOpcoes
                   label="Obras em curso ou previstas"
                   opcoes={[
                     { value: "nenhuma", label: "Nenhuma" },
@@ -274,6 +305,15 @@ export default function Diagnostico() {
                   ]}
                   value={r.obras}
                   onChange={(v) => set("obras", v)}
+                />
+                <DiagnosticoOpcoes
+                  label="O condomínio é novo / em implantação?"
+                  opcoes={[
+                    { value: "sim", label: "Sim, em implantação" },
+                    { value: "nao", label: "Não, já em operação" },
+                  ]}
+                  value={r.novo}
+                  onChange={(v) => set("novo", v)}
                 />
                 <DiagnosticoOpcoes
                   label="Nível de conflito entre condôminos"
@@ -287,6 +327,26 @@ export default function Diagnostico() {
                   colunas={3}
                 />
                 <DiagnosticoOpcoes
+                  label="Há transição de gestão em curso?"
+                  descricao="Troca de síndico ou de administradora."
+                  opcoes={[
+                    { value: "nao-aplica", label: "Não se aplica" },
+                    { value: "planejada", label: "Sim, planejada" },
+                    { value: "conturbada", label: "Sim, conturbada" },
+                  ]}
+                  value={r.transicao_gestao}
+                  onChange={(v) => set("transicao_gestao", v)}
+                  colunas={3}
+                />
+                <DiagnosticoOpcoes
+                  label="Existem problemas administrativos hoje?"
+                  descricao="Opcional. Pode marcar mais de um."
+                  opcoes={PROBLEMAS_ADMINISTRATIVOS.map((p) => ({ value: p.key, label: p.label, hint: p.descricao }))}
+                  value={r.problemas_administrativos}
+                  onChange={(v) => set("problemas_administrativos", v)}
+                  multi
+                />
+                <DiagnosticoOpcoes
                   label="Como é o conselho?"
                   opcoes={[
                     { value: "ausente", label: "Pouco presente" },
@@ -298,40 +358,67 @@ export default function Diagnostico() {
                   colunas={3}
                 />
                 <DiagnosticoOpcoes
-                  label="O condomínio é novo / em implantação?"
+                  label="Como são as assembleias?"
                   opcoes={[
-                    { value: "sim", label: "Sim, em implantação" },
-                    { value: "nao", label: "Não, já em operação" },
+                    { value: "tranquilas", label: "Tranquilas" },
+                    { value: "poucas-participam", label: "Baixa participação" },
+                    { value: "tensas", label: "Tensas" },
                   ]}
-                  value={r.novo}
-                  onChange={(v) => set("novo", v)}
+                  value={r.assembleias}
+                  onChange={(v) => set("assembleias", v)}
+                  colunas={3}
+                />
+                <DiagnosticoOpcoes
+                  label="Como estão os fornecedores?"
+                  opcoes={[
+                    { value: "estruturados", label: "Estruturados" },
+                    { value: "poucos-contratos", label: "Poucos contratos formalizados" },
+                    { value: "problematico", label: "Situação problemática" },
+                  ]}
+                  value={r.fornecedores}
+                  onChange={(v) => set("fornecedores", v)}
+                  colunas={3}
+                />
+                <DiagnosticoOpcoes
+                  label="Como está a equipe hoje?"
+                  opcoes={[
+                    { value: "estavel", label: "Estável" },
+                    { value: "rotatividade", label: "Alta rotatividade" },
+                    { value: "sem-equipe", label: "Sem equipe própria" },
+                  ]}
+                  value={r.equipe_situacao}
+                  onChange={(v) => set("equipe_situacao", v)}
+                  colunas={3}
                 />
               </>
             )}
 
+            {/* 4. Perfil procurado (opcional) */}
+            {passo === 3 && (
+              <DiagnosticoOpcoes
+                label="Existe um perfil de gestão preferido?"
+                descricao="Opcional — nunca é obrigatório. Pode marcar mais de um repertório desejável."
+                opcoes={PERFIS_GESTAO.map((p) => ({ value: p.key, label: p.label, hint: p.descricao }))}
+                value={r.perfil_desejado}
+                onChange={(v) => set("perfil_desejado", v)}
+                multi
+              />
+            )}
+
+            {/* 5. Três prioridades */}
             {passo === 4 && (
-              <>
-                <DiagnosticoOpcoes
-                  label="Quais são as prioridades desta gestão?"
-                  descricao="Escolha até 4. Elas pesam mais na análise de aderência."
-                  opcoes={DESAFIOS.map((d) => ({ value: d.key, label: d.label, hint: d.descricao }))}
-                  value={r.desafios}
-                  onChange={(v) => set("desafios", v)}
-                  multi
-                  max={4}
-                />
-                <DiagnosticoOpcoes
-                  label="Existe um perfil de gestão preferido?"
-                  opcoes={[
-                    { value: "indefinido", label: "Ainda não sei", hint: "O diagnóstico indica o perfil" },
-                    ...PERFIS_GESTAO.map((p) => ({ value: p.key, label: p.label, hint: p.descricao })),
-                  ]}
-                  value={r.perfil_desejado}
-                  onChange={(v) => set("perfil_desejado", v)}
-                />
-              </>
+              <DiagnosticoOpcoes
+                label="Quais são as 3 principais prioridades desta gestão?"
+                descricao="Escolha exatamente 3. A ordem de escolha pesa bastante na análise de aderência."
+                opcoes={PRIORIDADES.map((d) => ({ value: d.key, label: d.label, hint: d.descricao }))}
+                value={r.prioridades}
+                onChange={(v) => set("prioridades", v)}
+                multi
+                max={3}
+              />
             )}
 
+            {/* 6. Contato */}
             {passo === 5 && (
               <div className="rounded-2xl border border-border/30 bg-card p-6">
                 <p className="text-sm text-foreground mb-1" style={{ fontWeight: 450 }}>
@@ -367,10 +454,19 @@ export default function Diagnostico() {
                     className="h-10 text-sm rounded-lg"
                   />
                 </div>
+                <div className="mt-5">
+                  <DiagnosticoOpcoes
+                    label="Qual sua relação com o condomínio?"
+                    opcoes={RELACOES_CONDOMINIO}
+                    value={r.relacao}
+                    onChange={(v) => set("relacao", v)}
+                    colunas={3}
+                  />
+                </div>
                 <Button
                   onClick={enviar}
                   disabled={salvando}
-                  className="mt-5 h-11 px-7 rounded-full text-[13px] gap-2 w-full sm:w-auto"
+                  className="mt-2 h-11 px-7 rounded-full text-[13px] gap-2 w-full sm:w-auto"
                   style={{ fontWeight: 450 }}
                 >
                   {salvando ? <Loader2 size={14} className="animate-spin" /> : null}

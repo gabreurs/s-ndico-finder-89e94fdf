@@ -60,14 +60,23 @@ export function EspecialidadesQ1S() {
                   </span>
                 ))}
               </div>
-              <Link
-                to={`/sindicos?especialidade=${esp.slug}`}
-                className="mt-4 inline-flex items-center gap-1 text-[11px] text-primary/60 hover:text-primary/80 transition-colors group/link"
-                style={{ fontWeight: 430 }}
-              >
-                Ver perfis
-                <ArrowRight size={11} className="group-hover/link:translate-x-0.5 transition-transform" />
-              </Link>
+              <div className="mt-4 flex items-center gap-4">
+                <Link
+                  to={`/especialidades/${esp.slug}`}
+                  className="inline-flex items-center gap-1 text-[11px] text-primary/60 hover:text-primary/80 transition-colors group/link"
+                  style={{ fontWeight: 430 }}
+                >
+                  Saiba mais
+                  <ArrowRight size={11} className="group-hover/link:translate-x-0.5 transition-transform" />
+                </Link>
+                <Link
+                  to={`/sindicos?especialidade=${esp.slug}`}
+                  className="inline-flex items-center gap-1 text-[11px] text-white/40 hover:text-white/70 transition-colors"
+                  style={{ fontWeight: 430 }}
+                >
+                  Ver perfis
+                </Link>
+              </div>
             </motion.div>
           ))}
         </div>
