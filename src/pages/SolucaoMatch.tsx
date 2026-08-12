@@ -21,6 +21,11 @@ const PASSOS = [
 export default function SolucaoMatch() {
   return (
     <SolucaoLayout
+      seo={{
+        title: 'Q1S Match — indicação de síndicos por aderência real',
+        description: 'Recomendação de síndicos profissionais a partir do diagnóstico do condomínio, com evidências objetivas em vez de percentuais artificiais.',
+        path: '/solucoes/match',
+      }}
       icon={<Target size={32} />}
       title="Q1S Match"
       subtitle="Diagnóstico + recomendação de síndicos"

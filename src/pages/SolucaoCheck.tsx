@@ -22,6 +22,11 @@ const ITENS = [
 export default function SolucaoCheck() {
   return (
     <SolucaoLayout
+      seo={{
+        title: 'Q1S Check — verificação de síndicos profissionais',
+        description: 'Checagem estruturada do histórico, repertório e consistência do síndico antes da contratação.',
+        path: '/solucoes/check',
+      }}
       icon={<ClipboardCheck size={32} />}
       title="Q1S Check"
       subtitle="Auditoria de candidatos a síndico"

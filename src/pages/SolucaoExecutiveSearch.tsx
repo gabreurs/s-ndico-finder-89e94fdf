@@ -22,6 +22,11 @@ const ETAPAS = [
 export default function SolucaoExecutiveSearch() {
   return (
     <SolucaoLayout
+      seo={{
+        title: 'Q1S Executive Search — busca dirigida de síndicos',
+        description: 'Busca ativa e estruturada de síndicos profissionais para condomínios com exigência técnica, financeira ou de governança.',
+        path: '/solucoes/executive-search',
+      }}
       icon={<Search size={32} />}
       title="Q1S Executive Search"
       subtitle="Recrutamento dedicado de síndicos"

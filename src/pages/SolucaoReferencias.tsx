@@ -21,6 +21,11 @@ const PILARES = [
 export default function SolucaoReferencias() {
   return (
     <SolucaoLayout
+      seo={{
+        title: 'Q1S Referências — checagem de referências de síndicos',
+        description: 'Coleta e leitura de referências de condomínios anteriores para decidir com informação real.',
+        path: '/solucoes/referencias',
+      }}
       icon={<UserCheck size={32} />}
       title="Q1S Referências"
       subtitle="Banco de síndicos validados"
