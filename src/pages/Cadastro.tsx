@@ -16,6 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, ArrowLeft, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Seo } from "@/components/Seo";
 
 export default function Cadastro() {
   const [step, setStep] = useState(1);
@@ -140,6 +141,7 @@ export default function Cadastro() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo title={'Cadastro de síndico profissional | Quero 1 Síndico'} description={'Crie seu perfil de síndico profissional, informe especialidades, regiões e monte sua apresentação com método.'} path={'/cadastro'} />
       <Header />
 
       <section className="py-10 md:py-16 flex-1">

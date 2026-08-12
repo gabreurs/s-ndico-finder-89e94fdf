@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Search, SlidersHorizontal } from "lucide-react";
+import { Seo } from "@/components/Seo";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -56,6 +57,7 @@ export default function Sindicos() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo title={'Síndicos profissionais — busca por especialidade, cidade e região'} description={'Consulte síndicos profissionais aprovados e filtre por especialidade, cidade e região para encontrar o repertório certo.'} path={'/sindicos'} />
       <Header />
 
       {/* Hero */}
