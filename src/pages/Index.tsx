@@ -221,7 +221,7 @@ const Index = () => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* ===== MARQUEE ===== */}
