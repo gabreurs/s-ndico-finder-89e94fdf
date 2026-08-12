@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { MessageCircle } from "lucide-react";
 import { SpinBadge } from "./SpinBadge";
-import { buildRafaelWhatsAppUrl } from "@/lib/whatsapp";
+import { buildRafaelWhatsAppUrl, WHATSAPP_LINK_OFICIAL } from "@/lib/whatsapp";
 
 export function Footer() {
   return (
@@ -85,7 +85,7 @@ export function Footer() {
       </div>
 
       <a
-        href={buildRafaelWhatsAppUrl()}
+        href={WHATSAPP_LINK_OFICIAL}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-[hsl(var(--green-whatsapp))] flex items-center justify-center hover:scale-110 transition-transform duration-300 z-50 shadow-xl shadow-[hsl(var(--green-whatsapp))]/20"
