@@ -6,6 +6,7 @@ import { ArrowRight, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { buildRafaelWhatsAppUrl } from "@/lib/whatsapp";
 import type { ReactNode } from "react";
+import { Seo } from "@/components/Seo";
 
 interface SolucaoLayoutProps {
   icon: ReactNode;
@@ -15,6 +16,8 @@ interface SolucaoLayoutProps {
   benefits: string[];
   cta: { label: string; href: string; whatsapp?: boolean };
   children?: ReactNode;
+  /** SEO da página da solução. */
+  seo: { title: string; description: string; path: string };
 }
 
 const fadeUp = {
@@ -26,9 +29,10 @@ const fadeUp = {
   }),
 };
 
-export function SolucaoLayout({ icon, title, subtitle, description, benefits, cta, children }: SolucaoLayoutProps) {
+export function SolucaoLayout({ icon, title, subtitle, description, benefits, cta, children, seo }: SolucaoLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo title={seo.title} description={seo.description} path={seo.path} />
       <Header />
 
       <section className="relative gradient-mesh overflow-hidden pt-10 pb-16 md:pt-16 md:pb-24">
