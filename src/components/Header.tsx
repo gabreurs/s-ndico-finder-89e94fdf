@@ -49,10 +49,10 @@ export function Header() {
 
         <div className="hidden lg:flex items-center gap-2">
           <Button asChild variant="ghost" size="sm" className="px-4 h-8 text-[12px] rounded-full" style={{ fontWeight: 430 }}>
-            <Link to="/meu-perfil">Meu Perfil</Link>
+            <Link to="/meu-perfil">Entrar</Link>
           </Button>
           <Button asChild size="sm" className="px-5 h-8 text-[12px] rounded-full" style={{ fontWeight: 450 }}>
-            <Link to="/cadastro">Cadastre-se</Link>
+            <Link to="/diagnostico">Encontrar meu síndico</Link>
           </Button>
         </div>
 
@@ -89,10 +89,10 @@ export function Header() {
               ))}
               <div className="pt-3 space-y-2">
                 <Button asChild variant="outline" className="w-full h-10 rounded-full text-sm" style={{ fontWeight: 430 }}>
-                  <Link to="/meu-perfil" onClick={() => setMobileMenuOpen(false)}>Meu Perfil</Link>
+                  <Link to="/meu-perfil" onClick={() => setMobileMenuOpen(false)}>Entrar</Link>
                 </Button>
                 <Button asChild className="w-full h-10 rounded-full text-sm" style={{ fontWeight: 450 }}>
-                  <Link to="/cadastro" onClick={() => setMobileMenuOpen(false)}>Cadastre-se</Link>
+                  <Link to="/diagnostico" onClick={() => setMobileMenuOpen(false)}>Encontrar meu síndico</Link>
                 </Button>
               </div>
             </div>
