@@ -73,21 +73,18 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
         return;
       }
 
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${crypto.randomUUID()}.${fileExt}`;
-      const filePath = `profiles/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from("sindicos")
-        .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false,
-        });
+      const { data, error: uploadError } = await supabase.functions.invoke(
+        "upload-sindico-photo",
+        {
+          body: file,
+          headers: { "x-file-type": file.type },
+        },
+      );
 
       if (uploadError) throw uploadError;
+      if (!data?.url) throw new Error(data?.error || "Falha no upload");
 
-      const { data } = supabase.storage.from("sindicos").getPublicUrl(filePath);
-      onChange(data.publicUrl);
+      onChange(data.url as string);
     } catch (err) {
       console.error("Upload error:", err);
       setError("Erro ao fazer upload. Tente novamente.");
