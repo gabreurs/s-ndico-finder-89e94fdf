@@ -33,6 +33,8 @@ export function Footer() {
                 {[
                   { to: "/como-funciona", label: "Como funciona" },
                   { to: "/sindicos", label: "Síndicos" },
+                  { to: "/sou-sindico", label: "Sou síndico" },
+                  { to: "/conteudo", label: "Conteúdo" },
                   { to: "/cadastro", label: "Cadastre-se" },
                   { to: "/quem-somos", label: "Quem somos" },
                 ].map(link => (

@@ -115,7 +115,7 @@ export default function Cadastro() {
         throw authError;
       }
 
-      const { error } = await supabase.from("sindicos").insert({
+      const payload = {
         nome_completo: formData.nome_completo,
         contato_whatsapp: formData.contato_whatsapp,
         nome_empresa: formData.nome_empresa || null,
@@ -131,9 +131,23 @@ export default function Cadastro() {
         aceita_divulgacao_materiais: formData.aceita_divulgacao_materiais,
         autoriza_divulgacao_clientes: formData.autoriza_divulgacao_clientes,
         foto_url: formData.foto_url,
-      });
+      };
 
-      if (error) throw error;
+      const { error } = await supabase.from("sindicos").insert(payload);
+
+      // Alguns ambientes bloqueiam INSERT público por RLS (42501).
+      // Nesse caso o cadastro segue pela função de servidor.
+      if (error) {
+        const isRls = error.code === "42501" || /row-level security/i.test(error.message ?? "");
+        if (!isRls) throw error;
+
+        const { data: fnData, error: fnError } = await supabase.functions.invoke("submit-sindico", {
+          body: payload,
+        });
+        if (fnError) throw fnError;
+        if (fnData?.error) throw new Error(fnData.message || "Não foi possível concluir o cadastro.");
+      }
+
 
       toast({
         title: "Cadastro enviado com sucesso",

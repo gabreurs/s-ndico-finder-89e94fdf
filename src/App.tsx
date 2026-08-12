@@ -20,6 +20,10 @@ import QuemSomos from "./pages/QuemSomos";
 import Admin from "./pages/Admin";
 import MeuPerfil from "./pages/MeuPerfil";
 import ResetPassword from "./pages/ResetPassword";
+import Conteudo from "./pages/Conteudo";
+import ConteudoArtigo from "./pages/ConteudoArtigo";
+import SouSindico from "./pages/SouSindico";
+import Especialidade from "./pages/Especialidade";
 import NotFound from "./pages/NotFound";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
@@ -68,7 +72,12 @@ const App = () => {
                <Route path="/solucoes/referencias" element={<SolucaoReferencias />} />
                <Route path="/como-funciona" element={<ComoFunciona />} />
               <Route path="/quem-somos" element={<QuemSomos />} />
+              <Route path="/sou-sindico" element={<SouSindico />} />
+              <Route path="/especialidades/:slug" element={<Especialidade />} />
+              <Route path="/conteudo" element={<Conteudo />} />
+              <Route path="/conteudo/:slug" element={<ConteudoArtigo />} />
               <Route path="/meu-perfil" element={<MeuPerfil />} />
+
               <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />

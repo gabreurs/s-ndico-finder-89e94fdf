@@ -16,7 +16,7 @@ export function Header() {
 
   const navLinks: NavItem[] = [
     { href: "/sindicos", label: "Encontrar um síndico" },
-    { href: "/cadastro", label: "Sou síndico" },
+    { href: "/sou-sindico", label: "Sou síndico" },
     {
       href: "/solucoes",
       label: "Soluções",
@@ -28,6 +28,7 @@ export function Header() {
       ],
     },
     { href: "/como-funciona", label: "Como funciona" },
+    { href: "/conteudo", label: "Conteúdo" },
     { href: "/quem-somos", label: "Quem somos" },
   ];
 
