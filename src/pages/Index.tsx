@@ -12,7 +12,7 @@ import { useSindicos } from "@/hooks/useSindicos";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Shield, Clock, Building2, Users, Star, Target, Search, Wallet, HardHat, AlertTriangle, Gavel, BookOpen } from "lucide-react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import heroSp from "@/assets/hero-sp.jpg";
 import { Seo } from "@/components/Seo";
 import { HeadlineReveal } from "@/components/motion/HeadlineReveal";
@@ -38,14 +38,6 @@ const Index = () => {
   const [cidade, setCidade] = useState("all");
   const [regiao, setRegiao] = useState("all");
   const heroRef = useRef<HTMLDivElement>(null);
-
-  const { scrollYProgress: heroProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-
-  const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
-  const heroY = useTransform(heroProgress, [0, 1], [0, 100]);
 
   const { data: sindicos, isLoading } = useSindicos({ especialidade, cidade, regiao });
   const featuredSindicos = sindicos?.slice(0, 4) || [];
@@ -89,7 +81,7 @@ const Index = () => {
           }}
         />
 
-        <motion.div style={{ opacity: heroOpacity, y: heroY, willChange: "transform, opacity" }} className="relative container py-24 md:py-32 transform-gpu">
+        <div className="relative container py-24 md:py-32">
           <div className="grid lg:grid-cols-5 gap-12 items-center">
             {/* Left content */}
             <div className="lg:col-span-3">
