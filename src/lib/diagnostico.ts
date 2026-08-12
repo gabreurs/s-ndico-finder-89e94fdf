@@ -177,26 +177,28 @@ export interface SalvarDiagnosticoInput {
 }
 
 export async function salvarDiagnostico(input: SalvarDiagnosticoInput) {
-  const { data, error } = await supabase
-    .from("diagnosticos")
-    .insert({
-      nome: input.lead.nome.trim(),
-      whatsapp: input.lead.whatsapp.trim(),
-      email: input.lead.email.trim() || null,
-      condominio: input.lead.condominio.trim() || null,
-      cidade: input.respostas.cidade || null,
-      regiao: input.respostas.regiao || null,
-      respostas: input.respostas as unknown as Record<string, unknown>,
-      perfil_recomendado: input.perfil_recomendado,
-      perfis_secundarios: input.perfis_secundarios,
-      sindicos_sugeridos: input.sindicos_sugeridos as unknown as Record<string, unknown>[],
-    })
-    .select("id")
-    .single();
+  const payload = {
+    nome: input.lead.nome.trim(),
+    whatsapp: input.lead.whatsapp.trim(),
+    email: input.lead.email.trim() || null,
+    condominio: input.lead.condominio.trim() || null,
+    cidade: input.respostas.cidade || null,
+    regiao: input.respostas.regiao || null,
+    respostas: input.respostas as unknown as Record<string, unknown>,
+    perfil_recomendado: input.perfil_recomendado,
+    perfis_secundarios: input.perfis_secundarios,
+    sindicos_sugeridos: input.sindicos_sugeridos as unknown as Record<string, unknown>[],
+  };
+
+  const { data, error } = await supabase.functions.invoke("submit-diagnostico", {
+    body: payload,
+  });
 
   if (error) throw error;
-  return data as { id: string };
+  if (!data?.success || !data?.id) throw new Error("Resposta inesperada do servidor");
+  return { id: data.id as string };
 }
+
 
 export async function listarDiagnosticos(): Promise<DiagnosticoRegistro[]> {
   const { data, error } = await supabase

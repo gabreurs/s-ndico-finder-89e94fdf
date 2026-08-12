@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS public.diagnosticos (LIKE public.diagnosticos INCLUDING ALL);

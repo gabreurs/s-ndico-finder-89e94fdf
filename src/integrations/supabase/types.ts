@@ -14,11 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      diagnosticos: {
+        Row: {
+          cidade: string | null
+          condominio: string | null
+          created_at: string
+          email: string | null
+          id: string
+          nome: string
+          perfil_recomendado: string | null
+          perfis_secundarios: string[]
+          regiao: string | null
+          respostas: Json
+          sindicos_sugeridos: Json
+          status: string
+          updated_at: string
+          whatsapp: string
+        }
+        Insert: {
+          cidade?: string | null
+          condominio?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          nome: string
+          perfil_recomendado?: string | null
+          perfis_secundarios?: string[]
+          regiao?: string | null
+          respostas?: Json
+          sindicos_sugeridos?: Json
+          status?: string
+          updated_at?: string
+          whatsapp: string
+        }
+        Update: {
+          cidade?: string | null
+          condominio?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          nome?: string
+          perfil_recomendado?: string | null
+          perfis_secundarios?: string[]
+          regiao?: string | null
+          respostas?: Json
+          sindicos_sugeridos?: Json
+          status?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
       sindicos: {
         Row: {
           aceita_divulgacao_materiais: boolean | null
           ano_inicio_profissao: number | null
           autoriza_divulgacao_clientes: boolean | null
+          bio_data: Json | null
           breve_resumo: string | null
           cidade: string[]
           contato_whatsapp: string
@@ -42,6 +94,7 @@ export type Database = {
           aceita_divulgacao_materiais?: boolean | null
           ano_inicio_profissao?: number | null
           autoriza_divulgacao_clientes?: boolean | null
+          bio_data?: Json | null
           breve_resumo?: string | null
           cidade?: string[]
           contato_whatsapp: string
@@ -65,6 +118,7 @@ export type Database = {
           aceita_divulgacao_materiais?: boolean | null
           ano_inicio_profissao?: number | null
           autoriza_divulgacao_clientes?: boolean | null
+          bio_data?: Json | null
           breve_resumo?: string | null
           cidade?: string[]
           contato_whatsapp?: string

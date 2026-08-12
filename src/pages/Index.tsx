@@ -5,10 +5,13 @@ import { HeroFilters } from "@/components/HeroFilters";
 import { SindicoCard } from "@/components/SindicoCard";
 import { Marquee } from "@/components/Marquee";
 import { SpinBadge } from "@/components/SpinBadge";
+import { Q1SProcesso } from "@/components/Q1SProcesso";
+import { EspecialidadesQ1S } from "@/components/EspecialidadesQ1S";
+import { SolucoesQ1S } from "@/components/SolucoesQ1S";
 import { useSindicos } from "@/hooks/useSindicos";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Shield, Clock, Building2, Users, Star } from "lucide-react";
+import { ArrowRight, Shield, Clock, Building2, Users, Star, Target } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import heroSp from "@/assets/hero-sp.jpg";
 
@@ -21,9 +24,9 @@ const fadeUp = {
 };
 
 const SPECIALTIES_MARQUEE = [
-  "Residencial Multitorres", "Condomínio Comercial", "Residencial Clube",
-  "Condomínio Horizontal", "Torre Única", "Condomínio Misto",
-  "Loteamento", "Condomínio Industrial", "Associação de Moradores",
+  "Q1S Match", "Executive Search", "Q1S Check", "Q1S Referências",
+  "Alto Padrão", "Condomínio Clube", "Recuperação Financeira", "Grandes Condomínios",
+  "Obras e Reformas", "Gestão de Conflitos", "Implantação", "Condomínios Comerciais",
 ];
 
 const Index = () => {
@@ -46,7 +49,7 @@ const Index = () => {
 
   const benefits = [
     { icon: <Shield className="w-5 h-5" />, title: "Curadoria real", desc: "Perfis verificados e aprovados antes de ir ao ar." },
-    { icon: <Clock className="w-5 h-5" />, title: "Contato em minutos", desc: "Compare e converse direto pelo WhatsApp." },
+    { icon: <Clock className="w-5 h-5" />, title: "Contato em minutos", desc: "Diagnóstico gratuito e shortlist em poucos cliques." },
     { icon: <Building2 className="w-5 h-5" />, title: "Grande São Paulo", desc: "Cobertura em SP capital, ABC, interior e litoral." },
     { icon: <Users className="w-5 h-5" />, title: "100% gratuito", desc: "Sem custo para condomínios e moradores." },
   ];
@@ -93,7 +96,7 @@ const Index = () => {
                 className="text-[11px] text-white/25 tracking-[0.25em] uppercase mb-6"
                 style={{ fontWeight: 440 }}
               >
-                Plataforma de síndicos profissionais
+                Headhunter de síndicos profissionais
               </motion.p>
 
               <motion.h1
@@ -104,8 +107,8 @@ const Index = () => {
                 style={{ fontWeight: 300 }}
               >
                 Encontre o síndico{" "}
-                <span className="text-primary" style={{ fontWeight: 460 }}>profissional</span>{" "}
-                ideal para seu condomínio
+                <span className="text-primary" style={{ fontWeight: 460 }}>certo</span>{" "}
+                para o seu condomínio — com método
               </motion.h1>
 
               <motion.p
@@ -115,7 +118,7 @@ const Index = () => {
                 className="text-white/35 text-base md:text-lg max-w-lg leading-relaxed mb-10"
                 style={{ fontWeight: 390 }}
               >
-                Perfis verificados, contato direto pelo WhatsApp e cobertura em toda a Grande São Paulo. Gratuito para condomínios.
+                Não é um diretório. Aplicamos uma metodologia de recrutamento e seleção para conectar condomínios a síndicos com aderência real.
               </motion.p>
 
               {/* Stats */}
@@ -126,8 +129,8 @@ const Index = () => {
                 className="flex items-center gap-10 mb-10"
               >
                 {[
-                  { value: "100+", label: "Síndicos" },
-                  { value: "10+", label: "Cidades" },
+                  { value: "100+", label: "Síndicos curados" },
+                  { value: "10+", label: "Cidades atendidas" },
                   { value: "100%", label: "Gratuito" },
                 ].map((stat) => (
                   <div key={stat.label}>
@@ -135,6 +138,27 @@ const Index = () => {
                     <p className="text-[10px] text-white/20 tracking-widest uppercase" style={{ fontWeight: 420 }}>{stat.label}</p>
                   </div>
                 ))}
+              </motion.div>
+
+              {/* Primary CTAs */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="flex flex-wrap items-center gap-3 mb-8"
+              >
+                <Button asChild size="sm" className="rounded-full px-6 h-11 text-[13px] gap-2" style={{ fontWeight: 450 }}>
+                  <Link to="/diagnostico">
+                    <Target size={14} />
+                    Fazer diagnóstico do condomínio
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="rounded-full px-6 h-11 text-[13px] border-white/10 text-white/60 hover:text-white hover:border-white/20 bg-transparent" style={{ fontWeight: 430 }}>
+                  <Link to="/sindicos">
+                    Ver banco de referências
+                    <ArrowRight size={14} />
+                  </Link>
+                </Button>
               </motion.div>
 
               {/* Filters */}
@@ -150,14 +174,11 @@ const Index = () => {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
+                transition={{ delay: 0.9 }}
                 className="mt-6 flex flex-wrap items-center gap-4"
               >
-                <Button asChild size="sm" className="rounded-full px-6 h-10 text-[13px] gap-2" style={{ fontWeight: 450 }}>
-                  <Link to="/diagnostico">
-                    Fazer o diagnóstico do condomínio
-                    <ArrowRight size={14} />
-                  </Link>
+                <Button asChild size="sm" variant="ghost" className="rounded-full px-4 h-9 text-[12px] text-white/30 hover:text-white hover:bg-white/5" style={{ fontWeight: 430 }}>
+                  <Link to="/solucoes/match">Conhecer Q1S Match</Link>
                 </Button>
                 <span className="text-[12px] text-white/30" style={{ fontWeight: 390 }}>
                   Buscamos o perfil certo, não apenas um nome de lista.
@@ -221,6 +242,15 @@ const Index = () => {
           ))}
         </Marquee>
       </section>
+
+      {/* ===== SOLUTIONS ===== */}
+      <SolucoesQ1S />
+
+      {/* ===== PROCESS ===== */}
+      <Q1SProcesso />
+
+      {/* ===== SPECIALTIES ===== */}
+      <EspecialidadesQ1S />
 
       {/* ===== DISCOVERY ===== */}
       <section className="py-28 md:py-36">
@@ -299,7 +329,7 @@ const Index = () => {
                 A gestão condominial merece mais profissionalismo, transparência e facilidade
               </h2>
               <p className="text-white/35 text-sm leading-relaxed mb-8" style={{ fontWeight: 390 }}>
-                Encontrar o profissional certo impacta diretamente a qualidade de vida dos moradores e a valorização do patrimônio. Simplificamos essa busca.
+                Encontrar o profissional certo impacta diretamente a qualidade de vida dos moradores e a valorização do patrimônio. Simplificamos essa busca com método e curadoria.
               </p>
               <motion.div whileHover={{ x: 4 }} className="inline-block">
                 <Button asChild variant="outline" size="sm" className="rounded-full px-6 gap-1.5 border-white/10 text-white/60 hover:text-white hover:border-white/20 bg-transparent" style={{ fontWeight: 430 }}>
