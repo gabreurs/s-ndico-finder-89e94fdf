@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { Suspense, lazy, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,26 +7,27 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { IntroAnimation } from "@/components/IntroAnimation";
 import { ScrollBlur } from "@/components/ScrollBlur";
 import Index from "./pages/Index";
-import Sindicos from "./pages/Sindicos";
-import SindicoPerfil from "./pages/SindicoPerfil";
-import Cadastro from "./pages/Cadastro";
-import Diagnostico from "./pages/Diagnostico";
-import SolucaoMatch from "./pages/SolucaoMatch";
-import SolucaoExecutiveSearch from "./pages/SolucaoExecutiveSearch";
-import SolucaoCheck from "./pages/SolucaoCheck";
-import SolucaoReferencias from "./pages/SolucaoReferencias";
-import ComoFunciona from "./pages/ComoFunciona";
-import QuemSomos from "./pages/QuemSomos";
-import Admin from "./pages/Admin";
-import MeuPerfil from "./pages/MeuPerfil";
-import ResetPassword from "./pages/ResetPassword";
-import Conteudo from "./pages/Conteudo";
-import ConteudoArtigo from "./pages/ConteudoArtigo";
-import SouSindico from "./pages/SouSindico";
-import Especialidade from "./pages/Especialidade";
-import Especialidades from "./pages/Especialidades";
-import NotFound from "./pages/NotFound";
+const Sindicos = lazy(() => import("./pages/Sindicos"));
+const SindicoPerfil = lazy(() => import("./pages/SindicoPerfil"));
+const Cadastro = lazy(() => import("./pages/Cadastro"));
+const Diagnostico = lazy(() => import("./pages/Diagnostico"));
+const SolucaoMatch = lazy(() => import("./pages/SolucaoMatch"));
+const SolucaoExecutiveSearch = lazy(() => import("./pages/SolucaoExecutiveSearch"));
+const SolucaoCheck = lazy(() => import("./pages/SolucaoCheck"));
+const SolucaoReferencias = lazy(() => import("./pages/SolucaoReferencias"));
+const ComoFunciona = lazy(() => import("./pages/ComoFunciona"));
+const QuemSomos = lazy(() => import("./pages/QuemSomos"));
+const Admin = lazy(() => import("./pages/Admin"));
+const MeuPerfil = lazy(() => import("./pages/MeuPerfil"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Conteudo = lazy(() => import("./pages/Conteudo"));
+const ConteudoArtigo = lazy(() => import("./pages/ConteudoArtigo"));
+const SouSindico = lazy(() => import("./pages/SouSindico"));
+const Especialidade = lazy(() => import("./pages/Especialidade"));
+const Especialidades = lazy(() => import("./pages/Especialidades"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +62,8 @@ const App = () => {
         {!showIntro && <ScrollBlur />}
          <BrowserRouter>
             <ScrollToTop />
+            <SmoothScroll />
+            <Suspense fallback={<div className="min-h-screen bg-background" aria-hidden="true" />}>
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/sindicos" element={<Sindicos />} />
@@ -84,6 +87,7 @@ const App = () => {
               <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </Suspense>
           </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

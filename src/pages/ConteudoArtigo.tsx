@@ -6,6 +6,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Seo, SITE_URL } from "@/components/Seo";
+import { ReadingProgress } from "@/components/motion/ReadingProgress";
 import { artigoPorSlug, artigosRelacionados, type BlocoConteudo, type CtaTipo } from "@/lib/conteudo";
 
 const CTAS: Record<CtaTipo, { titulo: string; texto: string; label: string; href: string }> = {
@@ -152,8 +153,10 @@ export default function ConteudoArtigo() {
       />
       <Header />
 
+      <ReadingProgress targetId="artigo-conteudo" />
+
       <main className="flex-1">
-        <article className="py-10 md:py-16">
+        <article id="artigo-conteudo" className="py-10 md:py-16">
           <div className="container max-w-3xl">
             <PageBreadcrumb
               items={[{ label: "Conteúdo", href: "/conteudo" }, { label: artigo.categoria }]}

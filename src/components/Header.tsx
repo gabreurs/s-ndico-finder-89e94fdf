@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavItem {
@@ -13,6 +13,25 @@ interface NavItem {
 export function Header() {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    // Hysteresis avoids a "nervous" header toggling around the threshold.
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        setScrolled((prev) => (prev ? window.scrollY > 12 : window.scrollY > 40));
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
 
   const navLinks: NavItem[] = [
     { href: "/sindicos", label: "Encontrar um síndico" },
@@ -36,8 +55,14 @@ export function Header() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-2xl border-b border-border/30">
-      <div className="container flex h-14 items-center justify-between">
+    <header
+      className={`sticky top-0 z-50 w-full backdrop-blur-2xl transition-[background-color,border-color,box-shadow] duration-300 ${
+        scrolled
+          ? "bg-background/92 border-b border-border/50 shadow-[0_1px_20px_hsl(220_28%_4%_/_0.25)]"
+          : "bg-background/80 border-b border-border/30"
+      }`}
+    >
+      <div className={`container flex items-center justify-between transition-[height] duration-300 ${scrolled ? "h-12" : "h-14"}`}>
         <Link to="/" className="flex items-baseline gap-0.5 group">
           <span className="text-lg tracking-tight text-foreground" style={{ fontWeight: 380 }}>Quero</span>
           <span className="text-lg tracking-tight text-primary" style={{ fontWeight: 480 }}>1síndico</span>
@@ -84,7 +109,7 @@ export function Header() {
                 {isActive(link.href) && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute -bottom-[19px] left-0 right-0 h-[1.5px] bg-primary/60 rounded-full"
+                    className="absolute -bottom-[15px] left-0 right-0 h-[1.5px] bg-primary/60 rounded-full"
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
