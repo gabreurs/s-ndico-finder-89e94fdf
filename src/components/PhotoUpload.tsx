@@ -73,6 +73,7 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
         return;
       }
 
+      // Caminho preferencial: Edge Function (valida tipo/tamanho no servidor).
       const { data, error: uploadError } = await supabase.functions.invoke(
         "upload-sindico-photo",
         {
@@ -81,10 +82,24 @@ export function PhotoUpload({ value, onChange }: PhotoUploadProps) {
         },
       );
 
-      if (uploadError) throw uploadError;
-      if (!data?.url) throw new Error(data?.error || "Falha no upload");
+      if (!uploadError && data?.url) {
+        onChange(data.url as string);
+        return;
+      }
 
-      onChange(data.url as string);
+      // Fallback: envio direto ao Storage. Necessário enquanto a Edge Function
+      // não estiver publicada no projeto — sem isso o cadastro trava na foto.
+      console.warn("[PhotoUpload] Edge Function indisponível, usando upload direto.", uploadError);
+      const ext = file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+      const path = `profiles/${crypto.randomUUID()}.${ext}`;
+      const { error: storageError } = await supabase.storage
+        .from("sindicos")
+        .upload(path, file, { contentType: file.type, upsert: false });
+      if (storageError) throw storageError;
+
+      const { data: pub } = supabase.storage.from("sindicos").getPublicUrl(path);
+      if (!pub?.publicUrl) throw new Error("Falha ao obter URL pública da foto");
+      onChange(pub.publicUrl);
     } catch (err) {
       console.error("Upload error:", err);
       setError("Erro ao fazer upload. Tente novamente.");
