@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
@@ -8,9 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { ESPECIALIDADES, CIDADES_REGIOES, CIDADES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, AlertTriangle, RefreshCw } from "lucide-react";
 import { Seo } from "@/components/Seo";
 
 const fadeUp = {
@@ -22,9 +22,11 @@ const fadeUp = {
 };
 
 export default function Sindicos() {
-  const [especialidade, setEspecialidade] = useState("all");
-  const [cidade, setCidade] = useState("all");
-  const [regiao, setRegiao] = useState("all");
+  // Filtros podem chegar pela URL (links de especialidades, campanhas, compartilhamento).
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [especialidade, setEspecialidade] = useState(searchParams.get("especialidade") || "all");
+  const [cidade, setCidade] = useState(searchParams.get("cidade") || "all");
+  const [regiao, setRegiao] = useState(searchParams.get("regiao") || "all");
   const [searchQuery, setSearchQuery] = useState("");
   const [visibleCount, setVisibleCount] = useState(12);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -32,7 +34,16 @@ export default function Sindicos() {
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
-  const { data: sindicos, isLoading } = useSindicos({ especialidade, cidade, regiao });
+  const { data: sindicos, isLoading, isError, error, refetch, isFetching } = useSindicos({ especialidade, cidade, regiao });
+
+  // Mantém a URL em sincronia com os filtros ativos.
+  useEffect(() => {
+    const next = new URLSearchParams();
+    if (especialidade !== "all") next.set("especialidade", especialidade);
+    if (cidade !== "all") next.set("cidade", cidade);
+    if (regiao !== "all") next.set("regiao", regiao);
+    setSearchParams(next, { replace: true });
+  }, [especialidade, cidade, regiao, setSearchParams]);
 
   const filteredSindicos = sindicos?.filter((s) => {
     if (!searchQuery.trim()) return true;
@@ -133,13 +144,27 @@ export default function Sindicos() {
       {/* Results */}
       <section className="py-10 flex-1">
         <div className="container">
-          {!isLoading && (
+          {!isLoading && !isError && (
             <p className="text-[11px] text-muted-foreground/60 mb-6" style={{ fontWeight: 420 }}>
               {filteredSindicos.length} {filteredSindicos.length === 1 ? "profissional encontrado" : "profissionais encontrados"}
             </p>
           )}
 
-          {isLoading ? (
+          {isError ? (
+            <div className="text-center py-24 max-w-md mx-auto">
+              <AlertTriangle size={28} className="text-destructive/70 mx-auto mb-4" />
+              <p className="text-foreground text-sm mb-2" style={{ fontWeight: 450 }}>
+                Não conseguimos carregar os síndicos agora.
+              </p>
+              <p className="text-muted-foreground text-[13px] mb-5" style={{ fontWeight: 400 }}>
+                Houve uma falha na consulta ao banco de dados. Isso não significa que a base esteja vazia.
+              </p>
+              <Button size="sm" className="rounded-full px-6 gap-2" style={{ fontWeight: 450 }} onClick={() => refetch()} disabled={isFetching}>
+                <RefreshCw size={13} className={isFetching ? "animate-spin" : undefined} />
+                Tentar novamente
+              </Button>
+            </div>
+          ) : isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="bg-muted/20 animate-pulse rounded-xl h-[320px]" />
