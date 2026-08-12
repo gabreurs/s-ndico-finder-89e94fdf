@@ -24,6 +24,7 @@ import Conteudo from "./pages/Conteudo";
 import ConteudoArtigo from "./pages/ConteudoArtigo";
 import SouSindico from "./pages/SouSindico";
 import Especialidade from "./pages/Especialidade";
+import Especialidades from "./pages/Especialidades";
 import NotFound from "./pages/NotFound";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
@@ -73,6 +74,7 @@ const App = () => {
                <Route path="/como-funciona" element={<ComoFunciona />} />
               <Route path="/quem-somos" element={<QuemSomos />} />
               <Route path="/sou-sindico" element={<SouSindico />} />
+              <Route path="/especialidades" element={<Especialidades />} />
               <Route path="/especialidades/:slug" element={<Especialidade />} />
               <Route path="/conteudo" element={<Conteudo />} />
               <Route path="/conteudo/:slug" element={<ConteudoArtigo />} />

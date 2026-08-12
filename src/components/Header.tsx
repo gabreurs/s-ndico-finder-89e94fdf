@@ -28,6 +28,7 @@ export function Header() {
       ],
     },
     { href: "/como-funciona", label: "Como funciona" },
+    { href: "/especialidades", label: "Especialidades" },
     { href: "/conteudo", label: "Conteúdo" },
     { href: "/quem-somos", label: "Quem somos" },
   ];

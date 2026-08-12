@@ -212,12 +212,14 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
           transition={{ duration: phase === "forming" ? 1.05 : 0.55, ease: "easeOut" }}
           className="max-w-5xl text-center"
         >
-          <h1
+          {/* Splash decorativo: não é o H1 semântico da página (evita H1 duplicado em todas as rotas). */}
+          <p
+            aria-hidden="true"
             className="text-[clamp(2.1rem,6vw,4.8rem)] text-white/95 leading-[1.08] tracking-[-0.045em]"
             style={{ fontWeight: 360, fontFamily: "'Mona Sans', system-ui, sans-serif" }}
           >
             Quer 1síndico?<br />Te ajudamos com isso.
-          </h1>
+          </p>
 
           <motion.div
             initial={false}

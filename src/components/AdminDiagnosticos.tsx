@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronDown, ChevronUp, Phone, Mail, Building2, MapPin, AlertTriangle } from "lucide-react";
-import { listarDiagnosticos, atualizarStatusDiagnostico, type DiagnosticoRegistro } from "@/lib/diagnostico";
-import { perfilLabel, dimensaoLabel } from "@/lib/dimensoes";
+import { ChevronDown, ChevronUp, Phone, Mail, Building2, MapPin, AlertTriangle, Trash2 } from "lucide-react";
+import { listarDiagnosticos, atualizarStatusDiagnostico, excluirDiagnostico, STATUS_DIAGNOSTICO, statusDiagnosticoLabel, type DiagnosticoRegistro } from "@/lib/diagnostico";
+import { perfilLabel, dimensaoLabel, relacaoLabel } from "@/lib/dimensoes";
 import { useToast } from "@/hooks/use-toast";
 
 const LABELS: Record<string, string> = {
@@ -19,6 +19,12 @@ const LABELS: Record<string, string> = {
   conflitos: "Conflitos",
   conselho: "Conselho",
   novo: "Em implantação",
+  estado: "Estado",
+  complexidade: "Complexidade",
+  transicao_gestao: "Transição de gestão",
+  assembleias: "Assembleias",
+  fornecedores: "Fornecedores",
+  equipe_situacao: "Equipe",
 };
 
 export function AdminDiagnosticos() {
@@ -49,6 +55,17 @@ export function AdminDiagnosticos() {
       carregar();
     } catch (e: any) {
       toast({ title: "Erro", description: e?.message, variant: "destructive" });
+    }
+  };
+
+  const remover = async (id: string, nome: string) => {
+    if (!window.confirm(`Excluir definitivamente o diagnóstico de "${nome}"?`)) return;
+    try {
+      await excluirDiagnostico(id);
+      toast({ title: "Diagnóstico excluído" });
+      carregar();
+    } catch (e: any) {
+      toast({ title: "Erro ao excluir", description: e?.message, variant: "destructive" });
     }
   };
 
@@ -87,7 +104,7 @@ export function AdminDiagnosticos() {
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="text-sm text-foreground truncate" style={{ fontWeight: 450 }}>{d.nome}</h3>
                   <Badge variant={d.status === "novo" ? "default" : "secondary"} className="text-[10px] px-1.5 py-0">
-                    {d.status}
+                    {statusDiagnosticoLabel(d.status)}
                   </Badge>
                   {d.perfil_recomendado && (
                     <span className="text-[10px] px-2 py-0.5 rounded-full border border-primary/25 bg-primary/[0.06] text-primary">
@@ -106,18 +123,27 @@ export function AdminDiagnosticos() {
                 </p>
               </div>
               <div className="flex gap-1.5 shrink-0 flex-wrap">
-                {d.status !== "em-andamento" && (
-                  <Button size="sm" variant="outline" className="h-8 px-3 text-xs rounded-full border-border/20" onClick={() => mudarStatus(d.id, "em-andamento")}>
-                    Em andamento
+                {STATUS_DIAGNOSTICO.filter((s) => s.value !== d.status).map((s) => (
+                  <Button
+                    key={s.value}
+                    size="sm"
+                    variant="outline"
+                    className="h-8 px-3 text-xs rounded-full border-border/20"
+                    onClick={() => mudarStatus(d.id, s.value)}
+                  >
+                    {s.label}
                   </Button>
-                )}
-                {d.status !== "concluido" && (
-                  <Button size="sm" variant="outline" className="h-8 px-3 text-xs rounded-full border-border/20" onClick={() => mudarStatus(d.id, "concluido")}>
-                    Concluir
-                  </Button>
-                )}
+                ))}
                 <Button size="sm" variant="ghost" className="h-8 px-3 text-xs rounded-full gap-1" onClick={() => setAberto(expandido ? null : d.id)}>
                   {expandido ? <ChevronUp size={12} /> : <ChevronDown size={12} />} Detalhes
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-8 px-3 text-xs rounded-full gap-1 text-destructive hover:text-destructive"
+                  onClick={() => remover(d.id, d.nome)}
+                >
+                  <Trash2 size={12} /> Excluir
                 </Button>
               </div>
             </div>
@@ -139,6 +165,21 @@ export function AdminDiagnosticos() {
                     {(d.respostas?.tipos ?? []).length > 0 && (
                       <p className="text-[11px] text-muted-foreground">
                         <span className="text-muted-foreground/60">Tipos:</span> {d.respostas.tipos.map(dimensaoLabel).join(", ")}
+                      </p>
+                    )}
+                    {d.respostas?.relacao && (
+                      <p className="text-[11px] text-muted-foreground">
+                        <span className="text-muted-foreground/60">Relação com o condomínio:</span> {relacaoLabel(d.respostas.relacao)}
+                      </p>
+                    )}
+                    {(d.respostas?.perfil_desejado ?? []).length > 0 && (
+                      <p className="text-[11px] text-muted-foreground">
+                        <span className="text-muted-foreground/60">Perfil procurado:</span> {d.respostas.perfil_desejado.map(dimensaoLabel).join(", ")}
+                      </p>
+                    )}
+                    {(d.respostas?.problemas_administrativos ?? []).length > 0 && (
+                      <p className="text-[11px] text-muted-foreground">
+                        <span className="text-muted-foreground/60">Problemas administrativos:</span> {d.respostas.problemas_administrativos.map(dimensaoLabel).join(", ")}
                       </p>
                     )}
                     {(d.respostas?.prioridades ?? []).length > 0 && (
