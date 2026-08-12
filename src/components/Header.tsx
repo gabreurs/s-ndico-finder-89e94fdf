@@ -56,19 +56,33 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full backdrop-blur-2xl transition-[background-color,border-color,box-shadow] duration-300 ${
+      className={`sticky top-0 z-50 w-full backdrop-blur-2xl transition-[background-color,box-shadow] duration-300 ${
         scrolled
-          ? "bg-background/92 border-b border-border/50 shadow-[0_1px_20px_hsl(220_28%_4%_/_0.25)]"
-          : "bg-background/80 border-b border-border/30"
+          ? "bg-background/92 shadow-[0_1px_0_hsl(var(--border)/0.35),0_10px_30px_-18px_hsl(220_28%_4%_/_0.6)]"
+          : "bg-background/70"
       }`}
     >
-      <div className={`container flex items-center justify-between transition-[height] duration-300 ${scrolled ? "h-12" : "h-14"}`}>
-        <Link to="/" className="flex items-baseline gap-0.5 group">
-          <span className="text-lg tracking-tight text-foreground" style={{ fontWeight: 380 }}>Quero</span>
-          <span className="text-lg tracking-tight text-primary" style={{ fontWeight: 480 }}>1síndico</span>
+      <div
+        className={`container flex items-center justify-between gap-8 transition-[height] duration-300 ${
+          scrolled ? "h-16" : "h-20"
+        }`}
+      >
+        <Link to="/" className="flex items-baseline gap-1 group shrink-0">
+          <span
+            className="text-xl tracking-tight text-foreground/90 transition-colors duration-300 group-hover:text-primary"
+            style={{ fontWeight: 380 }}
+          >
+            Quero
+          </span>
+          <span
+            className="text-xl tracking-tight text-primary transition-colors duration-300 group-hover:text-foreground"
+            style={{ fontWeight: 500 }}
+          >
+            1síndico
+          </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-7">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navLinks.map((link) =>
             link.children ? (
               <div key={link.href} className="relative group">
@@ -109,7 +123,7 @@ export function Header() {
                 {isActive(link.href) && (
                   <motion.div
                     layoutId="nav-indicator"
-                    className="absolute -bottom-[15px] left-0 right-0 h-[1.5px] bg-primary/60 rounded-full"
+                    className="absolute -bottom-2 left-0 right-0 h-[2px] bg-primary rounded-full"
                     transition={{ type: "spring", stiffness: 500, damping: 35 }}
                   />
                 )}
@@ -118,11 +132,11 @@ export function Header() {
           )}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm" className="px-4 h-8 text-[12px] rounded-full" style={{ fontWeight: 430 }}>
+        <div className="hidden lg:flex items-center gap-2 shrink-0 pl-2">
+          <Button asChild variant="ghost" size="sm" className="px-4 h-9 text-[12.5px] rounded-full text-muted-foreground hover:text-foreground" style={{ fontWeight: 430 }}>
             <Link to="/meu-perfil">Entrar</Link>
           </Button>
-          <Button asChild size="sm" className="px-5 h-8 text-[12px] rounded-full" style={{ fontWeight: 450 }}>
+          <Button asChild size="sm" className="px-5 h-9 text-[12.5px] rounded-full" style={{ fontWeight: 450 }}>
             <Link to="/diagnostico">Encontrar meu síndico</Link>
           </Button>
         </div>
@@ -142,7 +156,7 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-border/20 bg-background/95 backdrop-blur-2xl overflow-hidden"
+            className="lg:hidden border-t border-border/30 bg-background/95 backdrop-blur-2xl overflow-hidden"
           >
             <div className="p-4 space-y-0.5">
               {navLinks.map((link) =>
