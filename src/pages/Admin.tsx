@@ -37,6 +37,7 @@ export default function Admin() {
   const [searchQuery, setSearchQuery] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Sindico>>({});
+  const [aba, setAba] = useState<"sindicos" | "diagnosticos">("sindicos");
   const { toast } = useToast();
 
   useEffect(() => {
