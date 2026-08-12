@@ -25,9 +25,10 @@ export function SmoothScroll() {
       return;
     }
 
+    // Suavização curta: o scroll acompanha a roda quase 1:1 (durações maiores
+    // dão sensação de lag/atraso, principalmente no topo da página).
     const lenis = new Lenis({
-      duration: 0.85,
-      easing: (t: number) => 1 - Math.pow(1 - t, 3),
+      lerp: 0.16,
       smoothWheel: true,
       syncTouch: false, // keep native, predictable touch scrolling
       wheelMultiplier: 1,
