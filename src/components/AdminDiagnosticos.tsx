@@ -141,9 +141,9 @@ export function AdminDiagnosticos() {
                         <span className="text-muted-foreground/60">Tipos:</span> {d.respostas.tipos.map(dimensaoLabel).join(", ")}
                       </p>
                     )}
-                    {(d.respostas?.desafios ?? []).length > 0 && (
+                    {(d.respostas?.prioridades ?? []).length > 0 && (
                       <p className="text-[11px] text-muted-foreground">
-                        <span className="text-muted-foreground/60">Prioridades:</span> {d.respostas.desafios.map(dimensaoLabel).join(", ")}
+                        <span className="text-muted-foreground/60">Prioridades:</span> {d.respostas.prioridades.map(dimensaoLabel).join(", ")}
                       </p>
                     )}
                   </div>
