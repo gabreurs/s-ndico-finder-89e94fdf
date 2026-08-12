@@ -130,7 +130,7 @@ export function Q1SProcesso() {
 
   return (
     <section className="py-24 md:py-32 bg-background relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-primary/[0.03] blur-[140px]" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full ambient-glow" />
 
       <div className="container relative">
         <Reveal stagger className="max-w-2xl mb-16">

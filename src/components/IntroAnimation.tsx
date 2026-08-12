@@ -190,7 +190,7 @@ export function IntroAnimation({ onComplete }: IntroAnimationProps) {
       }}
     >
       <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
-      <div className="absolute top-1/2 left-1/2 h-[44vw] w-[44vw] min-h-[280px] min-w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/[0.07] blur-[160px]" />
+      <div className="absolute top-1/2 left-1/2 h-[44vw] w-[44vw] min-h-[280px] min-w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full ambient-glow" />
 
       {particlesEnabled && (
         <canvas

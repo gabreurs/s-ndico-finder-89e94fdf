@@ -36,7 +36,7 @@ export default function Especialidade() {
       <Header />
 
       <section className="relative gradient-mesh overflow-hidden pt-10 pb-16 md:pt-16 md:pb-24">
-        <div className="absolute top-[10%] right-[8%] w-[360px] h-[360px] rounded-full bg-primary/[0.06] blur-[120px]" />
+        <div className="absolute top-[10%] right-[8%] w-[360px] h-[360px] rounded-full ambient-glow" />
 
         <div className="container relative">
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">

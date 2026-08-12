@@ -38,8 +38,8 @@ export default function QuemSomos() {
 
       {/* ===== HERO ===== */}
       <section ref={heroRef} className="relative min-h-[65vh] flex items-center gradient-mesh overflow-hidden">
-        <div className="absolute bottom-[20%] right-[15%] w-[400px] h-[400px] rounded-full bg-accent/[0.05] blur-[120px]" />
-        <div className="absolute top-[10%] left-[10%] w-[300px] h-[300px] rounded-full bg-primary/[0.04] blur-[100px]" />
+        <div className="absolute bottom-[20%] right-[15%] w-[400px] h-[400px] rounded-full ambient-glow-accent" />
+        <div className="absolute top-[10%] left-[10%] w-[300px] h-[300px] rounded-full ambient-glow" />
 
         <motion.div style={{ opacity: heroOpacity, y: heroY }} className="container relative py-24 md:py-32">
           <div className="grid lg:grid-cols-5 gap-12 items-center">
@@ -111,7 +111,7 @@ export default function QuemSomos() {
 
       {/* ===== VALUES ===== */}
       <section className="py-28 md:py-36 section-dark relative overflow-hidden">
-        <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] rounded-full bg-primary/[0.03] blur-[150px]" />
+        <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] rounded-full ambient-glow" />
         <div className="container relative">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} className="mb-14">
             <motion.p variants={fadeUp} className="text-[11px] text-primary/50 tracking-[0.2em] uppercase mb-3" style={{ fontWeight: 450 }}>O que nos move</motion.p>

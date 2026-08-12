@@ -43,8 +43,8 @@ export function SolucaoLayout({ icon, title, subtitle, description, benefits, ct
       <Header />
 
       <section className="relative gradient-mesh overflow-hidden pt-10 pb-16 md:pt-16 md:pb-24">
-        <div className="absolute top-[10%] right-[8%] w-[360px] h-[360px] rounded-full bg-primary/[0.06] blur-[120px]" />
-        <div className="absolute bottom-0 left-[15%] w-[280px] h-[280px] rounded-full bg-accent/[0.04] blur-[100px]" />
+        <div className="absolute top-[10%] right-[8%] w-[360px] h-[360px] rounded-full ambient-glow" />
+        <div className="absolute bottom-0 left-[15%] w-[280px] h-[280px] rounded-full ambient-glow-accent" />
 
         <div className="container relative">
           <motion.div initial="hidden" animate="visible" className="max-w-3xl">

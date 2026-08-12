@@ -67,8 +67,8 @@ export default function ComoFunciona() {
 
       {/* ===== HERO ===== */}
       <section ref={heroRef} className="relative min-h-[70vh] flex items-center gradient-mesh overflow-hidden">
-        <div className="absolute top-[15%] right-[10%] w-[400px] h-[400px] rounded-full bg-primary/[0.06] blur-[120px]" />
-        <div className="absolute bottom-[20%] left-[5%] w-[300px] h-[300px] rounded-full bg-accent/[0.04] blur-[100px]" />
+        <div className="absolute top-[15%] right-[10%] w-[400px] h-[400px] rounded-full ambient-glow" />
+        <div className="absolute bottom-[20%] left-[5%] w-[300px] h-[300px] rounded-full ambient-glow-accent" />
 
         {/* Grid overlay */}
         <div
@@ -148,7 +148,7 @@ export default function ComoFunciona() {
 
       {/* ===== COMPARISON ===== */}
       <section className="py-28 md:py-36 section-dark relative overflow-hidden">
-        <div className="absolute top-[30%] left-[20%] w-[500px] h-[500px] rounded-full bg-primary/[0.03] blur-[150px]" />
+        <div className="absolute top-[30%] left-[20%] w-[500px] h-[500px] rounded-full ambient-glow" />
         <div className="container max-w-5xl relative">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <motion.p variants={fadeUp} className="text-[11px] text-primary/50 tracking-[0.2em] uppercase mb-3" style={{ fontWeight: 450 }}>Comparação</motion.p>
