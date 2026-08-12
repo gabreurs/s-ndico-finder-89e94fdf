@@ -72,7 +72,7 @@ const Index = () => {
       {/* ===== HERO ===== */}
       <section ref={heroRef} className="relative min-h-[100vh] flex items-center overflow-hidden">
         {/* Background image with overlay */}
-        <motion.div style={{ y: heroBgY }} className="absolute inset-0">
+        <motion.div style={{ y: heroBgY, willChange: "transform" }} className="absolute inset-0 transform-gpu">
           <img src={heroSp} alt="" className="w-full h-full object-cover" aria-hidden="true" fetchPriority="high" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,25%,4%,0.88)] via-[hsl(220,25%,4%,0.92)] to-[hsl(220,25%,4%,0.97)]" />
         </motion.div>
@@ -90,7 +90,7 @@ const Index = () => {
           }}
         />
 
-        <motion.div style={{ opacity: heroOpacity, y: heroY }} className="relative container py-24 md:py-32">
+        <motion.div style={{ opacity: heroOpacity, y: heroY, willChange: "transform, opacity" }} className="relative container py-24 md:py-32 transform-gpu">
           <div className="grid lg:grid-cols-5 gap-12 items-center">
             {/* Left content */}
             <div className="lg:col-span-3">
