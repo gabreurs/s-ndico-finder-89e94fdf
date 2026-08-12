@@ -115,6 +115,7 @@ export default function Diagnostico() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <Seo title={'Diagnóstico do condomínio — descubra o perfil de síndico ideal'} description={'Responda ao diagnóstico Q1S e receba o perfil de síndico recomendado e profissionais com aderência ao seu contexto.'} path={'/diagnostico'} />
       <Header />
       <main className="flex-1 container py-10 max-w-3xl">
         <PageBreadcrumb items={[{ label: "Diagnóstico" }]} className="mb-6" />
