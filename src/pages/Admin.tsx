@@ -366,6 +366,8 @@ export default function Admin() {
             <p className="text-center text-sm text-muted-foreground py-12">Nenhum síndico nesta categoria.</p>
           )}
         </div>
+        </>
+        )}
       </div>
     </div>
   );
