@@ -46,7 +46,6 @@ const Index = () => {
 
   const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
   const heroY = useTransform(heroProgress, [0, 1], [0, 100]);
-  const heroBgY = useTransform(heroProgress, [0, 1], [0, 40]);
 
   const { data: sindicos, isLoading } = useSindicos({ especialidade, cidade, regiao });
   const featuredSindicos = sindicos?.slice(0, 4) || [];
@@ -72,10 +71,10 @@ const Index = () => {
       {/* ===== HERO ===== */}
       <section ref={heroRef} className="relative min-h-[100vh] flex items-center overflow-hidden">
         {/* Background image with overlay */}
-        <motion.div style={{ y: heroBgY, willChange: "transform" }} className="absolute inset-0 transform-gpu">
+        <div className="absolute inset-0">
           <img src={heroSp} alt="" className="w-full h-full object-cover" aria-hidden="true" fetchPriority="high" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-b from-[hsl(220,25%,4%,0.88)] via-[hsl(220,25%,4%,0.92)] to-[hsl(220,25%,4%,0.97)]" />
-        </motion.div>
+        </div>
 
         {/* Ambient light */}
         <div className="absolute top-[15%] left-[5%] w-[500px] h-[500px] rounded-full bg-primary/[0.06] blur-[150px] transform-gpu" />
