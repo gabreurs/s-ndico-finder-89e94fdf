@@ -5,7 +5,7 @@ import { CheckCircle2, AlertCircle, ArrowRight, User } from "lucide-react";
 import { perfilDescricao, perfilLabel, dimensaoLabel } from "@/lib/dimensoes";
 import { derivarRequisitos, type DiagnosticoLead, type DiagnosticoRespostas, type PerfilRecomendado } from "@/lib/diagnostico";
 import { NIVEL_LABEL, type ResultadoMatch } from "@/lib/matching";
-import { WHATSAPP_URL } from "@/lib/whatsapp";
+import { buildRafaelWhatsAppUrl } from "@/lib/whatsapp";
 
 interface Props {
   respostas: DiagnosticoRespostas;
@@ -100,7 +100,7 @@ export function DiagnosticoResultado({ respostas, perfis, matches, lead }: Props
             Ainda não há profissionais na base com dados suficientes para sustentar aderência a este cenário. Um especialista vai conduzir a busca manualmente.
           </p>
           <Button asChild size="sm" className="rounded-full px-6 h-9 text-[12px]" style={{ fontWeight: 450 }}>
-            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">Falar com um especialista</a>
+            <a href={buildRafaelWhatsAppUrl(`Olá! Fiz o diagnóstico no Quero 1 Síndico${lead.condominio ? ` para o ${lead.condominio}` : ""} e quero falar com um especialista.`)} target="_blank" rel="noopener noreferrer">Falar com um especialista</a>
           </Button>
         </div>
       ) : (
@@ -165,7 +165,7 @@ export function DiagnosticoResultado({ respostas, perfis, matches, lead }: Props
           Quer que a Q1S conduza a busca e a seleção junto ao conselho?
         </p>
         <Button asChild size="sm" className="rounded-full px-6 h-9 text-[12px] shrink-0" style={{ fontWeight: 450 }}>
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">Falar com um especialista</a>
+          <a href={buildRafaelWhatsAppUrl(`Olá! Fiz o diagnóstico no Quero 1 Síndico${lead.condominio ? ` para o ${lead.condominio}` : ""} e quero falar com um especialista.`)} target="_blank" rel="noopener noreferrer">Falar com um especialista</a>
         </Button>
       </div>
     </div>
