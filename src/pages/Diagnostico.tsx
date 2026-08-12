@@ -90,7 +90,7 @@ export default function Diagnostico() {
       <div className="min-h-screen flex flex-col bg-background">
         <Header />
         <main className="flex-1 container py-10">
-          <PageBreadcrumb items={[{ label: "Diagnóstico" }]} />
+          <PageBreadcrumb items={[{ label: "Diagnóstico" }]} className="mb-6" />
           <DiagnosticoResultado respostas={r} perfis={perfis} matches={matches} lead={lead} />
         </main>
         <Footer />
@@ -102,7 +102,7 @@ export default function Diagnostico() {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
       <main className="flex-1 container py-10 max-w-3xl">
-        <PageBreadcrumb items={[{ label: "Diagnóstico" }]} />
+        <PageBreadcrumb items={[{ label: "Diagnóstico" }]} className="mb-6" />
 
         <p className="text-[11px] text-primary/70 tracking-[0.2em] uppercase mb-3" style={{ fontWeight: 450 }}>
           Diagnóstico do condomínio
