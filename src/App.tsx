@@ -57,6 +57,7 @@ const App = () => {
               <Route path="/sindicos" element={<Sindicos />} />
               <Route path="/sindico/:slug" element={<SindicoPerfil />} />
               <Route path="/cadastro" element={<Cadastro />} />
+              <Route path="/diagnostico" element={<Diagnostico />} />
               <Route path="/como-funciona" element={<ComoFunciona />} />
               <Route path="/quem-somos" element={<QuemSomos />} />
               <Route path="/meu-perfil" element={<MeuPerfil />} />
