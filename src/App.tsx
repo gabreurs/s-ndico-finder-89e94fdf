@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Sindicos from "./pages/Sindicos";
 import SindicoPerfil from "./pages/SindicoPerfil";
 import Cadastro from "./pages/Cadastro";
+import Diagnostico from "./pages/Diagnostico";
 import ComoFunciona from "./pages/ComoFunciona";
 import QuemSomos from "./pages/QuemSomos";
 import Admin from "./pages/Admin";
@@ -56,6 +57,7 @@ const App = () => {
               <Route path="/sindicos" element={<Sindicos />} />
               <Route path="/sindico/:slug" element={<SindicoPerfil />} />
               <Route path="/cadastro" element={<Cadastro />} />
+              <Route path="/diagnostico" element={<Diagnostico />} />
               <Route path="/como-funciona" element={<ComoFunciona />} />
               <Route path="/quem-somos" element={<QuemSomos />} />
               <Route path="/meu-perfil" element={<MeuPerfil />} />

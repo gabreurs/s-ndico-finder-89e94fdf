@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { Tables } from "@/integrations/supabase/types";
 import { AdminMetrics } from "@/components/AdminMetrics";
+import { AdminDiagnosticos } from "@/components/AdminDiagnosticos";
 
 type Sindico = Tables<"sindicos">;
 type Status = "pending" | "approved" | "rejected";
@@ -36,6 +37,7 @@ export default function Admin() {
   const [searchQuery, setSearchQuery] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editData, setEditData] = useState<Partial<Sindico>>({});
+  const [aba, setAba] = useState<"sindicos" | "diagnosticos">("sindicos");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -178,6 +180,26 @@ export default function Admin() {
       <div className="container py-6">
         <AdminMetrics />
 
+        {/* Abas */}
+        <div className="flex gap-2 mb-5 border-b border-border/20">
+          {([["sindicos", "Síndicos"], ["diagnosticos", "Diagnósticos"]] as const).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setAba(key)}
+              className={`text-[13px] px-1 pb-2 -mb-px border-b-2 transition-colors ${
+                aba === key ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}
+              style={{ fontWeight: 430 }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {aba === "diagnosticos" && <AdminDiagnosticos />}
+
+        {aba === "sindicos" && (
+        <>
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-4">
           {(["all", "pending", "approved", "rejected"] as const).map((s) => (
@@ -344,6 +366,8 @@ export default function Admin() {
             <p className="text-center text-sm text-muted-foreground py-12">Nenhum síndico nesta categoria.</p>
           )}
         </div>
+        </>
+        )}
       </div>
     </div>
   );
