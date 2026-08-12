@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Sindicos from "./pages/Sindicos";
 import SindicoPerfil from "./pages/SindicoPerfil";
 import Cadastro from "./pages/Cadastro";
+import Diagnostico from "./pages/Diagnostico";
 import ComoFunciona from "./pages/ComoFunciona";
 import QuemSomos from "./pages/QuemSomos";
 import Admin from "./pages/Admin";
