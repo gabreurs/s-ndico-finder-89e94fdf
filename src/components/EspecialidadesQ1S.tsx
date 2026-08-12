@@ -1,7 +1,7 @@
 import { Reveal } from "@/components/motion/Reveal";
 import { Link } from "react-router-dom";
 import { ArrowRight, Award } from "lucide-react";
-import { ESPECIALIDADES_Q1S } from "@/lib/dimensoes";
+import { ESPECIALIDADES_Q1S, urlBuscaEspecialidade } from "@/lib/dimensoes";
 import { dimensaoLabel } from "@/lib/dimensoes";
 
 export function EspecialidadesQ1S() {
@@ -50,7 +50,7 @@ export function EspecialidadesQ1S() {
                   <ArrowRight size={11} className="group-hover/link:translate-x-0.5 transition-transform" />
                 </Link>
                 <Link
-                  to={`/sindicos?especialidade=${esp.slug}`}
+                  to={urlBuscaEspecialidade(esp.slug)}
                   className="inline-flex items-center gap-1 text-[11px] text-white/40 hover:text-white/70 transition-colors"
                   style={{ fontWeight: 430 }}
                 >

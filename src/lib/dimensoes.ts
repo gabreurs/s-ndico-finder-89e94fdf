@@ -183,3 +183,23 @@ export const ESPECIALIDADES_Q1S: EspecialidadeQ1S[] = [
 
 export const especialidadePorSlug = (slug: string) =>
   ESPECIALIDADES_Q1S.find((e) => e.slug === slug);
+
+/**
+ * Especialidades Q1S são dimensões editoriais; a busca (`/sindicos`) filtra pelo campo
+ * `especialidades` do cadastro, que usa os tipos de condomínio de `ESPECIALIDADES`.
+ * Só existe filtro equivalente para as especialidades abaixo — as demais levam para a
+ * busca completa, sem simular um filtro que o banco não conhece.
+ */
+const BUSCA_POR_ESPECIALIDADE_Q1S: Record<string, string> = {
+  "condominios-comerciais": "Cond. Comercial",
+  "grandes-condominios": "Residencial multitorres",
+  "condominio-clube": "Residencial clube",
+  "condominios-pequenos": "Residencial torre única",
+  associacoes: "Associação de moradores (Loteamento)",
+};
+
+/** URL de busca correspondente a uma especialidade Q1S. */
+export function urlBuscaEspecialidade(slug: string) {
+  const filtro = BUSCA_POR_ESPECIALIDADE_Q1S[slug];
+  return filtro ? `/sindicos?especialidade=${encodeURIComponent(filtro)}` : "/sindicos";
+}
