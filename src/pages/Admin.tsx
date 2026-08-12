@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import type { Tables } from "@/integrations/supabase/types";
 import { AdminMetrics } from "@/components/AdminMetrics";
+import { AdminDiagnosticos } from "@/components/AdminDiagnosticos";
 
 type Sindico = Tables<"sindicos">;
 type Status = "pending" | "approved" | "rejected";
